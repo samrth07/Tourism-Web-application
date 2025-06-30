@@ -28,12 +28,7 @@ export const handleMessageEvent = async (socket,message,userId) => {
       case "message:add":
 
         try {
-          // await addMessage(roomId, userId, content)({
-          //   roomId,
-          //   userId,
-          //   content: content,
-          // });
-
+          await addMessage(room, userId, content);
           logger.info(
             `User ${userId} sent a message in room ${room}`
           );
@@ -56,15 +51,15 @@ export const handleMessageEvent = async (socket,message,userId) => {
           logger.warn(`Delete event received without message ID.`);
           return;
         }
-
+          const messageId = message.messageId;
           const savedMessage = await getMessage(messageId);
           if (!savedMessage) {
-            logger.warn(`Message ${messageId} not found in room ${room}`);
+            logger.warn(`Message ${message.messageId} not found in room ${room}`);
             return;
           }
 
           await deleteMessage(messageId);
-          logger.info(`User ${userId} deleted message ${messageId} in room ${room}`);
+          logger.info(`User ${userId} deleted message ${message.messageId} in room ${room}`);
 
           broadcastToRoom(
             room,
@@ -82,7 +77,8 @@ export const handleMessageEvent = async (socket,message,userId) => {
         break;
 
       case "message:edit": {
-        if (!message.messageId) {
+        const messageId = message.messageId;
+        if (!messageId) {
           logger.warn(`Edit event received without message ID.`);
           return;
         }
@@ -94,9 +90,9 @@ export const handleMessageEvent = async (socket,message,userId) => {
             return;
           }
 
-          const editedMessage = await editMessage(message.messageId, content);
+          const editedMessage = await editMessage(messageId, content);
           logger.info(
-            `User ${userId} updated message ${message.messageId} in room ${room}`
+            `User ${userId} updated message ${messageId} in room ${room}`
           );
 
           broadcastToRoom(
@@ -104,6 +100,7 @@ export const handleMessageEvent = async (socket,message,userId) => {
             {
               type: "message:edit",
               userId,
+              messageId,
               content,
             },
             socket

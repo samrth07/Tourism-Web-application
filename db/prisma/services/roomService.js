@@ -62,7 +62,6 @@ export const getRoomsByUserId = async (userId) => {
 };
 
 export const getCreatedRoomsByUserId = async (userId) => {
-  console.log(userId + " :in function");
   return await client.user.findUnique({
     where: {
       id: userId,

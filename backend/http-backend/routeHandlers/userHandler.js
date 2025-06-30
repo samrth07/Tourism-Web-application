@@ -79,7 +79,6 @@ export const getMyRooms = async (req, res) => {
   try {
 
     const userId = req.id;
-    console.log("userId before call" + " " + userId)
     const user = await getCreatedRoomsByUserId(userId);
     if (!user) {
       res.status(404).json({

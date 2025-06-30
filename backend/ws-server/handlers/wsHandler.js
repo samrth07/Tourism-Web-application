@@ -60,8 +60,8 @@ export const setupWebSocketServer = async (wss) => {
 
     // Handle disconnection
     socket.on("close", () => {
-      logger.info(`User ${userId} disconnected`);
-      handleUserDisconnect(socket, userId); // uses userId to fully clean up rooms
+      logger.info(`User ${socket.userId} disconnected`);
+      handleUserDisconnect(socket, socket.userId); // uses userId to fully clean up rooms
     });
   });
 
