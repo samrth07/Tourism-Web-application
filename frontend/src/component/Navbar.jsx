@@ -1,9 +1,10 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaPlaneDeparture } from "react-icons/fa";
-import ProfileDropdown from "./Profile/ProfileDropdown"; 
 
-const Navbar = () => {
+const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="sticky top-0 z-50">
       {/* Top Navbar */}
@@ -13,42 +14,33 @@ const Navbar = () => {
           Trekker
         </Link>
 
-
-        <div className="flex items-center gap-4 text-sm">
-          <button className="bg-transparent border border-white px-4 py-1 rounded-full hover:bg-white hover:text-black transition">
-            Sign In
-          </button>
-          <button className="bg-green-500 px-4 py-1 rounded-full text-white font-semibold hover:scale-105 transition">
-            Sign Up
-          </button>
-          {/* Profile Dropdown */}
-          <div className="ml-4">
-            <ProfileDropdown />
-          </div>
-
-        <div className="flex gap-4 text-sm">
-          <Link to="/signin">
-            <button className="bg-transparent border border-white px-4 py-1 rounded-full hover:bg-white hover:text-black transition">
+        {!isLoggedIn && (
+          <div className="flex items-center gap-4 text-sm">
+            <button
+              onClick={() => navigate("/signin")}
+              className="bg-transparent border border-white px-4 py-1 rounded-full hover:bg-white hover:text-black transition"
+            >
               Sign In
             </button>
-          </Link>
-          <Link to="/signup">
-            <button className="bg-green-500 px-4 py-1 rounded-full text-white font-semibold hover:scale-105 transition">
+            <button
+              onClick={() => navigate("/signup")}
+              className="bg-green-500 px-4 py-1 rounded-full text-white font-semibold hover:scale-105 transition"
+            >
               Sign Up
             </button>
-          </Link>
+          </div>
+        )}
+      </div>
 
+      {/* Bottom Navbar - only when not logged in */}
+      {!isLoggedIn && (
+        <div className="flex justify-center gap-10 px-6 py-2 bg-[#004d40]/90 text-white text-sm font-semibold shadow-md">
+          <Link to="/" className="hover:text-green-300 transition">Explore</Link>
+          <Link to="/destinations" className="hover:text-green-300 transition">Destinations</Link>
+          <Link to="/offers" className="hover:text-green-300 transition">Offers</Link>
+          <Link to="/find-travel-mate" className="hover:text-green-300 transition">Find Travel Mate</Link>
         </div>
-      </div>
-
-      {/* Bottom Navbar */}
-      <div className="flex justify-center gap-10 px-6 py-2 bg-[#004d40]/90 text-white text-sm font-semibold shadow-md">
-        <Link to="/" className="hover:text-green-300 transition">Explore</Link>
-        <Link to="/destinations" className="hover:text-green-300 transition">Destinations</Link>
-        <Link to="/offers" className="hover:text-green-300 transition">Offers</Link>
-        <Link to="/find-travel-mate" className="hover:text-green-300 transition">Find Travel Mate</Link>
-      </div>
-    </div>
+      )}
     </div>
   );
 };

@@ -1,13 +1,15 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; 
 import { FaEnvelope, FaLock, FaGoogle, FaFacebookF } from "react-icons/fa";
 
-const SignIn = () => {
+const SignIn = ({ setIsLoggedIn }) => { 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     rememberMe: false,
   });
+
+  const navigate = useNavigate(); 
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -23,11 +25,14 @@ const SignIn = () => {
       alert("Please fill in both email and password.");
       return;
     }
+
     alert("Form submitted");
     console.log("Submitted:", formData);
+    
+    setIsLoggedIn(true); 
+    navigate("/");       
   };
 
-  
   const handleClick = () => {
     console.log(" Sign In button clicked");
     alert(" Sign In button clicked!");
@@ -84,7 +89,6 @@ const SignIn = () => {
             </a>
           </div>
 
-         
           <button
             type="submit"
             onClick={handleClick}

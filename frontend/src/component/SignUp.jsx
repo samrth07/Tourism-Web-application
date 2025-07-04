@@ -1,12 +1,15 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; 
 import { FaUser, FaEnvelope, FaPhone, FaLock, FaCalendar } from "react-icons/fa";
 
 const SignUp = () => {
-  
+  const navigate = useNavigate(); 
+
   const handleSignUpClick = () => {
     alert(" Sign Up button clicked!");
     console.log(" Sign Up form triggered!");
+
+    navigate("/signin"); 
   };
 
   return (
@@ -135,7 +138,6 @@ const SignUp = () => {
             </label>
           </div>
 
-          
           <button
             type="submit"
             onClick={handleSignUpClick}
