@@ -1,39 +1,46 @@
+import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useState } from "react";
-import Navbar from "./component/Navbar"; 
-import Home from "./component/Home";
+
 import SidebarMenu from "./component/Profile/SidebarMenu";
-import FindTravelMate from "./component/FindTravelMate"; 
+import Home from "./component/Home";
+import FindTravelMate from "./component/FindTravelMate";
 import TravelProfilePage from "./component/Profile/TravelProfilePage";
 import TravelFriendsPage from "./component/FriendsPage/TravelFriendsPage";
+import Settings from "./component/Profile/Settings";
 import SignIn from "./component/SignIn";
 import SignUp from "./component/SignUp";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    localStorage.getItem("isLoggedIn") === "true"
+  );
+
+  // ✅ Helper to wrap sidebar and content together
+  const withSidebar = (Component) => (
+    <div className="flex">
+      <SidebarMenu />
+      <div className="ml-56 w-full p-6">
+        <Component />
+      </div>
+    </div>
+  );
 
   return (
     <Router>
-      {isLoggedIn && <SidebarMenu />}
-      <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
-      
-      <div className={`${isLoggedIn ? "ml-56" : ""} min-h-screen bg-gray-100`}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/signin" element={<SignIn setIsLoggedIn={setIsLoggedIn} />} />
-          <Route path="/signup" element={<SignUp setIsLoggedIn={setIsLoggedIn} />} />
-          {isLoggedIn && (
-            <>
-              <Route path="/find-travel-mate" element={<FindTravelMate />} />
-              <Route path="/profile" element={<TravelProfilePage />} />
-              <Route path="/friends" element={<TravelFriendsPage />} />
-            </>
-          )}
-        </Routes>
-      </div>
+      <Routes>
+        {/* Public Pages */}
+        <Route path="/signin" element={<SignIn setIsLoggedIn={setIsLoggedIn} />} />
+        <Route path="/signup" element={<SignUp />} />
+
+        {/* Pages with Sidebar */}
+        <Route path="/" element={withSidebar(Home)} />
+        <Route path="/find-travel-mate" element={withSidebar(FindTravelMate)} />
+        <Route path="/profile" element={withSidebar(TravelProfilePage)} />
+        <Route path="/friends" element={withSidebar(TravelFriendsPage)} />
+        <Route path="/settings" element={withSidebar(Settings)} />
+      </Routes>
     </Router>
   );
 }
 
 export default App;
- 

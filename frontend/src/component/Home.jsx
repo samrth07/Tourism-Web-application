@@ -1,5 +1,6 @@
 import React from 'react';
 import TravelPackageCards from './TravelPackageCards';
+import Setting from './Profile/Settings';
 
 
 const Home = () => {

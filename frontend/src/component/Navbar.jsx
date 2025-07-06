@@ -14,7 +14,26 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
           Trekker
         </Link>
 
-        {!isLoggedIn && (
+        {/* Right Side Options */}
+        {isLoggedIn ? (
+          <div className="flex items-center gap-4 text-sm">
+            <Link
+              to="/settings"
+              className="px-4 py-1 rounded-full hover:bg-white hover:text-black border border-white transition"
+            >
+              Settings
+            </Link>
+            <button
+              onClick={() => {
+                setIsLoggedIn(false);
+                navigate("/signin");
+              }}
+              className="bg-red-500 px-4 py-1 rounded-full text-white font-semibold hover:scale-105 transition"
+            >
+              Logout
+            </button>
+          </div>
+        ) : (
           <div className="flex items-center gap-4 text-sm">
             <button
               onClick={() => navigate("/signin")}
