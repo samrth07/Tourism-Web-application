@@ -15,7 +15,7 @@ function App() {
     localStorage.getItem("isLoggedIn") === "true"
   );
 
-  // ✅ Helper to wrap sidebar and content together
+  
   const withSidebar = (Component) => (
     <div className="flex">
       <SidebarMenu />
@@ -28,11 +28,11 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Public Pages */}
+        
         <Route path="/signin" element={<SignIn setIsLoggedIn={setIsLoggedIn} />} />
         <Route path="/signup" element={<SignUp />} />
 
-        {/* Pages with Sidebar */}
+        
         <Route path="/" element={withSidebar(Home)} />
         <Route path="/find-travel-mate" element={withSidebar(FindTravelMate)} />
         <Route path="/profile" element={withSidebar(TravelProfilePage)} />

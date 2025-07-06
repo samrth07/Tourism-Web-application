@@ -14,7 +14,6 @@ const TravelProfilePage = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800">
       <div className="max-w-5xl mx-auto px-4 py-6">
 
-        {/* Header Profile */}
          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-green-600 p-6 text-white shadow-2xl shadow-emerald-500/25 mb-6">
           <div className="absolute inset-0 bg-black/20"></div>
           <div className="absolute top-2 right-2 opacity-10">

@@ -48,7 +48,7 @@ const Settings = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800 py-12 px-4 text-white">
       <div className="max-w-4xl mx-auto bg-slate-800/70 backdrop-blur-xl rounded-2xl shadow-2xl px-8 py-10 border border-teal-500/30">
         <h2 className="text-4xl font-bold text-emerald-300 text-center mb-10">
-          ✨ User Settings
+           User Settings
         </h2>
 
         
@@ -139,7 +139,7 @@ const Settings = () => {
 
         <div className="mb-10">
           <h3 className="text-xl font-semibold mb-4 border-b border-pink-500 pb-1">
-            🔐 Reset Password
+             Reset Password
           </h3>
           <div className="grid md:grid-cols-2 gap-4">
             <input
@@ -175,7 +175,7 @@ const Settings = () => {
         
         <div className="mb-10">
           <h3 className="text-xl font-semibold mb-4 border-b border-yellow-400 pb-1">
-            🛡️ Security Options
+             Security Options
           </h3>
           <div className="space-y-4">
             <div className="flex justify-between items-center">

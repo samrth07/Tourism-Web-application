@@ -27,7 +27,7 @@ const SignIn = ({ setIsLoggedIn }) => {
       return;
     }
 
-    // ✅ Dummy logic - allow all emails/passwords
+    //  Dummy logic
     localStorage.setItem("isLoggedIn", "true");
     setIsLoggedIn(true);
     navigate("/settings");
