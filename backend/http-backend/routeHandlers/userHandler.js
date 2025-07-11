@@ -11,7 +11,7 @@ export const signup = async(req, res) => {
 
         if(!result.success) {
             res.status(403).json ({
-                message: res.error.message
+                message: result.error.message
             })
             return;
         }
