@@ -1,12 +1,25 @@
 import client from "../index.js";
 
-export const createUser = async (email,hashedPassword) => {
+export const createUser = async ( email , hashedPassword , name) => {
   
-  return client.user.create({
+  return await client.user.create({
     data: {
       email,
-      password: hashedPassword
+      password: hashedPassword,
+      name
     },
+  });
+};
+
+export const createAddress = async ( city , country , pincode , userId) => {
+
+  return await client.address.create({
+          data : {
+            city,
+            userId,
+            country,
+            pincode
+          }
   });
 };
 
@@ -49,3 +62,30 @@ export const isUserAdmin = async(roomId, userId) => {
     }
   });
 };
+
+
+export const getUser = async ( userID ) => {
+
+      return await client.user.findMany({
+        where : {
+          id :{
+            not : userID
+          }
+        },
+          include : {
+            Address : true
+          }
+      })
+}
+
+export const getMyinformation = async ( userID) => {
+    return await client.user.findFirst({
+      where : {
+        id : userID
+      },
+      include : {
+        Address : true,
+        password : false
+      }
+    })
+}
