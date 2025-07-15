@@ -1,45 +1,45 @@
-import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
-import SidebarMenu from "./component/Profile/SidebarMenu";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Navbar from "./component/Navbar";
 import Home from "./component/Home";
 import FindTravelMate from "./component/FindTravelMate";
 import TravelProfilePage from "./component/Profile/TravelProfilePage";
 import TravelFriendsPage from "./component/FriendsPage/TravelFriendsPage";
-import Settings from "./component/Profile/Settings";
 import SignIn from "./component/SignIn";
 import SignUp from "./component/SignUp";
+import Destination from "./component/ui/Destination"; // ✅ Make sure this path is correct
+
+// Dashboard Components
+import Profile from "./component/Dashboard/Profile";
+import Settings from "./component/Dashboard/Settings";
+import Friends from "./component/Dashboard/Friends";
+import CurrentPlan from "./component/Dashboard/CurrentPlan";
+import DashboardLayout from "./component/Dashboard/DashboardLayout";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    localStorage.getItem("isLoggedIn") === "true"
-  );
-
-  
-  const withSidebar = (Component) => (
-    <div className="flex">
-      <SidebarMenu />
-      <div className="ml-56 w-full p-6">
-        <Component />
-      </div>
-    </div>
-  );
-
   return (
-    <Router>
-      <Routes>
-        
-        <Route path="/signin" element={<SignIn setIsLoggedIn={setIsLoggedIn} />} />
-        <Route path="/signup" element={<SignUp />} />
+    <>
+      <Navbar />
 
-        
-        <Route path="/" element={withSidebar(Home)} />
-        <Route path="/find-travel-mate" element={withSidebar(FindTravelMate)} />
-        <Route path="/profile" element={withSidebar(TravelProfilePage)} />
-        <Route path="/friends" element={withSidebar(TravelFriendsPage)} />
-        <Route path="/settings" element={withSidebar(Settings)} />
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<Home />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/find-travel-mate" element={<FindTravelMate />} />
+        <Route path="/travel-profile" element={<TravelProfilePage />} />
+        <Route path="/travel-friends" element={<TravelFriendsPage />} />
+        <Route path="/destinations" element={<Destination />} /> {/* ✅ Route added */}
+
+        {/* Dashboard with Nested Routes */}
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index element={<Navigate to="profile" />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="currentPlan" element={<CurrentPlan />} />
+          <Route path="userFriends" element={<Friends />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
       </Routes>
-    </Router>
+    </>
   );
 }
 

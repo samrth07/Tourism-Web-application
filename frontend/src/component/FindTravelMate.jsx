@@ -1,90 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import TravelMateCard from "./TravelMateCard";
-
-const travelMates = [
-  {
-    name: "Sarah Chen",
-    age: 28,
-    location: "San Francisco, CA",
-    destination: "Tokyo",
-    travelStyle: "Adventure",
-    duration: "1 Month",
-    groupSize: "small",
-    experience: "first-timer",
-    bio: "Excited to explore Tokyo and find like-minded travel buddies."
-  },
-  {
-    name: "David Park",
-    age: 35,
-    location: "Seoul, South Korea",
-    destination: "Bali",
-    travelStyle: "Relaxation",
-    duration: "1 Week",
-    groupSize: "medium",
-    experience: "experienced",
-    bio: "Seasoned traveler looking to unwind in Bali."
-  },
-  {
-    name: "Alex Thompson",
-    age: 26,
-    location: "New York, USA",
-    destination: "Iceland",
-    travelStyle: "Adventure",
-    duration: "Weekend",
-    groupSize: "solo",
-    experience: "first-timer",
-    bio: "Ready for my first solo trip into the wild beauty of Iceland."
-  },
-  {
-    name: "Priya Sharma",
-    age: 32,
-    location: "Mumbai, India",
-    destination: "Tokyo",
-    travelStyle: "Cultural",
-    duration: "1 Week",
-    groupSize: "medium",
-    experience: "experienced",
-    bio: "History buff looking to explore Tokyo’s ancient and modern culture."
-  },
-  {
-    name: "Liam Nguyen",
-    age: 30,
-    location: "Hanoi, Vietnam",
-    destination: "Nepal",
-    travelStyle: "Adventure",
-    duration: "1 Month",
-    groupSize: "small",
-    experience: "experienced",
-    bio: "Mountaineering enthusiast heading for the Himalayas."
-  },
-  {
-    name: "Emily Clark",
-    age: 27,
-    location: "London, UK",
-    destination: "Patagonia",
-    travelStyle: "Adventure",
-    duration: "1 Month",
-    groupSize: "medium",
-    experience: "first-timer",
-    bio: "Seeking thrill and peace in Patagonia’s vastness."
-  }
-];
+import { useAuth } from "../context/Authcontext";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const FindTravelmate = () => {
   const [destination, setDestination] = useState("");
   const [tripDuration, setTripDuration] = useState("");
   const [groupSize, setGroupSize] = useState("");
   const [ageGroup, setAgeGroup] = useState("");
-  const [filteredMates, setFilteredMates] = useState(travelMates);
+  const [filteredMates, setFilteredMates] = useState([]);
+  const [users, setUsers] = useState([]);
+
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user) {
+      alert("Login is required.");
+      navigate("/signin");
+    }
+  }, [user, navigate]);
 
   const handleApplyFilters = () => {
-    const filtered = travelMates.filter((mate) => {
+    const filtered = users.filter((mate) => {
       const inAgeGroup =
-        (ageGroup === "" ||
-          (ageGroup === "18-25" && mate.age >= 18 && mate.age <= 25) ||
-          (ageGroup === "26-35" && mate.age >= 26 && mate.age <= 35) ||
-          (ageGroup === "36-45" && mate.age >= 36 && mate.age <= 45));
+        ageGroup === "" ||
+        (ageGroup === "18-25" && mate.age >= 18 && mate.age <= 25) ||
+        (ageGroup === "26-35" && mate.age >= 26 && mate.age <= 35) ||
+        (ageGroup === "36-45" && mate.age >= 36 && mate.age <= 45);
+
       return (
         (!destination || mate.destination === destination) &&
         (!tripDuration || mate.duration === tripDuration) &&
@@ -92,6 +38,7 @@ const FindTravelmate = () => {
         inAgeGroup
       );
     });
+
     setFilteredMates(filtered);
   };
 
@@ -100,125 +47,108 @@ const FindTravelmate = () => {
     setTripDuration("");
     setGroupSize("");
     setAgeGroup("");
-    setFilteredMates(travelMates);
+    setFilteredMates(users);
   };
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    async function fetchUser() {
+      try {
+        const response = await axios.get("http://localhost:3000/user/getUsers", {
+          headers: {
+            authorization: token,
+          },
+        });
+        setUsers(response.data.res);
+        setFilteredMates(response.data.res);
+      } catch (err) {
+        console.error("Failed to fetch users:", err.response?.data || err.message);
+      }
+    }
+
+    if (user) {
+      fetchUser();
+    }
+  }, [user]);
+
   return (
-    <div className="min-h-screen px-6 py-12 bg-gradient-to-br from-[#000814] via-[#003049] to-[#001d3d] text-white font-sans">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
-          Discover Your Next <span className="bg-gradient-to-r from-green-400 to-blue-500 text-transparent bg-clip-text">Adventure Partner</span>
-        </h1>
-        <p className="mt-4 text-lg max-w-xl mx-auto">
-          Connect with like-minded travelers, share incredible experiences, and create memories that last a lifetime.
-        </p>
-        <div className="mt-6 flex flex-col md:flex-row justify-center gap-4 items-center">
-          <input
-            type="text"
-            placeholder="Where do you want to go? (e.g., Tokyo, Bali...)"
-            className="px-5 py-3 w-full max-w-md text-white rounded-full bg-black/30 shadow focus:outline-none focus:ring-4 ring-green-400 placeholder:text-gray-300"
-            value={destination}
-            onChange={(e) => setDestination(e.target.value)}
-          />
-          <button
-            className="px-6 py-3 rounded-full bg-gradient-to-r from-green-500 to-blue-500 text-white font-semibold hover:scale-105 transition-transform duration-300 shadow-lg"
-            onClick={handleApplyFilters}
-          >
-            <FaSearch className="inline mr-2" /> Find Matches
-          </button>
-        </div>
-      </div>
-
-      <div className="text-xl font-semibold text-white mb-4 text-center">Filters</div>
-
-      <div className="bg-white/10 backdrop-blur-md p-6 rounded-3xl shadow-lg max-w-5xl mx-auto mb-12">
-        <div className="grid md:grid-cols-4 gap-6">
-          <div>
-            <label className="block text-sm font-semibold mb-2 text-white">Destination</label>
-            <select
-              className="w-full p-3 rounded-xl bg-white/20 text-#001d3d"
+    <div
+      className="min-h-screen bg-cover bg-center text-white"
+      style={{
+        backgroundImage:
+          "url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80')",
+      }}
+    >
+      <div className="bg-black/60 w-full h-full px-6 py-12">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
+            Find Your Perfect{" "}
+            <span className="text-green-300">Travel Buddy</span>
+          </h1>
+          <p className="mt-4 text-lg max-w-xl mx-auto text-gray-300">
+            Filter and connect with fellow travelers that match your style and interests.
+          </p>
+          <div className="mt-6 flex flex-col md:flex-row justify-center gap-4 items-center">
+            <input
+              type="text"
+              placeholder="Enter destination..."
+              className="px-5 py-3 w-full max-w-md rounded-full bg-white/20 text-white placeholder-gray-200 focus:outline-none focus:ring-2 ring-green-400"
               value={destination}
               onChange={(e) => setDestination(e.target.value)}
+            />
+            <button
+              className="px-6 py-3 rounded-full bg-gradient-to-r from-green-500 to-blue-500 text-white font-semibold hover:scale-105 transition-transform duration-300 shadow-lg"
+              onClick={handleApplyFilters}
             >
-              <option value="">Any Destination</option>
-              <option value="Tokyo">Tokyo</option>
-              <option value="Bali">Bali</option>
-              <option value="Iceland">Iceland</option>
-              <option value="Nepal">Nepal</option>
-              <option value="Patagonia">Patagonia</option>
-            </select>
+              <FaSearch className="inline mr-2" /> Find
+            </button>
           </div>
+        </div>
 
-          <div>
-            <label className="block text-sm font-semibold mb-2 text-white">Trip Duration</label>
-            <select
-              className="w-full p-3 rounded-xl bg-white/20 text-white"
-              value={tripDuration}
-              onChange={(e) => setTripDuration(e.target.value)}
-            >
-              <option value="">Any Duration</option>
+        <div className="max-w-6xl mx-auto bg-black/50 p-6 rounded-2xl shadow-lg">
+          <div className="grid md:grid-cols-4 gap-4 mb-6">
+            <select value={tripDuration} onChange={(e) => setTripDuration(e.target.value)} className="p-3 rounded-xl bg-white/10 text-white">
+              <option value="">Trip Duration</option>
               <option value="Weekend">Weekend</option>
               <option value="1 Week">1 Week</option>
               <option value="1 Month">1 Month</option>
             </select>
-          </div>
 
-          <div>
-            <label className="block text-sm font-semibold mb-2 text-white">Group Size</label>
-            <select
-              className="w-full p-3 rounded-xl bg-white/20 text-white"
-              value={groupSize}
-              onChange={(e) => setGroupSize(e.target.value)}
-            >
-              <option value="">Any Size</option>
+            <select value={groupSize} onChange={(e) => setGroupSize(e.target.value)} className="p-3 rounded-xl bg-white/10 text-white">
+              <option value="">Group Size</option>
               <option value="solo">Solo</option>
               <option value="small">2-4 people</option>
               <option value="medium">5-8 people</option>
               <option value="large">9+ people</option>
             </select>
-          </div>
 
-          <div>
-            <label className="block text-sm font-semibold mb-2 text-white">Age Group</label>
-            <select
-              className="w-full p-3 rounded-xl bg-white/20 text-white"
-              value={ageGroup}
-              onChange={(e) => setAgeGroup(e.target.value)}
-            >
-              <option value="">Any Age</option>
+            <select value={ageGroup} onChange={(e) => setAgeGroup(e.target.value)} className="p-3 rounded-xl bg-white/10 text-white">
+              <option value="">Age Group</option>
               <option value="18-25">18 - 25</option>
               <option value="26-35">26 - 35</option>
               <option value="36-45">36 - 45</option>
             </select>
-          </div>
-        </div>
 
-        <div className="flex justify-end gap-4 mt-6">
-          <button
-            className="px-6 py-2 rounded-xl bg-gradient-to-r from-green-500 to-blue-500 text-white font-bold hover:scale-105 transition"
-            onClick={handleApplyFilters}
-          >
-            Apply Filters
-          </button>
-          <button
-            className="px-6 py-2 rounded-xl bg-white/20 text-white font-semibold hover:scale-105 transition"
-            onClick={handleReset}
-          >
-            Reset All
-          </button>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-        {filteredMates.length > 0 ? (
-          filteredMates.map((mate, idx) => (
-            <TravelMateCard key={idx} mate={mate} />
-          ))
-        ) : (
-          <div className="col-span-full text-center text-white text-lg font-medium">
-            No matches found.
+            <div className="flex gap-2">
+              <button onClick={handleApplyFilters} className="flex-1 bg-green-500 hover:bg-green-600 rounded-xl text-white font-bold px-4 py-2">
+                Apply
+              </button>
+              <button onClick={handleReset} className="flex-1 bg-white/10 hover:bg-white/20 rounded-xl text-white font-semibold px-4 py-2">
+                Reset
+              </button>
+            </div>
           </div>
-        )}
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {(filteredMates.length > 0 ? filteredMates : []).map((user, idx) => (
+              <TravelMateCard key={idx} user={user} />
+            ))}
+          </div>
+
+          {filteredMates.length === 0 && (
+            <div className="text-center text-white text-lg font-medium mt-6">No matching travel mates found.</div>
+          )}
+        </div>
       </div>
     </div>
   );

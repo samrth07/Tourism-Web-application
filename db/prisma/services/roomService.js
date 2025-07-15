@@ -60,7 +60,7 @@ export const getRoomsByUserId = async (userId) => {
     },
   });
 };
-
+// don't understand --samarth
 export const getCreatedRoomsByUserId = async (userId) => {
   console.log(userId + " :in function");
   return await client.user.findUnique({

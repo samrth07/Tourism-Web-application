@@ -82,7 +82,6 @@ const TravelPackageCards = () => {
     return <Sun className="w-3 h-3" />;
   };
 
-  
   useEffect(() => {
     const container = containerRef.current;
     if (!isAutoPlaying || !container) return;
@@ -104,7 +103,6 @@ const TravelPackageCards = () => {
     return () => cancelAnimationFrame(animationFrame);
   }, [isAutoPlaying]);
 
-  
   useEffect(() => {
     const container = containerRef.current;
     if (container) {
@@ -113,13 +111,13 @@ const TravelPackageCards = () => {
   }, []);
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 py-12 bg-gradient-to-b from-[#004d40]/10 to-white">
+    <div className="w-full max-w-7xl mx-auto px-4 py-12 bg-gradient-to-br from-[#001f3f] to-[#004d40] text-white">
       <div className="text-center mb-12">
         <div className="flex items-center justify-center mb-4">
-          <Plane className="w-8 h-8 text-green-600 mr-3" />
-          <h2 className="text-4xl font-bold text-[#001f3f]">Featured Travel Packages</h2>
+          <Plane className="w-8 h-8 text-green-400 mr-3" />
+          <h2 className="text-4xl font-bold">Featured Travel Packages</h2>
         </div>
-        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+        <p className="text-xl text-gray-300 max-w-3xl mx-auto">
           Explore incredible Indian destinations with our curated travel packages. Discover the beauty of India!
         </p>
       </div>
@@ -131,33 +129,33 @@ const TravelPackageCards = () => {
         onMouseLeave={() => setIsAutoPlaying(true)}
       >
         {infinitePackages.map((pkg, index) => (
-          <div key={`${pkg.id}-${index}`} className="w-[280px] flex-shrink-0 bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 overflow-hidden border border-gray-200">
+          <div key={`${pkg.id}-${index}`} className="w-[280px] flex-shrink-0 bg-white/10 backdrop-blur-md text-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 overflow-hidden border border-white/10">
             <img src={pkg.image} alt={pkg.title} className="w-full h-40 object-cover" />
             <div className="p-4">
               <div className="flex justify-between items-center mb-1">
-                <h4 className="text-lg font-semibold text-gray-800 truncate" title={pkg.title}>{pkg.title}</h4>
-                <button onClick={() => toggleFavorite(pkg.id)} className="text-red-500 hover:text-red-700">
+                <h4 className="text-lg font-semibold truncate" title={pkg.title}>{pkg.title}</h4>
+                <button onClick={() => toggleFavorite(pkg.id)} className="text-red-400 hover:text-red-500">
                   <Heart fill={favorites.has(pkg.id) ? 'red' : 'none'} className="w-4 h-4" />
                 </button>
               </div>
-              <div className="text-sm text-gray-500 mb-2 flex items-center gap-1">
+              <div className="text-sm text-gray-300 mb-2 flex items-center gap-1">
                 <MapPin className="w-3 h-3" /> {pkg.destination}
               </div>
-              <div className="flex items-center justify-between mb-2 text-sm text-gray-600">
+              <div className="flex items-center justify-between mb-2 text-sm text-gray-300">
                 <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {pkg.duration}</span>
                 <span className="flex items-center gap-1"><Users className="w-3 h-3" /> {pkg.groupSize}</span>
               </div>
               <div className="flex items-center justify-between mb-2 text-sm">
-                <span className="text-green-600 font-semibold">{pkg.currency}{pkg.price.toLocaleString()}</span>
+                <span className="text-green-400 font-semibold">{pkg.currency}{pkg.price.toLocaleString()}</span>
                 <span className="line-through text-gray-400 text-xs">{pkg.currency}{pkg.originalPrice.toLocaleString()}</span>
               </div>
-              <div className="flex items-center justify-between text-xs text-gray-500">
+              <div className="flex items-center justify-between text-xs text-gray-300">
                 <span className="flex items-center gap-1"><Star className="w-3 h-3" /> {pkg.rating}</span>
                 <span className="flex items-center gap-1">{getCategoryIcon(pkg.category)} {pkg.category}</span>
               </div>
               <button
                 onClick={() => setSelectedPackage(pkg)}
-                className="mt-3 w-full text-sm text-white bg-emerald-600 hover:bg-emerald-700 px-3 py-1 rounded-full"
+                className="mt-3 w-full text-sm text-white bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 px-3 py-1 rounded-full shadow-md hover:scale-105 transition"
               >
                 View Details
               </button>
@@ -169,17 +167,17 @@ const TravelPackageCards = () => {
       {selectedPackage && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setSelectedPackage(null)}>
           <div
-            className="bg-white p-6 rounded-xl shadow-lg w-[90%] max-w-lg relative overflow-y-auto max-h-[80vh]"
+            className="bg-[#001f3f] text-white p-6 rounded-xl shadow-2xl border border-white/10 w-[90%] max-w-lg relative overflow-y-auto max-h-[80vh]"
             onClick={(e) => e.stopPropagation()}
           >
             <button
-              className="absolute top-3 right-3 text-gray-600 hover:text-red-500"
+              className="absolute top-3 right-3 text-gray-400 hover:text-red-500"
               onClick={() => setSelectedPackage(null)}
             >
               <X className="w-5 h-5" />
             </button>
-            <h3 className="text-2xl font-semibold text-gray-800 mb-2">{selectedPackage.title}</h3>
-            <p className="text-sm text-gray-600 mb-2">{selectedPackage.destination}</p>
+            <h3 className="text-2xl font-semibold mb-2">{selectedPackage.title}</h3>
+            <p className="text-sm text-gray-300 mb-2">{selectedPackage.destination}</p>
             <img src={selectedPackage.image} alt={selectedPackage.title} className="w-full h-48 object-cover rounded-lg mb-4" />
 
             <div className="grid grid-cols-2 gap-4 text-sm mb-4">
@@ -192,8 +190,8 @@ const TravelPackageCards = () => {
             </div>
 
             <div className="mb-4">
-              <h4 className="font-semibold text-gray-700 mb-2">Facilities Included:</h4>
-              <ul className="list-disc list-inside text-sm text-gray-600">
+              <h4 className="font-semibold mb-2">Facilities Included:</h4>
+              <ul className="list-disc list-inside text-sm text-gray-300">
                 {selectedPackage.includes.map((item, idx) => (
                   <li key={idx}>{item}</li>
                 ))}
@@ -201,8 +199,8 @@ const TravelPackageCards = () => {
             </div>
 
             <div className="mb-4">
-              <h4 className="font-semibold text-gray-700 mb-2">Trip Highlights:</h4>
-              <ul className="list-disc list-inside text-sm text-gray-600">
+              <h4 className="font-semibold mb-2">Trip Highlights:</h4>
+              <ul className="list-disc list-inside text-sm text-gray-300">
                 {selectedPackage.highlights.map((item, idx) => (
                   <li key={idx}>{item}</li>
                 ))}
@@ -211,8 +209,8 @@ const TravelPackageCards = () => {
 
             {selectedPackage.optionalExtras && (
               <div className="mb-4">
-                <h4 className="font-semibold text-gray-700 mb-2">Optional Extras:</h4>
-                <ul className="list-disc list-inside text-sm text-gray-600">
+                <h4 className="font-semibold mb-2">Optional Extras:</h4>
+                <ul className="list-disc list-inside text-sm text-gray-300">
                   {selectedPackage.optionalExtras.map((item, idx) => (
                     <li key={idx}>{item}</li>
                   ))}
@@ -220,7 +218,7 @@ const TravelPackageCards = () => {
               </div>
             )}
 
-            <div className="mt-4 text-lg font-bold text-green-600">
+            <div className="mt-4 text-lg font-bold text-green-400">
               {selectedPackage.currency}{selectedPackage.price.toLocaleString()}
               <span className="line-through text-sm text-gray-400 ml-2">
                 {selectedPackage.currency}{selectedPackage.originalPrice.toLocaleString()}
