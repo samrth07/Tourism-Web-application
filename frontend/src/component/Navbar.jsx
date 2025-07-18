@@ -1,9 +1,13 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaPlaneDeparture } from "react-icons/fa";
+import { CgProfile } from "react-icons/cg";
+import { useAuth } from "../context/Authcontext";
 
-const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
+const Navbar = () => {
   const navigate = useNavigate();
+  const { user , logout } = useAuth();
+
 
   return (
     <div className="sticky top-0 z-50">
@@ -14,7 +18,7 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
           Trekker
         </Link>
 
-        {!isLoggedIn && (
+        {!user ? (
           <div className="flex items-center gap-4 text-sm">
             <button
               onClick={() => navigate("/signin")}
@@ -29,18 +33,31 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
               Sign Up
             </button>
           </div>
-        )}
+        ) : 
+            <div className="flex items-center gap-4 text-sm">
+            <button
+              onClick={() => { logout() ;  navigate("/")} }
+              className="bg-transparent border border-white px-4 py-1 rounded-full hover:bg-white hover:text-black transition"
+            >
+             LogOut
+            </button>
+            <button
+              onClick={() => navigate("/Dashboard")}
+              className="text-3xl px-4 py-1 rounded-full text-white font-semibold hover:scale-105 transition"
+            >
+              <CgProfile />
+            </button>
+          </div>
+          }
       </div>
 
-      {/* Bottom Navbar - only when not logged in */}
-      {!isLoggedIn && (
         <div className="flex justify-center gap-10 px-6 py-2 bg-[#004d40]/90 text-white text-sm font-semibold shadow-md">
-          <Link to="/" className="hover:text-green-300 transition">Explore</Link>
+          <Link to="/" className="hover:text-green-300 transition">Experience</Link>
           <Link to="/destinations" className="hover:text-green-300 transition">Destinations</Link>
           <Link to="/offers" className="hover:text-green-300 transition">Offers</Link>
           <Link to="/find-travel-mate" className="hover:text-green-300 transition">Find Travel Mate</Link>
         </div>
-      )}
+   
     </div>
   );
 };

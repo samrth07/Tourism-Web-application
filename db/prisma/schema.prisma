@@ -29,10 +29,21 @@ model User {
   travelPlans            TravelPlan[]          @relation("TravelPlanMembers") // plans user joined
   createdPlans           TravelPlan[]          @relation("UserToTravelPlan")  // plans user created
   messages               Message[]
+  Address                Address?              @relation("userAddress")
   createdAt              DateTime             @default(now())
   updatedAt              DateTime             @updatedAt
 }
 
+
+model Address {
+    id          String    @id @default(uuid())
+    city        String
+    country     String
+    pincode     String
+    user        User     @relation("userAddress" , fields: [userId] , references: [id])
+    userId      String   @unique
+
+}
 
 model TravelPlan {
   id                     String               @id @default(uuid())

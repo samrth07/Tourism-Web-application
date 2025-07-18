@@ -1,15 +1,39 @@
-import React from "react";
-import { Link, useNavigate } from "react-router-dom"; 
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { FaUser, FaEnvelope, FaPhone, FaLock, FaCalendar } from "react-icons/fa";
+import axios from 'axios'
 
 const SignUp = () => {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
-  const handleSignUpClick = () => {
-    alert(" Sign Up button clicked!");
-    console.log(" Sign Up form triggered!");
+  const [formData, setformData] = useState({
+    username: "",
+    password: "",
+    email: "",
+    mob_num: "",
+    city: "",
+    country: "",
+    pincode: "",  
+  });
 
-    navigate("/signin"); 
+  const HandleOnchange = (e) => {
+    const { name, value } = e.target;
+    setformData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSignUpClick = async (e) => {
+    e.preventDefault();
+    console.log(formData);
+
+        const responce =   await axios.post("http://localhost:3000/user/signup" , formData);
+    if(responce){
+      console.log(responce);
+      alert("Signup successfully")
+    }
+    else{
+        alert("somthing went wrong")
+    }
+    navigate("/signin");
   };
 
   return (
@@ -20,14 +44,17 @@ const SignUp = () => {
           Join <span className="text-lime-300 font-bold">Trekker</span> to plan your next big trip!
         </p>
 
-        <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <form className="grid grid-cols-1 md:grid-cols-2 gap-6" onSubmit={handleSignUpClick}>
           <div className="relative">
             <FaUser className="absolute top-3 left-3 text-gray-300" />
             <input
               type="text"
+              name="username"
               placeholder="Full Name"
               className="w-full pl-10 py-3 rounded-md bg-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-lime-400"
               required
+              onChange={HandleOnchange}
+              value={formData.username}
             />
           </div>
 
@@ -35,9 +62,12 @@ const SignUp = () => {
             <FaEnvelope className="absolute top-3 left-3 text-gray-300" />
             <input
               type="email"
+              name="email"
               placeholder="Email"
               className="w-full pl-10 py-3 rounded-md bg-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
               required
+              onChange={HandleOnchange}
+              value={formData.email}
             />
           </div>
 
@@ -45,9 +75,13 @@ const SignUp = () => {
             <FaPhone className="absolute top-3 left-3 text-gray-300" />
             <input
               type="tel"
+              name="mob_num"
               placeholder="Phone Number"
+              maxLength={10}
               className="w-full pl-10 py-3 rounded-md bg-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400"
               required
+              onChange={HandleOnchange}
+              value={formData.mob_num}
             />
           </div>
 
@@ -55,18 +89,24 @@ const SignUp = () => {
             <FaCalendar className="absolute top-3 left-3 text-gray-300" />
             <input
               type="date"
+              name="dob"
               className="w-full pl-10 py-3 rounded-md bg-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400"
               required
+              onChange={HandleOnchange}
+              value={formData.dob}
             />
           </div>
 
           <div>
             <input
               type="text"
+              name="city"
               list="cities"
               placeholder="City"
               className="w-full pl-4 py-3 rounded-md bg-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
               required
+              onChange={HandleOnchange}
+              value={formData.city}
             />
             <datalist id="cities">
               <option value="Mumbai" />
@@ -79,10 +119,13 @@ const SignUp = () => {
           <div>
             <input
               type="text"
+              name="country"
               list="countries"
               placeholder="Country"
               className="w-full pl-4 py-3 rounded-md bg-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
               required
+              onChange={HandleOnchange}
+              value={formData.country}
             />
             <datalist id="countries">
               <option value="India" />
@@ -94,18 +137,24 @@ const SignUp = () => {
 
           <input
             type="text"
+            name="pincode"
             placeholder="Postal Code"
             className="col-span-1 md:col-span-2 pl-4 py-3 rounded-md bg-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-400"
             required
+            onChange={HandleOnchange}
+            value={formData.pincode}
           />
 
           <div className="relative">
             <FaLock className="absolute top-3 left-3 text-gray-300" />
             <input
               type="password"
+              name="password"
               placeholder="Password"
               className="w-full pl-10 py-3 rounded-md bg-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-red-400"
               required
+              onChange={HandleOnchange}
+              value={formData.password}
             />
           </div>
 
@@ -122,9 +171,13 @@ const SignUp = () => {
           <div className="col-span-1 md:col-span-2">
             <input
               type="tel"
+              name="emergencyContact"
               placeholder="Emergency Contact Number"
+              maxLength={10}
               className="w-full pl-4 py-3 rounded-md bg-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
               required
+              onChange={HandleOnchange}
+              value={formData.emergencyContact}
             />
           </div>
 
@@ -140,7 +193,6 @@ const SignUp = () => {
 
           <button
             type="submit"
-            onClick={handleSignUpClick}
             className="col-span-1 md:col-span-2 w-full bg-lime-400 hover:bg-lime-500 text-gray-900 font-bold py-3 rounded-md transition-all shadow-xl"
           >
             Sign Up

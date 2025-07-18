@@ -1,6 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import TravelMateCard from "./TravelMateCard";
+import { useAuth } from "../context/Authcontext";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify";
+
 
 const travelMates = [
   {
@@ -77,14 +82,26 @@ const FindTravelmate = () => {
   const [groupSize, setGroupSize] = useState("");
   const [ageGroup, setAgeGroup] = useState("");
   const [filteredMates, setFilteredMates] = useState(travelMates);
+  const [users, setUsers] = useState([]);
+
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user) {
+      alert("Login is required.");
+      navigate("/signin");
+    }
+  }, [user, navigate]);
 
   const handleApplyFilters = () => {
     const filtered = travelMates.filter((mate) => {
       const inAgeGroup =
-        (ageGroup === "" ||
-          (ageGroup === "18-25" && mate.age >= 18 && mate.age <= 25) ||
-          (ageGroup === "26-35" && mate.age >= 26 && mate.age <= 35) ||
-          (ageGroup === "36-45" && mate.age >= 36 && mate.age <= 45));
+        ageGroup === "" ||
+        (ageGroup === "18-25" && mate.age >= 18 && mate.age <= 25) ||
+        (ageGroup === "26-35" && mate.age >= 26 && mate.age <= 35) ||
+        (ageGroup === "36-45" && mate.age >= 36 && mate.age <= 45);
+
       return (
         (!destination || mate.destination === destination) &&
         (!tripDuration || mate.duration === tripDuration) &&
@@ -92,6 +109,7 @@ const FindTravelmate = () => {
         inAgeGroup
       );
     });
+
     setFilteredMates(filtered);
   };
 
@@ -103,14 +121,45 @@ const FindTravelmate = () => {
     setFilteredMates(travelMates);
   };
 
+  useEffect(() => {
+    let token = localStorage.getItem("token");
+
+console.log("Token being sent:", token);
+
+
+    async function fetchUser() {
+      try {
+        const response = await axios.get("http://localhost:3000/user/getUsers" , {
+          headers : {
+            authorization : token
+          }
+        });
+        toast.success("User data fetched successfully!");
+        console.log("Backend response:", response.data.res);
+        setUsers(response.data.res);
+      } catch (err) {
+        console.error("Failed to fetch users:", err.response?.data || err.message);
+      }
+    }
+
+    if (user) {
+      fetchUser();
+    }
+  }, [user]);
+
+
   return (
     <div className="min-h-screen px-6 py-12 bg-gradient-to-br from-[#000814] via-[#003049] to-[#001d3d] text-white font-sans">
       <div className="text-center mb-12">
         <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
-          Discover Your Next <span className="bg-gradient-to-r from-green-400 to-blue-500 text-transparent bg-clip-text">Adventure Partner</span>
+          Discover Your Next{" "}
+          <span className="bg-gradient-to-r from-green-400 to-blue-500 text-transparent bg-clip-text">
+            Adventure Partner
+          </span>
         </h1>
         <p className="mt-4 text-lg max-w-xl mx-auto">
-          Connect with like-minded travelers, share incredible experiences, and create memories that last a lifetime.
+          Connect with like-minded travelers, share incredible experiences, and
+          create memories that last a lifetime.
         </p>
         <div className="mt-6 flex flex-col md:flex-row justify-center gap-4 items-center">
           <input
@@ -136,7 +185,7 @@ const FindTravelmate = () => {
           <div>
             <label className="block text-sm font-semibold mb-2 text-white">Destination</label>
             <select
-              className="w-full p-3 rounded-xl bg-white/20 text-#001d3d"
+              className="w-full p-3 rounded-xl bg-white/20 text-black"
               value={destination}
               onChange={(e) => setDestination(e.target.value)}
             >
@@ -209,17 +258,18 @@ const FindTravelmate = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-        {filteredMates.length > 0 ? (
-          filteredMates.map((mate, idx) => (
-            <TravelMateCard key={idx} mate={mate} />
-          ))
-        ) : (
-          <div className="col-span-full text-center text-white text-lg font-medium">
-            No matches found.
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+              {users.length > 0 ? (
+                users.map((user, idx) => (
+                  <TravelMateCard key={idx} user={user} />
+                ))
+              ) : (
+                <div className="col-span-full text-center text-white text-lg font-medium">
+                  No users found.
+                </div>
+              )}
           </div>
-        )}
-      </div>
+
     </div>
   );
 };
