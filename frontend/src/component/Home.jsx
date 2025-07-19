@@ -18,6 +18,7 @@ const Home = () => {
         <p className="mt-4 text-xl">Let us help you map your perfect getaway!</p>
       </div>
       <TravelPackageCards/>
+    
       </div>
   );
 };
