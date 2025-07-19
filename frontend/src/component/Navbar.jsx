@@ -11,9 +11,9 @@ const Navbar = () => {
 
   return (
     <div className="w-full">
-      {/* Top Bar */}
+     
       <div className="flex justify-between items-center px-8 py-4 bg-gradient-to-r from-[#001f3f] to-[#00334d] text-white shadow-lg">
-        {/* Logo */}
+        
         <Link
           to="/"
           className="flex items-center gap-2 text-2xl font-bold hover:scale-105 transition-transform"

@@ -1,240 +1,619 @@
 import React, { useState, useEffect } from 'react';
-import {
-  MapPin, Calendar, Users, DollarSign, Backpack
-} from 'lucide-react';
+import { MapPin, Calendar, DollarSign, Package, Star, Search, ChevronDown, Plane, Building, Utensils, Camera, ShoppingBag, Car } from 'lucide-react';
 
-const Destination = () => {
-  const [activeTab, setActiveTab] = useState('planner');
-  const [preferences, setPreferences] = useState({
-    budget: 'medium',
-    duration: '3-5',
-    travelers: 'couple'
-  });
+const Destination= () => {
+  const [activeTab, setActiveTab] = useState('explore');
   const [selectedDestination, setSelectedDestination] = useState(null);
-  const [packingList, setPackingList] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All Categories');
+  const [selectedState, setSelectedState] = useState('All States');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [travelers, setTravelers] = useState(1);
+  const [accommodation, setAccommodation] = useState('');
+  const [selectedActivities, setSelectedActivities] = useState([]);
+  const [additionalNotes, setAdditionalNotes] = useState('');
+  const [budget, setBudget] = useState({
+    total: '',
+    flights: '',
+    accommodation: '',
+    food: '',
+    activities: '',
+    shopping: '',
+    other: ''
+  });
+  const [packingItems, setPackingItems] = useState({});
 
   const destinations = [
-    { id: 1, name: 'Manali', type: 'mountains', season: 'Oct-Mar', budget: 'medium', activities: ['trekking', 'skiing', 'camping'] },
-    { id: 2, name: 'Goa', type: 'beaches', season: 'Nov-Feb', budget: 'low', activities: ['beaches', 'water sports', 'nightlife'] },
-    { id: 3, name: 'Rajasthan', type: 'heritage', season: 'Nov-Mar', budget: 'high', activities: ['palaces', 'desert', 'culture'] },
-    { id: 4, name: 'Kerala', type: 'nature', season: 'Sep-Mar', budget: 'medium', activities: ['backwaters', 'wildlife', 'ayurveda'] },
-    { id: 5, name: 'Ladakh', type: 'adventure', season: 'Jun-Sep', budget: 'high', activities: ['trekking', 'motorcycling', 'monasteries'] }
+    {
+      id: 1,
+      name: 'Goa',
+      category: 'Beach',
+      state: 'Goa',
+      rating: 4.8,
+      description: 'Tropical beaches with Portuguese architecture and vibrant nightlife',
+      price: 8000,
+      days: 7,
+      tags: ['Beaches', 'Nightlife', 'Culture'],
+      image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=400&h=250&fit=crop'
+    },
+    {
+      id: 2,
+      name: 'Kerala Backwaters',
+      category: 'Nature',
+      state: 'Kerala',
+      rating: 4.9,
+      description: 'Serene backwaters with houseboats and lush greenery',
+      price: 12000,
+      days: 5,
+      tags: ['Nature', 'Houseboats', 'Ayurveda'],
+      image: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=400&h=250&fit=crop'
+    },
+    {
+      id: 3,
+      name: 'Rajasthan Heritage',
+      category: 'Culture',
+      state: 'Rajasthan',
+      rating: 4.7,
+      description: 'Majestic palaces, forts and desert landscapes',
+      price: 15000,
+      days: 8,
+      tags: ['Palaces', 'Desert', 'Heritage'],
+      image: 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=400&h=250&fit=crop'
+    },
+    {
+      id: 4,
+      name: 'Himachal Mountains',
+      category: 'Mountain',
+      state: 'Himachal Pradesh',
+      rating: 4.6,
+      description: 'Snow-capped mountains with adventure activities',
+      price: 10000,
+      days: 6,
+      tags: ['Mountains', 'Adventure', 'Trekking'],
+      image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=250&fit=crop'
+    },
+    {
+      id: 5,
+      name: 'Leh Ladakh',
+      category: 'Adventure',
+      state: 'Ladakh',
+      rating: 4.8,
+      description: 'High altitude desert with Buddhist monasteries',
+      price: 18000,
+      days: 9,
+      tags: ['Adventure', 'Monasteries', 'Desert'],
+      image: 'https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=400&h=250&fit=crop'
+    },
+    {
+      id: 6,
+      name: 'Andaman Islands',
+      category: 'Beach',
+      state: 'Andaman & Nicobar',
+      rating: 4.9,
+      description: 'Crystal clear waters and pristine white sand beaches',
+      price: 20000,
+      days: 7,
+      tags: ['Beaches', 'Diving', 'Islands'],
+      image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400&h=250&fit=crop'
+    },
+    {
+      id: 7,
+      name: 'Golden Triangle',
+      category: 'Culture',
+      state: 'Delhi-Agra-Jaipur',
+      rating: 4.5,
+      description: 'Delhi, Agra, and Jaipur - India\'s cultural triangle',
+      price: 14000,
+      days: 6,
+      tags: ['Monuments', 'Culture', 'History'],
+      image: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=400&h=250&fit=crop'
+    },
+    {
+      id: 8,
+      name: 'Kashmir Valley',
+      category: 'Nature',
+      state: 'Jammu & Kashmir',
+      rating: 4.7,
+      description: 'Paradise on earth with Dal Lake and houseboats',
+      price: 16000,
+      days: 7,
+      tags: ['Lakes', 'Houseboats', 'Gardens'],
+      image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=250&fit=crop'
+    },
+    {
+      id: 9,
+      name: 'Tamil Nadu Temples',
+      category: 'Culture',
+      state: 'Tamil Nadu',
+      rating: 4.4,
+      description: 'Ancient temples and rich South Indian culture',
+      price: 11000,
+      days: 8,
+      tags: ['Temples', 'Culture', 'Architecture'],
+      image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=250&fit=crop'
+    }
   ];
 
-  const generatePackingList = (destination) => {
-    const baseItems = ['Clothes', 'Phone Charger', 'Toiletries', 'First Aid Kit'];
-    const seasonalItems = {
-      'Oct-Mar': ['Warm Clothes', 'Jacket', 'Gloves'],
-      'Nov-Feb': ['Sunscreen', 'Swimwear', 'Hats'],
-      'Jun-Sep': ['Raincoat', 'Waterproof Shoes', 'Umbrella']
-    };
-    const seasonal = seasonalItems[destination.season] || [];
-    setPackingList([...baseItems, ...seasonal]);
+  const categories = ['All Categories', 'Beach', 'Culture', 'Mountain', 'Adventure', 'Nature'];
+  const states = ['All States', 'Goa', 'Kerala', 'Rajasthan', 'Himachal Pradesh', 'Ladakh', 'Andaman & Nicobar', 'Delhi-Agra-Jaipur', 'Jammu & Kashmir', 'Tamil Nadu'];
+  const activities = ['Sightseeing', 'Adventure', 'Relaxation', 'Culture', 'Food Tours', 'Shopping', 'Nightlife', 'Nature'];
+  const accommodationTypes = ['Hotel', 'Resort', 'Apartment', 'Villa', 'Hostel', 'Boutique Hotel'];
+
+  const packingCategories = {
+    'Clothing': ['T-shirts', 'Pants', 'Underwear', 'Socks', 'Jacket', 'Swimwear', 'Dress', 'Shoes'],
+    'Electronics': ['Phone', 'Charger', 'Camera', 'Power-bank', 'Headphones', 'Adapter', 'Laptop', 'Tablet'],
+    'Toiletries': ['Toothbrush', 'Toothpaste', 'Shampoo', 'Soap', 'Deodorant', 'Medications', 'Sunscreen', 'Moisturizer'],
+    'Documents': ['Passport', 'Tickets', 'Insurance', 'ID', 'Visa', 'Hotel Booking', 'Emergency Contacts'],
+    'Accessories': ['Sunglasses', 'Hat', 'Watch', 'Backpack', 'Umbrella', 'Money Belt', 'Travel Pillow']
   };
 
-  useEffect(() => {
-    if (selectedDestination) {
-      generatePackingList(selectedDestination);
-    }
-  }, [selectedDestination]);
+  const filteredDestinations = destinations.filter(dest => {
+    const matchesSearch = dest.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         dest.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = selectedCategory === 'All Categories' || dest.category === selectedCategory;
+    const matchesState = selectedState === 'All States' || dest.state === selectedState;
+    
+    return matchesSearch && matchesCategory && matchesState;
+  });
 
-  const TabButton = ({ id, label, icon }) => (
-    <button
-      onClick={() => setActiveTab(id)}
-      className={`flex items-center gap-2 px-4 py-2 rounded-full transition font-medium ${
-        activeTab === id
-          ? 'bg-gradient-to-r from-[#315477] to-[#1c594f] text-green-300 shadow'
-          : 'bg-white text-gray-800 hover:bg-gray-200'
-      }`}
-    >
-      {icon}
-      {label}
-    </button>
-  );
-
-  const Card = ({ children }) => (
-    <div className=" bg-gradient-to-br from-green-100 via-green-200 to-green-300
- p-6 rounded-xl shadow-md">{children}</div>
-  );
-
-  const PlannerTab = () => (
-    <div className="space-y-6">
-      <div className="text-white p-6 rounded-xl bg-gradient-to-r from-[#001f3f] to-[#004d40] shadow">
-        <h2 className="text-2xl font-bold"> Plan Your Trip</h2>
-        <p className="opacity-90">Smart AI suggestions for a perfect getaway.</p>
-      </div>
-
-      <div className="grid md:grid-cols-2 gap-6">
-        <Card className="bg-green-300">
-          <h3 className="text-lg font-semibold mb-4">Your Preferences</h3>
-          <label className="block text-sm mb-1">Budget</label>
-          <select
-            value={preferences.budget}
-            onChange={(e) => setPreferences({ ...preferences, budget: e.target.value })}
-            className="w-full mb-3 p-2 border rounded"
-          >
-            <option value="low">Budget (₹5k–15k)</option>
-            <option value="medium">Mid (₹15k–35k)</option>
-            <option value="high">Luxury (₹35k+)</option>
-          </select>
-
-          <label className="block text-sm mb-1">Duration</label>
-          <select
-            value={preferences.duration}
-            onChange={(e) => setPreferences({ ...preferences, duration: e.target.value })}
-            className="w-full mb-3 p-2 border rounded"
-          >
-            <option value="1-2">1–2 Days</option>
-            <option value="3-5">3–5 Days</option>
-            <option value="week">1 Week</option>
-            <option value="2weeks">2+ Weeks</option>
-          </select>
-
-          <label className="block text-sm mb-1">Travelers</label>
-          <select
-            value={preferences.travelers}
-            onChange={(e) => setPreferences({ ...preferences, travelers: e.target.value })}
-            className="w-full p-2 border rounded"
-          >
-            <option value="solo">Solo</option>
-            <option value="couple">Couple</option>
-            <option value="family">Family</option>
-            <option value="friends">Friends</option>
-          </select>
-        </Card>
-
-        <Card>
-          <h3 className="text-lg font-semibold mb-4">Suggested Destinations</h3>
-          {destinations.map((dest) => (
-            <div
-              key={dest.id}
-              onClick={() => setSelectedDestination(dest)}
-              className={`cursor-pointer p-3 border rounded-lg mb-2 hover:border-[#004d40] transition ${
-                selectedDestination?.id === dest.id ? 'bg-teal-100 border-[#004d40]' : ''
-              }`}
-            >
-              <h4 className="font-medium text-[#004d40]">{dest.name}</h4>
-              <p className="text-sm text-gray-500">Season: {dest.season}</p>
-              <p className="text-xs text-gray-700">{dest.activities.join(', ')}</p>
-            </div>
-          ))}
-        </Card>
-      </div>
-    </div>
-  );
-
-  const CalendarTab = () => (
-    <div className="space-y-6">
-      <div className="text-white p-6 rounded-xl bg-gradient-to-r from-[#001f3f] to-[#004d40] shadow">
-        <h2 className="text-2xl font-bold">📅 Seasonal Calendar</h2>
-        <p className="opacity-90">Plan according to the best weather.</p>
-      </div>
-
-      <Card>
-        {destinations.map((dest) => (
-          <div key={dest.id} className="flex justify-between py-2 border-b">
-            <span>{dest.name}</span>
-            <span className="text-sm text-gray-500">{dest.season}</span>
-          </div>
-        ))}
-      </Card>
-    </div>
-  );
-
-  const BudgetTab = () => {
-    const estimate = {
-      low: { travel: 2000, stay: 1000, food: 1500, activities: 500 },
-      medium: { travel: 4000, stay: 2000, food: 2500, activities: 1000 },
-      high: { travel: 8000, stay: 4000, food: 4000, activities: 2000 }
-    }[preferences.budget];
-
-    const total = Object.values(estimate).reduce((a, b) => a + b, 0);
-
-    return (
-      <div className="space-y-6">
-        <div className="text-white p-6 rounded-xl bg-gradient-to-r from-[#001f3f] to-[#004d40] shadow">
-          <h2 className="text-2xl font-bold"> Budget Breakdown</h2>
-          <p className="opacity-90">Your expense plan based on preferences.</p>
-        </div>
-
-        <Card>
-          {Object.entries(estimate).map(([category, amount]) => (
-            <div key={category} className="flex justify-between py-2 border-b">
-              <span className="capitalize">{category}</span>
-              <span className="text-blue-600 font-medium">₹{amount}</span>
-            </div>
-          ))}
-          <div className="flex justify-between pt-4 font-bold text-lg text-[#004d40]">
-            <span>Total</span>
-            <span>₹{total}</span>
-          </div>
-        </Card>
-      </div>
+  const handleActivityToggle = (activity) => {
+    setSelectedActivities(prev => 
+      prev.includes(activity) 
+        ? prev.filter(a => a !== activity)
+        : [...prev, activity]
     );
   };
 
-  const PackingTab = () => (
-    <div className="space-y-6">
-      <div className="text-white p-6 rounded-xl bg-gradient-to-r from-[#001f3f] to-[#004d40] shadow">
-        <h2 className="text-2xl font-bold">🧳 Packing Assistant</h2>
-        <p className="opacity-90">Pack smarter for your destination.</p>
-      </div>
+  const handleBudgetChange = (field, value) => {
+    setBudget(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
 
-      <div className="grid md:grid-cols-2 gap-6">
-        <Card>
-          <h3 className="text-lg font-semibold mb-4">Choose Destination</h3>
-          {destinations.map((dest) => (
-            <button
-              key={dest.id}
-              onClick={() => setSelectedDestination(dest)}
-              className={`w-full text-left p-3 rounded-lg border mb-2 transition ${
-                selectedDestination?.id === dest.id
-                  ? 'bg-green-100 border-green-600'
-                  : 'hover:bg-gray-50'
-              }`}
-            >
-              {dest.name} <span className="text-sm text-gray-500">({dest.season})</span>
-            </button>
-          ))}
-        </Card>
+  const togglePackingItem = (category, item) => {
+    const key = `${category}-${item}`;
+    setPackingItems(prev => ({
+      ...prev,
+      [key]: !prev[key]
+    }));
+  };
 
-        <Card>
-          <h3 className="text-lg font-semibold mb-4">Your Packing List</h3>
-          {packingList.length ? (
-            <ul className="list-disc pl-5 space-y-1 text-gray-700">
-              {packingList.map((item, index) => <li key={index}>{item}</li>)}
-            </ul>
-          ) : (
-            <p className="text-gray-500 italic">Select a destination</p>
-          )}
-        </Card>
-      </div>
-    </div>
-  );
+  const getPackedItemsCount = () => {
+    return Object.values(packingItems).filter(Boolean).length;
+  };
 
-  const renderTab = () => {
-    switch (activeTab) {
-      case 'planner': return <PlannerTab />;
-      case 'calendar': return <CalendarTab />;
-      case 'budget': return <BudgetTab />;
-      case 'packing': return <PackingTab />;
-      default: return <PlannerTab />;
+  const getTotalPackingItems = () => {
+    return Object.values(packingCategories).flat().length;
+  };
+
+  const nextTab = () => {
+    const tabs = ['explore', 'planner', 'budget', 'packing'];
+    const currentIndex = tabs.indexOf(activeTab);
+    if (currentIndex < tabs.length - 1) {
+      setActiveTab(tabs[currentIndex + 1]);
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-[#001f3f] to-[#004d40] py-10 text-gray-800">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="flex justify-center gap-2 flex-wrap mb-6">
-          <TabButton id="planner" label="Planner" icon={<MapPin className="w-4 h-4" />} />
-          <TabButton id="calendar" label="Calendar" icon={<Calendar className="w-4 h-4" />} />
-          <TabButton id="budget" label="Budget" icon={<DollarSign className="w-4 h-4" />} />
-          <TabButton id="packing" label="Packing" icon={<Backpack className="w-4 h-4" />} />
+  const selectDestination = (destination) => {
+    setSelectedDestination(destination);
+    setActiveTab('planner');
+  };
+
+  const renderExplore = () => (
+  <div className="space-y-6 bg-gradient-to-b from-[#0e2f2d] to-[#1a5c58] min-h-screen p-6 rounded-xl shadow-inner">
+    <div className="flex flex-col md:flex-row gap-4 items-center">
+      <div className="relative flex-1">
+        <Search className="absolute left-3 top-3 h-4 w-4 text-gray-300" />
+        <input
+          type="text"
+          placeholder="Search destinations..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full pl-10 pr-4 py-2 rounded-lg bg-gradient-to-r from-[#0e2f2d] to-[#1a5c58] text-white placeholder-gray-300 focus:ring-2 focus:ring-[#6dd3b4] border-none"
+        />
+      </div>
+      <div className="flex gap-4">
+        <div className="relative">
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="appearance-none bg-gradient-to-r from-[#0e2f2d] to-[#1a5c58] text-white border-none rounded-lg px-4 py-2 pr-8 focus:ring-2 focus:ring-[#6dd3b4]"
+          >
+            {categories.map(cat => (
+              <option key={cat} value={cat}>{cat}</option>
+            ))}
+          </select>
+          <ChevronDown className="absolute right-2 top-3 h-4 w-4 text-gray-300 pointer-events-none" />
         </div>
-        {renderTab()}
+        <div className="relative">
+          <select
+            value={selectedState}
+            onChange={(e) => setSelectedState(e.target.value)}
+            className="appearance-none bg-gradient-to-r from-[#0e2f2d] to-[#1a5c58] text-white border-none rounded-lg px-4 py-2 pr-8 focus:ring-2 focus:ring-[#6dd3b4]"
+          >
+            {states.map(state => (
+              <option key={state} value={state}>{state}</option>
+            ))}
+          </select>
+          <ChevronDown className="absolute right-2 top-3 h-4 w-4 text-gray-300 pointer-events-none" />
+        </div>
       </div>
     </div>
-  );
+
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {filteredDestinations.map(dest => (
+        <div key={dest.id} className="bg-gradient-to-br from-[#0e2f2d] to-[#1a5c58] rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+          <div className="h-48 overflow-hidden">
+            <img 
+              src={dest.image} 
+              alt={dest.name}
+              className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+              onError={(e) => {
+                e.target.src = 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=250&fit=crop';
+              }}
+            />
+          </div>
+          <div className="p-4 text-white">
+            <div className="flex justify-between items-start mb-2">
+              <span className="text-sm bg-white/10 px-2 py-1 rounded">{dest.category}</span>
+              <div className="flex items-center">
+                <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                <span className="text-sm ml-1">{dest.rating}</span>
+              </div>
+            </div>
+            <h3 className="text-xl font-semibold mb-2">{dest.name}</h3>
+            <p className="text-gray-200 mb-4">{dest.description}</p>
+            <div className="flex flex-wrap gap-1 mb-4">
+              {dest.tags.map(tag => (
+                <span key={tag} className="text-xs bg-white/10 px-2 py-1 rounded">{tag}</span>
+              ))}
+            </div>
+            <div className="flex justify-between items-center">
+              <div>
+                <span className="text-2xl font-bold">₹{dest.price.toLocaleString()}</span>
+                <span className="text-gray-300"> / {dest.days} days</span>
+              </div>
+              <button
+                onClick={() => selectDestination(dest)}
+                className="bg-gradient-to-r from-[#001f3f] to-[#1f4d00] text-white px-4 py-2 rounded-lg hover:shadow-lg hover:scale-105 transition-all"
+              >
+                Plan Trip
+              </button>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    {filteredDestinations.length === 0 && (
+      <div className="text-center py-12">
+        <p className="text-gray-300 text-lg">No destinations found matching your criteria</p>
+      </div>
+    )}
+  </div>
+);
+
+
+
+  const renderPlanner = () => (
+  <div className="space-y-6 bg-gradient-to-b from-[#0e2f2d] to-[#1a5c58] p-6 rounded-xl shadow-inner">
+    <div className="flex items-center gap-2 mb-6">
+      <MapPin className="h-5 w-5 text-gray-300" />
+      <h2 className="text-2xl font-bold text-white">
+        {selectedDestination ? `Planning Trip to ${selectedDestination.name}` : 'Planning Trip to Bali, Indonesia'}
+      </h2>
+    </div>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="space-y-6">
+        <div>
+          <h3 className="text-lg font-semibold text-white mb-4">Travel Dates</h3>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-white/80 mb-1">Start date</label>
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="w-full px-3 py-2 rounded-lg bg-gradient-to-r from-[#0e2f2d] to-[#1a5c58] text-white focus:ring-2 focus:ring-[#6dd3b4] border-none"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-white/80 mb-1">End date</label>
+              <input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="w-full px-3 py-2 rounded-lg bg-gradient-to-r from-[#0e2f2d] to-[#1a5c58] text-white focus:ring-2 focus:ring-[#6dd3b4] border-none"
+              />
+            </div>
+          </div>
+        </div>
+        <div>
+          <h3 className="text-lg font-semibold text-white mb-4">Number of Travelers</h3>
+          <select
+            value={travelers}
+            onChange={(e) => setTravelers(Number(e.target.value))}
+            className="w-full px-3 py-2 rounded-lg bg-gradient-to-r from-[#0e2f2d] to-[#1a5c58] text-white focus:ring-2 focus:ring-[#6dd3b4] border-none"
+          >
+            {[1, 2, 3, 4, 5, 6, 7, 8].map(num => (
+              <option key={num} value={num}>
+                {num} Traveler{num > 1 ? 's' : ''}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <h3 className="text-lg font-semibold text-white mb-4">Accommodation Preference</h3>
+          <select
+            value={accommodation}
+            onChange={(e) => setAccommodation(e.target.value)}
+            className="w-full px-3 py-2 rounded-lg bg-gradient-to-r from-[#0e2f2d] to-[#1a5c58] text-white focus:ring-2 focus:ring-[#6dd3b4] border-none"
+          >
+            <option value="">Select accommodation</option>
+            {accommodationTypes.map(type => (
+              <option key={type} value={type}>{type}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+      <div className="space-y-6">
+        <div>
+          <h3 className="text-lg font-semibold text-white mb-4">Preferred Activities</h3>
+          <div className="grid grid-cols-2 gap-2">
+            {activities.map(activity => (
+              <label key={activity} className="flex items-center space-x-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={selectedActivities.includes(activity)}
+                  onChange={() => handleActivityToggle(activity)}
+                  className="rounded border-white/20 bg-white/10 text-[#6dd3b4] focus:ring-[#6dd3b4]"
+                />
+                <span className="text-sm text-white">{activity}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+        <div>
+          <h3 className="text-lg font-semibold text-white mb-4">Additional Notes</h3>
+          <textarea
+            value={additionalNotes}
+            onChange={(e) => setAdditionalNotes(e.target.value)}
+            placeholder="Any special requirements or preferences..."
+            rows={4}
+            className="w-full px-3 py-2 rounded-lg bg-gradient-to-r from-[#0e2f2d] to-[#1a5c58] text-white placeholder-white/50 focus:ring-2 focus:ring-[#6dd3b4] border-none resize-none"
+          />
+        </div>
+      </div>
+    </div>
+    <div className="flex justify-end">
+      <button
+        onClick={nextTab}
+        className="bg-gradient-to-r from-[#1a5c58] to-[#0e2f2d] text-white px-6 py-2 rounded-lg hover:shadow-lg transition-all"
+      >
+        Next: Budget Planning →
+      </button>
+    </div>
+  </div>
+);
+
+
+
+  const renderBudget = () => (
+  <div className="space-y-6">
+    <div className="flex items-center gap-2 mb-6">
+      <DollarSign className="h-5 w-5 text-blue-750" />
+      <h2 className="text-2xl font-bold text-to-[#1a5c58]">Budget Planning</h2>
+    </div>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="space-y-6">
+        <div>
+          <label className="block text-lg font-semibold text-from-[#488b92] mb-4">Total Budget</label>
+          <input
+            type="number"
+            value={budget.total}
+            onChange={(e) => handleBudgetChange('total', e.target.value)}
+            placeholder="Enter total budget"
+            className="w-full px-3 py-2 rounded-lg bg-gradient-to-r from-[#489b95] to-[#1a5c58] text-white placeholder-gray-300 focus:ring-2 focus:ring-[#6dd3b4] border-none"
+          />
+        </div>
+        <div className="space-y-4">
+          {['flights', 'accommodation', 'food'].map(type => (
+            <div key={type} className="space-y-1">
+              <label className="block text-sm font-medium text-to-[#1a5c58] capitalize">{type}</label>
+              <input
+                type="number"
+                value={budget[type]}
+                onChange={(e) => handleBudgetChange(type, e.target.value)}
+                placeholder={`${type} budget`}
+                className="w-full px-3 py-2 rounded-lg bg-gradient-to-r from-[#0e2f2d] to-[#1a5c58] text-white placeholder-gray-300 focus:ring-2 focus:ring-[#6dd3b4] border-none"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="space-y-6">
+        <div className="space-y-4">
+          {['activities', 'shopping', 'other'].map(type => (
+            <div key={type} className="space-y-1">
+              <label className="block text-sm font-medium text-white capitalize">{type}</label>
+              <input
+                type="number"
+                value={budget[type]}
+                onChange={(e) => handleBudgetChange(type, e.target.value)}
+                placeholder={`${type} budget`}
+                className="w-full px-3 py-2 rounded-lg bg-gradient-to-r from-[#0e2f2d] to-[#1a5c58] text-white placeholder-gray-300 focus:ring-2 focus:ring-[#6dd3b4] border-none"
+              />
+            </div>
+          ))}
+        </div>
+        <div className="bg-gradient-to-r from-[#1a5c58] to-[#0e2f2d] p-4 rounded-lg text-white">
+          <h4 className="font-semibold mb-2">Budget Summary</h4>
+          <div className="space-y-1 text-sm">
+            <div className="flex justify-between">
+              <span>Total Budget:</span>
+              <span>₹{budget.total || '0'}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Allocated:</span>
+              <span>
+                ₹{Object.entries(budget).reduce((sum, [key, value]) => key !== 'total' ? sum + (Number(value) || 0) : sum, 0)}
+              </span>
+            </div>
+            <div className="flex justify-between font-semibold border-t pt-1">
+              <span>Remaining:</span>
+              <span>
+                ₹{(Number(budget.total) || 0) - Object.entries(budget).reduce((sum, [key, value]) => key !== 'total' ? sum + (Number(value) || 0) : sum, 0)}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div className="flex justify-end">
+      <button
+        onClick={nextTab}
+        className="bg-gradient-to-r from-[#1a5c58] to-[#0e2f2d] text-white px-6 py-2 rounded-lg hover:shadow-lg transition-all"
+      >
+        Next: Packing List →
+      </button>
+    </div>
+  </div>
+);
+  const renderPacking = () => (
+  <div className="space-y-6">
+    <div className="bg-gradient-to-r from-[#0e2f2d] to-[#1a5c58] rounded-lg p-6 text-white">
+      <h3 className="text-xl font-semibold mb-4">Trip Summary</h3>
+      <div className="flex gap-6">
+        <div className="w-20 h-20 bg-white/10 rounded-lg flex items-center justify-center">
+          <MapPin className="h-8 w-8 text-white/60" />
+        </div>
+        <div className="flex-1">
+          <h4 className="text-lg font-semibold">
+            {selectedDestination ? selectedDestination.name : 'Bali, Indonesia'}
+          </h4>
+          <p className="text-white/80 mb-4">
+            {selectedDestination ? selectedDestination.description : 'Tropical paradise with stunning beaches and rich culture'}
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+            <div>
+              <h5 className="font-semibold mb-1">Travel Details</h5>
+              <p>Travelers: {travelers}</p>
+              <p>Accommodation: {accommodation || 'Not selected'}</p>
+              <p>Activities: {selectedActivities.length > 0 ? selectedActivities.join(', ') : 'None selected'}</p>
+            </div>
+            <div>
+              <h5 className="font-semibold mb-1">Budget</h5>
+              <p>Total: ₹{budget.total || '0'}</p>
+              <p>Flights: ₹{budget.flights || '0'}</p>
+              <p>Hotels: ₹{budget.accommodation || '0'}</p>
+            </div>
+            <div>
+              <h5 className="font-semibold mb-1">Packing Progress</h5>
+              <p>{getPackedItemsCount()} items packed</p>
+              <p>{getTotalPackingItems() - getPackedItemsCount()} items remaining</p>
+              <div className="w-full bg-white/20 rounded-full h-2 mt-2">
+                <div 
+                  className="bg-[#6dd3b4] h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${(getPackedItemsCount() / getTotalPackingItems()) * 100}%` }}
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {Object.entries(packingCategories).map(([category, items]) => (
+        <div key={category} className="bg-gradient-to-br from-[#1a5c58] to-[#0e2f2d] text-white border border-white/10 rounded-lg p-4">
+          <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
+            {category === 'Clothing' && <Package className="h-5 w-5" />}
+            {category === 'Electronics' && <Plane className="h-5 w-5" />}
+            {category === 'Toiletries' && <Package className="h-5 w-5" />}
+            {category === 'Documents' && <MapPin className="h-5 w-5" />}
+            {category === 'Accessories' && <Package className="h-5 w-5" />}
+            {category}
+          </h4>
+          <div className="space-y-2">
+            {items.map(item => {
+              const key = `${category}-${item}`;
+              const isPacked = packingItems[key] || false;
+              return (
+                <label key={item} className="flex items-center space-x-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={isPacked}
+                    onChange={() => togglePackingItem(category, item)}
+                    className="rounded border-white/20 bg-white/10 text-[#6dd3b4] focus:ring-[#6dd3b4]"
+                  />
+                  <span className={`text-sm ${isPacked ? 'line-through text-white/50' : ''}`}>
+                    {item}
+                  </span>
+                </label>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div className="text-center">
+      <div className="inline-flex items-center gap-2 bg-green-550 text-[#6dd3b4] px-4 py-2 rounded-lg">
+        <Package className="h-5 w-5" />
+        <span className="font-semibold">
+          {getPackedItemsCount()} of {getTotalPackingItems()} items packed ({Math.round((getPackedItemsCount() / getTotalPackingItems()) * 100)}%)
+        </span>
+      </div>
+    </div>
+  </div>
+);
+
+  return (
+  <div className="min-h-screen bg-gradient-to-br from-[#001f3f] via-[#00334d] to-green-800 text-white">
+    <div className="max-w-7xl mx-auto px-4 py-8">
+      <header className="mb-8">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-[#001f3f] to-[#00334d] bg-clip-text text-transparent mb-2">
+          Travel Planner
+        </h1>
+        <p className="text-gray-300">Discover amazing destinations across India and plan your perfect trip</p>
+      </header>
+
+      <nav className="mb-8">
+        <div className="flex space-x-1 bg-white/10 backdrop-blur-sm rounded-lg p-1 shadow-sm border border-white/20">
+          {[
+            { id: 'explore', label: 'Explore', icon: Search },
+            { id: 'planner', label: 'Trip Planner', icon: Calendar },
+            { id: 'budget', label: 'Budget', icon: DollarSign },
+            { id: 'packing', label: 'Packing', icon: Package }
+          ].map(({ id, label, icon: Icon }) => (
+            <button
+              key={id}
+              onClick={() => setActiveTab(id)}
+              className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium transition-all ${
+                activeTab === id
+                  ? 'bg-gradient-to-r from-[#001f3f] to-[#00334d] text-white shadow-lg'
+                  : 'text-gray-200 hover:text-white hover:bg-white/10'
+              }`}
+            >
+              <Icon className="h-4 w-4" />
+              {label}
+            </button>
+          ))}
+        </div>
+      </nav>
+
+      <main>
+        {activeTab === 'explore' && renderExplore()}
+        {activeTab === 'planner' && renderPlanner()}
+        {activeTab === 'budget' && renderBudget()}
+        {activeTab === 'packing' && renderPacking()}
+      </main>
+    </div>
+  </div>
+);
+
 };
 
 export default Destination;

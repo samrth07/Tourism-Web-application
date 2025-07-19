@@ -167,7 +167,7 @@ const TravelPackageCards = () => {
       {selectedPackage && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setSelectedPackage(null)}>
           <div
-            className="bg-[#001f3f] text-white p-6 rounded-xl shadow-2xl border border-white/10 w-[90%] max-w-lg relative overflow-y-auto max-h-[80vh]"
+            className="bg-[#273558] text-white p-6 rounded-xl shadow-2xl border border-white/10 w-[90%] max-w-lg relative overflow-y-auto max-h-[80vh]"
             onClick={(e) => e.stopPropagation()}
           >
             <button
@@ -185,7 +185,7 @@ const TravelPackageCards = () => {
               <div><strong>Group Size:</strong> {selectedPackage.groupSize}</div>
               <div><strong>Departure:</strong> {selectedPackage.departure}</div>
               <div><strong>Difficulty:</strong> {selectedPackage.difficulty}</div>
-              <div><strong>Rating:</strong> ⭐ {selectedPackage.rating} ({selectedPackage.reviews} reviews)</div>
+              <div><strong>Rating:</strong>  {selectedPackage.rating} ({selectedPackage.reviews} reviews)</div>
               <div><strong>Category:</strong> {selectedPackage.category}</div>
             </div>
 
