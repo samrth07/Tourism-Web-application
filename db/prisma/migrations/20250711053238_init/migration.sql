@@ -1,6 +1,7 @@
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
+    "name" TEXT,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "profileImage" TEXT,
@@ -8,6 +9,17 @@ CREATE TABLE "User" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Address" (
+    "id" TEXT NOT NULL,
+    "city" TEXT NOT NULL,
+    "country" TEXT NOT NULL,
+    "pincode" INTEGER NOT NULL,
+    "userId" TEXT NOT NULL,
+
+    CONSTRAINT "Address_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -19,7 +31,7 @@ CREATE TABLE "TravelPlan" (
     "timeSlot" TEXT NOT NULL,
     "isActive" BOOLEAN NOT NULL DEFAULT true,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "roomname" TEXT,
+    "roomName" TEXT NOT NULL,
 
     CONSTRAINT "TravelPlan_pkey" PRIMARY KEY ("id")
 );
@@ -27,7 +39,7 @@ CREATE TABLE "TravelPlan" (
 -- CreateTable
 CREATE TABLE "Message" (
     "id" TEXT NOT NULL,
-    "type" TEXT NOT NULL,
+    "type" TEXT,
     "content" TEXT NOT NULL,
     "senderId" TEXT NOT NULL,
     "roomId" TEXT NOT NULL,
@@ -48,7 +60,16 @@ CREATE TABLE "_TravelPlanMembers" (
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Address_userId_key" ON "Address"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "TravelPlan_roomName_key" ON "TravelPlan"("roomName");
+
+-- CreateIndex
 CREATE INDEX "_TravelPlanMembers_B_index" ON "_TravelPlanMembers"("B");
+
+-- AddForeignKey
+ALTER TABLE "Address" ADD CONSTRAINT "Address_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "TravelPlan" ADD CONSTRAINT "TravelPlan_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

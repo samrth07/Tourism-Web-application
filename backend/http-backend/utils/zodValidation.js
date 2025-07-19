@@ -34,6 +34,9 @@ export const timeSchema = z.
 export const CreateUserSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
+  city    : z.string(),
+  country : z.string(),
+  pincode : z.string(),
 });
 
 export const CreateRoomSchema = z.object({

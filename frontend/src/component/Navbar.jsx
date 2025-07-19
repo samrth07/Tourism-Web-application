@@ -127,6 +127,7 @@ const Navbar = () => {
   );
 };
 
+main
 
 const NavLinks = () => (
   <>
@@ -156,5 +157,5 @@ const NavLinks = () => (
     </Link>
   </>
 );
-
+ main
 export default Navbar;

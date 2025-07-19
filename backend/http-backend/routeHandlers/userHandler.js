@@ -2,33 +2,51 @@ import { getCreatedRoomsByUserId } from "../../../db/prisma/services/roomService
 import { CreateUserSchema } from "../utils/zodValidation.js";
 import { hashPassword, verifyPassword } from '../utils/bcrypt.js';
 import { generateToken } from '../utils/jwt.js'
-import { createUser, getUserByEmail } from "../../../db/prisma/services/userService.js";
+import { createAddress, createUser, getUser, getUserByEmail , getMyinformation} from "../../../db/prisma/services/userService.js";
 
 export const signup = async(req, res) => {
 
     try {
-        const result = await CreateUserSchema.safeParse(req.body);
-
+       console.log(req.body.email);
+        const result =  CreateUserSchema.safeParse(req.body);
+        
+        
         if(!result.success) {
             res.status(403).json ({
-                message: res.error.message
+                message: result.error.message
             })
             return;
         }
-
+       
         const email = req.body.email;
         const password = req.body.password;
+        const name    =  req.body.username
+        const city = req.body.city
+        const country = req.body.country
+        const pincode = req.body.pincode
 
         const hashedPassword = await hashPassword(password);
 
-        let user = createUser(email, hashedPassword);
+        let user = await createUser(email, hashedPassword , name);
+        
+        const userID = user.id;
 
+        const addEntry = await createAddress( city , country , pincode , userID);
+
+          if(!user){
+            res.json({
+              msg : "Something went wrong"
+            })
+          }
+        console.log(user);
         res.json({
             message: "user created succesfully!",
             id: user.id
         })
     }
     catch(e) {
+      console.log(e);
+
         res.status(500).json ({
             message: "Error signin up!",
             error: e
@@ -40,6 +58,7 @@ export const signup = async(req, res) => {
 export const signin = async(req, res) => {
 
     try {
+
         const email = req.body.email;
         const password = req.body.password;
 
@@ -62,9 +81,11 @@ export const signin = async(req, res) => {
         }
 
         const token = await generateToken(user.id);
+        const userInfo = await getMyinformation( user.id )
 
         res.json({
-            token: token
+            token: token,
+            user : userInfo
         })
     } 
     catch(e) {
@@ -79,7 +100,6 @@ export const getMyRooms = async (req, res) => {
   try {
 
     const userId = req.id;
-    console.log("userId before call" + " " + userId)
     const user = await getCreatedRoomsByUserId(userId);
     if (!user) {
       res.status(404).json({
@@ -123,4 +143,28 @@ export const getMyRooms = async (req, res) => {
 
 export const getPlans = (req, res) => {
 
+}
+
+export const getUsers = async(req , res) => {
+
+      try{
+        const userId = req.id;
+
+         const data = await getUser( userId );
+
+         if(data){
+            res.json({
+              res : data
+            })
+         }else{
+            res.json({
+              res : "Unble fetch users"
+            })
+         }
+
+      }catch(e){
+          res.json({
+            msg : e
+          })
+      }
 }
