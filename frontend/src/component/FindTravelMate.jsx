@@ -4,6 +4,8 @@ import TravelMateCard from "./TravelMateCard";
 import { useAuth } from "../context/Authcontext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
+
 
 const FindTravelmate = () => {
   const [destination, setDestination] = useState("");
@@ -59,6 +61,11 @@ const FindTravelmate = () => {
             authorization: token,
           },
         });
+ main
+=======
+        toast.success("User data fetched successfully!");
+        console.log("Backend response:", response.data.res);
+main
         setUsers(response.data.res);
         setFilteredMates(response.data.res);
       } catch (err) {

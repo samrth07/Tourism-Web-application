@@ -14,11 +14,15 @@ import Settings from "./component/Dashboard/Settings";
 import Friends from "./component/Dashboard/Friends";
 import CurrentPlan from "./component/Dashboard/CurrentPlan";
 import DashboardLayout from "./component/Dashboard/DashboardLayout";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 function App() {
   return (
     <>
-      <Navbar />
+      <Navbar /
+    main
 
       <Routes>
         {/* Public Routes */}
@@ -39,6 +43,25 @@ function App() {
           <Route path="settings" element={<Settings />} />
         </Route>
       </Routes>
+=======
+      <ToastContainer position="top-center" />
+     <Routes>
+      
+          <Route path="/" element={<Home />} />
+          <Route path="/signin" element={<SignIn/>} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/find-travel-mate" element={<FindTravelMate />} />
+
+          <Route path="/Dashboard" element={<DashboardLayout/>} >
+                  <Route index element={<Navigate to="profile" />} />
+                  <Route path="profile" element={<Profile/>} />
+                  <Route path="currentPlan" element={<CurrentPlan/>} />
+                  <Route path="userFriends" element={<Friends/>} />
+                  <Route path="settings" element={<Settings/>} />
+          </Route>
+
+    </Routes
+main
     </>
   );
 }

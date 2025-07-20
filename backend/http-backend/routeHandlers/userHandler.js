@@ -61,7 +61,7 @@ export const signin = async(req, res) => {
 
         const email = req.body.email;
         const password = req.body.password;
-
+        console.log(email + password)
         let user = await getUserByEmail(email);
 
         if(!user) {
@@ -89,6 +89,7 @@ export const signin = async(req, res) => {
         })
     } 
     catch(e) {
+      console.log(e);
         res.status(500).json ({
             message: "Error signing in",
             error: e
