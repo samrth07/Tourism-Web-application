@@ -64,7 +64,7 @@ const Navbar = () => {
           onClick={() => setIsOpen(!isOpen)}
           className="md:hidden text-white text-xl focus:outline-none"
         >
-          ☰
+          
         </button>
       </div>
 
@@ -127,7 +127,7 @@ const Navbar = () => {
   );
 };
 
-main
+
 
 const NavLinks = () => (
   <>
@@ -157,5 +157,5 @@ const NavLinks = () => (
     </Link>
   </>
 );
- main
+
 export default Navbar;
