@@ -1,6 +1,10 @@
 import React, { useState } from "react";
+main
+import { Link, useNavigate } from "react-router-dom";
+
 import { RotatingLines } from "react-loader-spinner";
 import { Link, useNavigate } from "react-router-dom"; 
+main
 import { FaEnvelope, FaLock, FaGoogle, FaFacebookF } from "react-icons/fa";
 import axios from "axios";
 import { useAuth } from "../context/Authcontext";
@@ -31,6 +35,7 @@ const SignIn = () => {
 
   const handleSubmit = async(e) => {
     e.preventDefault();
+
     if (!formData.email || !formData.password) {
       alert("Please fill in both email and password.");
       return;
@@ -58,8 +63,11 @@ const SignIn = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0f2027] via-[#2c5364] to-[#00bf8f] px-4">
       <div className="bg-white/10 backdrop-blur-lg text-white shadow-2xl rounded-2xl w-full max-w-lg p-8 md:p-10 border border-white/20">
         <h2 className="text-4xl font-bold text-center mb-3">✈️ Welcome Back!</h2>
-        <p className="text-center text-sm text-gray-200 mb-6">
+        <p className="text-center text-sm text-gray-200 mb-2">
           Sign in to plan your next adventure with Trekker.
+        </p>
+        <p className="text-center text-yellow-300 text-sm mb-6">
+          🔐 Any email and password will work for now!
         </p>
 
         {isLoading ? (
