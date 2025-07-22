@@ -1,11 +1,5 @@
 import { CreateRoomSchema } from "../utils/zodValidation.js";
-import { getRoomByName,
-   createPlan, 
-   getPlan,
-    getRoomByRoomId,  
-    deleteRoom,
-    removeUserFromRoom
-   } from "../../../db/prisma/services/roomService.js";
+import * as Planservisces from "../../../db/prisma/services/roomService.js";
 import { connectUserWithRoom } from "../../../db/prisma/services/userService.js";
 
 
@@ -26,7 +20,7 @@ export const createPlan = async (req, res) => {
     const userId = req.id;
 
     // Create the room
-    const user = await createPlan(destination, travelDate, timeSlot ,userId);
+    const user = await Planservisces.createPlan(destination, travelDate, timeSlot ,userId);
     if (!user) {
       res.status(500).json({
         error: "Failed to create the plan. Please try again .",
@@ -35,7 +29,8 @@ export const createPlan = async (req, res) => {
     }
 
     res.status(200).json({
-      message: "Plan Created Successfully"
+      message: "Plan Created Successfully",
+      user : user
     });
     return;
   }
@@ -53,6 +48,7 @@ export const createPlan = async (req, res) => {
 export const joinPlan = async (req, res) => {
 
   const planId = req.params.planId;
+  console.log(planId)
 
   if ( !planId ) {
     res.status(403).json({
@@ -62,16 +58,30 @@ export const joinPlan = async (req, res) => {
   }
 
   try {
-    const plan = await getPlan( planId );
+    const plan = await Planservisces.getPlan( planId );
+     
 
     if ( !plan ) {
       res.status(404).json({
         success: false,
         error: "PLan doesn't exist",
       });
-      return;
     }
 
+      console.log(plan);
+    
+    let room = plan.roomName;
+    if( !room ){
+      const user1 = req.id;
+      const AdminId = plan.createdById;
+      room = Planservisces.createRoom(AdminId , user1);
+      console.log(room)
+    }
+
+      res.json({
+        msg : "plan ceated succussfuly!!!",
+        roomId : room
+      })
     // Room logic yet to write 
     // check first the Room name is null or not 
     // If the room name is null then create the room by name of first two user
@@ -81,7 +91,7 @@ export const joinPlan = async (req, res) => {
     const isAlreadyMember = room.members.some((user) => user.id === userId);
 
     if (!isAlreadyMember) {
-      await connectUserWithRoom(roomId, userId);
+      await Planservisces.connectUserWithRoom(roomId, userId);
     }
 
     res.json({
@@ -91,6 +101,7 @@ export const joinPlan = async (req, res) => {
     return;
   } 
   catch (error) {
+    console.log(error);
     res.status(500).json({
       error: "Failed to join the room.",
     });
@@ -111,7 +122,7 @@ export const VerifyUserInRoom = async (req, res) => {
   }
 
   try {
-    const room = await getRoomByRoomId(roomId);
+    const room = await Planservisces.getRoomByRoomId(roomId);
 
     if (!room) {
       res.status(404).json({ message: "Room not found" });
@@ -148,7 +159,7 @@ export const leaveRoom = async (req, res) => {
   }
 
   try {
-    const room = await getRoomUsers(roomId);
+    const room = await Planservisces.getRoomUsers(roomId);
     if (!room) {
       res
         .status(404)
