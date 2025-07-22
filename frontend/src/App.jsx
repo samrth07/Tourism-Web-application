@@ -15,6 +15,7 @@ import CurrentPlan from "./component/Dashboard/CurrentPlan";
 import DashboardLayout from "./component/Dashboard/DashboardLayout";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import MessengerUI from "./component/chatInerface/ChatInterface";
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
           <Route path="/signin" element={<SignIn/>} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/find-travel-mate" element={<FindTravelMate />} />
+          <Route path="/chat" element={ <MessengerUI/>} />
 
           <Route path="/Dashboard" element={<DashboardLayout/>} >
                   <Route index element={<Navigate to="profile" />} />

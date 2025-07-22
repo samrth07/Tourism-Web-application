@@ -1,12 +1,13 @@
 import client from "../index.js";
 
-export const createUser = async ( email , hashedPassword , name) => {
+export const createUser = async ( email , hashedPassword , name , profileImage) => {
   
   return await client.user.create({
     data: {
       email,
       password: hashedPassword,
-      name
+      name,
+      profileImage
     },
   });
 };

@@ -20,15 +20,19 @@ export const signup = async(req, res) => {
        
         const email = req.body.email;
         const password = req.body.password;
-        const name    =  req.body.username
+        const name    =  req.body.name
         const city = req.body.city
+        const profileImage = req.body.profileImage;
         const country = req.body.country
         const pincode = req.body.pincode
 
         const hashedPassword = await hashPassword(password);
 
-        let user = await createUser(email, hashedPassword , name);
-        
+        let user = await createUser(email, hashedPassword , name , profileImage);
+        if(!user) res.json({msg : "no user is created "});
+
+        console.log("user is +" + user.id);
+
         const userID = user.id;
 
         const addEntry = await createAddress( city , country , pincode , userID);

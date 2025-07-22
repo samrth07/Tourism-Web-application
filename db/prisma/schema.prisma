@@ -18,6 +18,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -26,13 +27,17 @@ model User {
   email                  String               @unique
   password               String
   profileImage           String?   
-  travelPlans            TravelPlan[]          @relation("TravelPlanMembers") // plans user joined
-  createdPlans           TravelPlan[]          @relation("UserToTravelPlan")  // plans user created
-  messages               Message[]
-  Address                Address?              @relation("userAddress")
   createdAt              DateTime             @default(now())
   updatedAt              DateTime             @updatedAt
-}
+
+  // relation
+   travelPlans            TravelPlan[]          @relation("TravelPlanMembers") // plans user joined
+  createdPlans           TravelPlan[]           @relation("UserToTravelPlan")  // plans user created
+  messages               Message[]
+  Address                Address?               @relation("userAddress")
+
+  TravelPlan        TravelPlanMembers[]
+  }
 
 
 model Address {
@@ -47,16 +52,29 @@ model Address {
 
 model TravelPlan {
   id                     String               @id @default(uuid())
-  user                   User                 @relation("UserToTravelPlan", fields: [userId], references: [id])//admin
-  userId                 String
+  user                   User                 @relation("UserToTravelPlan", fields: [createdById], references: [id])  //admin
+  createdById            String
   destination            String
   travelDate             DateTime
   timeSlot               String               //Morning, Noon, Evening, Night, Mid-night
   isActive               Boolean              @default(true)
   createdAt              DateTime             @default(now())
-  roomName               String               @unique
+  roomName               String ?              @unique
+  
+  // relation
   members                User[]               @relation("TravelPlanMembers")
   messages               Message[]
+  TravelPlanMembers      TravelPlanMembers[] 
+}
+
+model TravelPlanMembers {
+    memberId      String
+    travelPlanId  String
+
+    user          User        @relation(fields: [memberId], references: [id], onDelete: Cascade)
+    travelPlan    TravelPlan  @relation(fields: [travelPlanId], references: [id])
+
+    @@id([memberId, travelPlanId])
 }
 
 model Message {

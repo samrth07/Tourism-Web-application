@@ -16,7 +16,7 @@ CREATE TABLE "Address" (
     "id" TEXT NOT NULL,
     "city" TEXT NOT NULL,
     "country" TEXT NOT NULL,
-    "pincode" INTEGER NOT NULL,
+    "pincode" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
 
     CONSTRAINT "Address_pkey" PRIMARY KEY ("id")
