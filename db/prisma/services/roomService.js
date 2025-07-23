@@ -6,7 +6,8 @@ export const createPlan = async ( destination, travelDate, timeSlot ,userId) => 
       destination,
       travelDate,
       timeSlot,
-      createdById : userId
+      createdById : userId,
+      roomName : destination
     },
   });
 };
@@ -184,4 +185,26 @@ export const filterByTimeDateDestination = async(timeSlot, travelDate,destinatio
       destination
     }
   })
+}
+
+
+export const addMemberTotravelPlan = async ( planId , user) => {
+  console.log(user);
+  return await client.travelPlanMembers.create({
+      data : {
+        memberId : user,
+        travelPlanId : planId
+      }
+  })
+}
+
+
+export const getMemebers = async (planId) => {
+
+    return await client.travelPlanMembers.findMany({
+      where : {
+        travelPlanId : planId
+      },
+
+    })
 }

@@ -1,11 +1,12 @@
 import express from 'express'
 import { getTravelPlans } from '../routeHandlers/travelHandler.js';
 import { middleware } from '../utils/middleware.js';
-import { createPlan, joinPlan, leaveRoom } from '../routeHandlers/roomHandler.js';
+import { createPlan, getMemebers, joinPlan, leaveRoom } from '../routeHandlers/roomHandler.js';
 
 const travelRouter = express.Router();
 
 travelRouter.get('/:filter', getTravelPlans);
+travelRouter.get('/:planId/members' , getMemebers)
 
 travelRouter.use(middleware);
 

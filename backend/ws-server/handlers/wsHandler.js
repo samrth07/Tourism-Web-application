@@ -18,6 +18,7 @@ export const setupWebSocketServer = async (wss) => {
     }
 
     const token = getToken(url);
+    console.log(token);
     const authenticatedUser = await authenticateWebSocket(token);
 
     if (!authenticatedUser) {

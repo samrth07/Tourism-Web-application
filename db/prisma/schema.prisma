@@ -1,89 +1,71 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
-//inputs {
-    // type : "join"/"chat",
-    // payload: {
-    //     "roomId"/"message"
-    // }
-//}
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
 model User {
-  id                     String               @id @default(uuid())
-  name                   String?                
-  email                  String               @unique
-  password               String
-  profileImage           String?   
-  createdAt              DateTime             @default(now())
-  updatedAt              DateTime             @updatedAt
+  id           String              @id @default(uuid())
+  name         String?
+  email        String              @unique
+  password     String
+  profileImage String?
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+  Address      Address?            @relation("userAddress")
+  messages     Message[]
 
-  // relation
-   travelPlans            TravelPlan[]          @relation("TravelPlanMembers") // plans user joined
-  createdPlans           TravelPlan[]           @relation("UserToTravelPlan")  // plans user created
-  messages               Message[]
-  Address                Address?               @relation("userAddress")
+  // Relation
+  createdPlans TravelPlan[]        @relation("UserToTravelPlan")
 
-  TravelPlan        TravelPlanMembers[]
-  }
-
+  travelPlans   TravelPlanMembers[]
+}
 
 model Address {
-    id          String    @id @default(uuid())
-    city        String
-    country     String
-    pincode     String
-    user        User     @relation("userAddress" , fields: [userId] , references: [id])
-    userId      String   @unique
-
+  id      String @id @default(uuid())
+  city    String
+  country String
+  pincode String
+  userId  String @unique
+  user    User   @relation("userAddress", fields: [userId], references: [id])
 }
 
 model TravelPlan {
-  id                     String               @id @default(uuid())
-  user                   User                 @relation("UserToTravelPlan", fields: [createdById], references: [id])  //admin
-  createdById            String
-  destination            String
-  travelDate             DateTime
-  timeSlot               String               //Morning, Noon, Evening, Night, Mid-night
-  isActive               Boolean              @default(true)
-  createdAt              DateTime             @default(now())
-  roomName               String ?              @unique
-  
-  // relation
-  members                User[]               @relation("TravelPlanMembers")
-  messages               Message[]
-  TravelPlanMembers      TravelPlanMembers[] 
+  id                String              @id @default(uuid())
+  destination       String
+  travelDate        DateTime
+  timeSlot          String
+  isActive          Boolean             @default(true)
+  createdAt         DateTime            @default(now())
+  roomName          String?             @unique
+  createdById       String
+  messages          Message[]
+  user              User                @relation("UserToTravelPlan", fields: [createdById], references: [id])
+
+  members       TravelPlanMembers[]
 }
 
 model TravelPlanMembers {
-    memberId      String
-    travelPlanId  String
+  memberId     String
+  travelPlanId String
+  user         User      @relation(fields: [memberId], references: [id], onDelete: Cascade)
 
-    user          User        @relation(fields: [memberId], references: [id], onDelete: Cascade)
-    travelPlan    TravelPlan  @relation(fields: [travelPlanId], references: [id])
+  travelPlan   TravelPlan @relation(fields: [travelPlanId], references: [id], onDelete: Cascade)
 
-    @@id([memberId, travelPlanId])
+  @@id([memberId, travelPlanId])
 }
 
 model Message {
-  id                     String                @id @default(uuid())
-  type                   String?
-  content                String
-  senderId               String
-  roomId                 String
-  sender                 User                  @relation(fields: [senderId], references: [id])
-  room                   TravelPlan            @relation(fields: [roomId], references: [id])
-  createdAt              DateTime              @default(now())
+  id        String     @id @default(uuid())
+  type      String?
+  content   String
+  senderId  String
+  roomId    String
+  createdAt DateTime   @default(now())
+  room      TravelPlan @relation(fields: [roomId], references: [id])
+  sender    User       @relation(fields: [senderId], references: [id])
 }

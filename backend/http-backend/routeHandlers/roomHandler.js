@@ -67,20 +67,16 @@ export const joinPlan = async (req, res) => {
         error: "PLan doesn't exist",
       });
     }
-
-      console.log(plan);
+   console.log(plan);
+  const user = req.id;
     
-    let room = plan.roomName;
-    if( !room ){
-      const user1 = req.id;
-      const AdminId = plan.createdById;
-      room = Planservisces.createRoom(AdminId , user1);
-      console.log(room)
-    }
+  const addMember = await Planservisces.addMemberTotravelPlan(planId , user);
+
+  
 
       res.json({
         msg : "plan ceated succussfuly!!!",
-        roomId : room
+        roomId : addMember
       })
     // Room logic yet to write 
     // check first the Room name is null or not 
@@ -191,3 +187,25 @@ export const leaveRoom = async (req, res) => {
     return;
   }
 };
+
+export const getMemebers = async(req , res) => {
+
+    try {
+        console.log("control reach here")
+    const planId  = req.params.planId;
+    console.log(planId);
+    if( !planId ){
+          res.status(403).json({msg : "PlanId is missing"});
+    } 
+
+      const member = await Planservisces.getMemebers(planId);
+
+      res.status(200).json({
+        member : member
+      })
+    
+    } catch (error) {
+      console.log(error)
+        res.status(500).json({msg : "Something went wrong !!!"});
+    }
+}

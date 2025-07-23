@@ -25,15 +25,23 @@ CREATE TABLE "Address" (
 -- CreateTable
 CREATE TABLE "TravelPlan" (
     "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
     "destination" TEXT NOT NULL,
     "travelDate" TIMESTAMP(3) NOT NULL,
     "timeSlot" TEXT NOT NULL,
     "isActive" BOOLEAN NOT NULL DEFAULT true,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "roomName" TEXT NOT NULL,
+    "roomName" TEXT,
+    "createdById" TEXT NOT NULL,
 
     CONSTRAINT "TravelPlan_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "TravelPlanMembers" (
+    "memberId" TEXT NOT NULL,
+    "travelPlanId" TEXT NOT NULL,
+
+    CONSTRAINT "TravelPlanMembers_pkey" PRIMARY KEY ("memberId","travelPlanId")
 );
 
 -- CreateTable
@@ -72,13 +80,19 @@ CREATE INDEX "_TravelPlanMembers_B_index" ON "_TravelPlanMembers"("B");
 ALTER TABLE "Address" ADD CONSTRAINT "Address_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "TravelPlan" ADD CONSTRAINT "TravelPlan_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "TravelPlan" ADD CONSTRAINT "TravelPlan_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Message" ADD CONSTRAINT "Message_senderId_fkey" FOREIGN KEY ("senderId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "TravelPlanMembers" ADD CONSTRAINT "TravelPlanMembers_memberId_fkey" FOREIGN KEY ("memberId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "TravelPlanMembers" ADD CONSTRAINT "TravelPlanMembers_travelPlanId_fkey" FOREIGN KEY ("travelPlanId") REFERENCES "TravelPlan"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Message" ADD CONSTRAINT "Message_roomId_fkey" FOREIGN KEY ("roomId") REFERENCES "TravelPlan"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Message" ADD CONSTRAINT "Message_senderId_fkey" FOREIGN KEY ("senderId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_TravelPlanMembers" ADD CONSTRAINT "_TravelPlanMembers_A_fkey" FOREIGN KEY ("A") REFERENCES "TravelPlan"("id") ON DELETE CASCADE ON UPDATE CASCADE;
