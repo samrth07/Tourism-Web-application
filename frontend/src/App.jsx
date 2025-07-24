@@ -16,14 +16,20 @@ import DashboardLayout from "./component/Dashboard/DashboardLayout";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import MessengerUI from "./component/chatInerface/ChatInterface";
+import OffersPage from "./component/OfferPage";
+import Experience from "./component/ExperiencePage/Experience";
+import ExpBlog from "./component/ExperiencePage/ExpBlog";
+
+
 
 
 function App() {
 
   return (
     <>
+
       <Navbar />
-      <ToastContainer position="top-center" />
+      <ToastContainer position="top-center" autoClose={1000} />
      <Routes>
       
           <Route path="/" element={<Home />} />
@@ -31,6 +37,10 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/find-travel-mate" element={<FindTravelMate />} />
           <Route path="/chat" element={ <MessengerUI/>} />
+          <Route path="/offers" element={<OffersPage />} />
+          <Route path="/experience" element={<Experience />} />
+          <Route path="/experience/:slug" element={<ExpBlog />} />
+
 
           <Route path="/Dashboard" element={<DashboardLayout/>} >
                   <Route index element={<Navigate to="profile" />} />
@@ -41,6 +51,7 @@ function App() {
           </Route>
 
     </Routes>
+    
 
 
     </>

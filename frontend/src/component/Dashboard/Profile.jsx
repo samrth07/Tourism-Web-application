@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 import {
   FaUser,
   FaMapMarkerAlt,
@@ -17,7 +17,8 @@ import {
   FaSignOutAlt,
   FaPlus,
   FaTrash,
-} from "react-icons/fa"
+} from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const getInitials = (name) =>
   typeof name === "string"
@@ -28,21 +29,17 @@ const getInitials = (name) =>
         .join("")
     : "";
 
-
 const Profile = () => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const [ user , setUser] = useState(null);
-  const [ loading , setLoading] = useState(true);
-  
-
- useEffect(() => {
+  useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
-     setLoading(false);
+    setLoading(false);
   }, []);
-
 
   const currentUser = {
     name: "Sarah Mitchell",
@@ -58,82 +55,99 @@ const Profile = () => {
       connections: 45,
       rating: 4.9,
     },
-    interests: ["Photography", "Hiking", "Food Tours", "Museums", "Beach", "Adventure Sports"],
+    interests: [
+      "Photography",
+      "Hiking",
+      "Food Tours",
+      "Museums",
+      "Beach",
+      "Adventure Sports",
+    ],
     upcomingTrips: [
       { destination: "Iceland", date: "March 2024", status: "Planning" },
       { destination: "Morocco", date: "June 2024", status: "Booked" },
     ],
     recentTrips: [
-      { destination: "New Zealand", date: "Dec 2023", image: "/placeholder.svg?height=100&width=150", rating: 5 },
-      { destination: "Thailand", date: "Sep 2023", image: "/placeholder.svg?height=100&width=150", rating: 5 },
-      { destination: "Greece", date: "Jul 2023", image: "/placeholder.svg?height=100&width=150", rating: 4 },
+      {
+        destination: "New Zealand",
+        date: "Dec 2023",
+        image: "/placeholder.svg?height=100&width=150",
+        rating: 5,
+      },
+      {
+        destination: "Thailand",
+        date: "Sep 2023",
+        image: "/placeholder.svg?height=100&width=150",
+        rating: 5,
+      },
+      {
+        destination: "Greece",
+        date: "Jul 2023",
+        image: "/placeholder.svg?height=100&width=150",
+        rating: 4,
+      },
     ],
     privacy: {
       profileVisibility: "Public",
       showEmail: false,
       showPhone: false,
     },
+  };
+
+  if (loading || !user) {
+    return <div className="text-white text-center py-20">Loading Profile...</div>;
   }
 
-    if( loading || !user){
-      return (
-        <div>
-              Loding Page..........
-        </div>
-      )
-    }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
-      {/* Header */}
-      <div className="relative bg-gradient-to-r from-purple-500/20 via-blue-500/20 to-cyan-500/20 backdrop-blur-sm border-b border-white/10">
+    <div className="min-h-screen bg-[#0B0D14] text-white">
+      <div className="relative bg-gradient-to-r from-purple-500/20 via-indigo-500/20 to-cyan-500/20 backdrop-blur-md border-b border-[#1F2937] shadow-inner">
         <div className="max-w-6xl mx-auto px-6 py-8">
           <div className="flex flex-col md:flex-row items-center gap-6">
-            {/* Avatar Section */}
             <div className="relative group">
-              <div className="w-32 h-32 rounded-full bg-gradient-to-br from-purple-400 via-blue-500 to-cyan-600 flex items-center justify-center text-4xl font-bold shadow-2xl ring-4 ring-blue-500/20">
-                   {getInitials(user.name)}
+              <div className="w-32 h-32 rounded-full bg-gradient-to-br from-purple-500 via-indigo-500 to-cyan-400 flex items-center justify-center text-4xl font-bold shadow-2xl ring-4 ring-[#9333EA]/30">
+                {getInitials(user.name)}
               </div>
-              <button className="absolute bottom-2 right-2 w-10 h-10 bg-blue-600 hover:bg-blue-500 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg group">
+              <button className="absolute bottom-2 right-2 w-10 h-10 bg-[#6366F1] hover:bg-indigo-400 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg">
                 <FaCamera className="text-sm" />
               </button>
               <div className="absolute -inset-2 bg-gradient-to-br from-purple-400/20 to-cyan-600/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </div>
 
-            {/* Profile Info */}
             <div className="flex-1 text-center md:text-left">
               <div className="flex flex-col md:flex-row md:items-center gap-4 mb-4">
-                <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
                   {user.name}
                 </h1>
                 <div className="flex gap-2">
-                  <button className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-xl transition-all duration-300 hover:scale-105 font-medium">
+                  <button className="inline-flex items-center gap-2 px-4 py-2 bg-[#6366F1] hover:bg-indigo-400 rounded-xl transition-all duration-300 hover:scale-105 font-medium shadow-md">
                     <FaEdit className="text-sm" />
                     Edit Profile
                   </button>
-                  <button className="inline-flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-xl transition-all duration-300 hover:scale-105 font-medium">
+                  <button className="inline-flex items-center gap-2 px-4 py-2 bg-[#12141C] hover:bg-[#1F2937] rounded-xl transition-all duration-300 hover:scale-105 font-medium border border-[#1F2937]">
                     <FaCog className="text-sm" />
                     Settings
                   </button>
                 </div>
               </div>
 
-              <div className="flex flex-wrap justify-center md:justify-start gap-4 text-gray-300 mb-4">
+              <div className="flex flex-wrap justify-center md:justify-start gap-4 text-[#D1D5DB] mb-4">
                 <div className="flex items-center gap-2">
-                  <FaMapMarkerAlt className="text-purple-400" />
-                  <span>{user.Address?.city || "Unkonwn"}</span>
+                  <FaMapMarkerAlt className="text-[#9333EA]" />
+                  <span>{user.Address?.city || "Unknown"}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <FaCalendar className="text-blue-400" />
-                  <span>Member since {(user.createdAt).slice(0 , 4)}</span>
+                  <FaCalendar className="text-[#06B6D4]" />
+                  <span>Member since {user.createdAt?.slice(0, 4) || "2024"}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <FaEye className="text-cyan-400" />
+                  <FaEye className="text-[#06B6D4]" />
                   <span>{currentUser.profileViews} profile views</span>
                 </div>
               </div>
 
-              <p className="text-gray-200 max-w-2xl leading-relaxed">{currentUser.bio}</p>
+              <p className="text-[#D1D5DB] max-w-2xl leading-relaxed">
+                {currentUser.bio}
+              </p>
             </div>
           </div>
         </div>
@@ -148,25 +162,33 @@ const Profile = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="bg-gradient-to-br from-black/40 to-black/60 backdrop-blur-sm border border-white/10 rounded-2xl p-6 text-center hover:scale-105 transition-transform duration-300">
                 <FaPlane className="text-3xl text-purple-400 mx-auto mb-2" />
-                <div className="text-2xl font-bold">{currentUser.stats.trips}</div>
+                <div className="text-2xl font-bold">
+                  {currentUser.stats.trips}
+                </div>
                 <div className="text-gray-400 text-sm">My Trips</div>
               </div>
 
               <div className="bg-gradient-to-br from-black/40 to-black/60 backdrop-blur-sm border border-white/10 rounded-2xl p-6 text-center hover:scale-105 transition-transform duration-300">
                 <FaGlobe className="text-3xl text-blue-400 mx-auto mb-2" />
-                <div className="text-2xl font-bold">{currentUser.stats.countries}</div>
+                <div className="text-2xl font-bold">
+                  {currentUser.stats.countries}
+                </div>
                 <div className="text-gray-400 text-sm">Countries</div>
               </div>
 
               <div className="bg-gradient-to-br from-black/40 to-black/60 backdrop-blur-sm border border-white/10 rounded-2xl p-6 text-center hover:scale-105 transition-transform duration-300">
                 <FaUser className="text-3xl text-cyan-400 mx-auto mb-2" />
-                <div className="text-2xl font-bold">{currentUser.stats.connections}</div>
+                <div className="text-2xl font-bold">
+                  {currentUser.stats.connections}
+                </div>
                 <div className="text-gray-400 text-sm">Connections</div>
               </div>
 
               <div className="bg-gradient-to-br from-black/40 to-black/60 backdrop-blur-sm border border-white/10 rounded-2xl p-6 text-center hover:scale-105 transition-transform duration-300">
                 <FaStar className="text-3xl text-yellow-400 mx-auto mb-2" />
-                <div className="text-2xl font-bold">{currentUser.stats.rating}</div>
+                <div className="text-2xl font-bold">
+                  {currentUser.stats.rating}
+                </div>
                 <div className="text-gray-400 text-sm">My Rating</div>
               </div>
             </div>
@@ -190,7 +212,9 @@ const Profile = () => {
                     className="flex items-center justify-between p-4 bg-black/20 border border-white/5 rounded-xl hover:border-white/20 transition-all duration-300"
                   >
                     <div>
-                      <h4 className="font-semibold text-white">{trip.destination}</h4>
+                      <h4 className="font-semibold text-white">
+                        {trip.destination}
+                      </h4>
                       <p className="text-gray-300 text-sm">{trip.date}</p>
                     </div>
                     <div className="flex items-center gap-2">
@@ -267,12 +291,17 @@ const Profile = () => {
                     <div className="absolute bottom-0 left-0 right-0 p-4">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h4 className="font-semibold text-white">{trip.destination}</h4>
+                          <h4 className="font-semibold text-white">
+                            {trip.destination}
+                          </h4>
                           <p className="text-gray-300 text-sm">{trip.date}</p>
                         </div>
                         <div className="flex items-center gap-1">
                           {[...Array(trip.rating)].map((_, i) => (
-                            <FaStar key={i} className="text-yellow-400 text-xs" />
+                            <FaStar
+                              key={i}
+                              className="text-yellow-400 text-xs"
+                            />
                           ))}
                         </div>
                       </div>
@@ -329,13 +358,21 @@ const Profile = () => {
               </h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-300">Profile Visibility</span>
-                  <span className="text-sm text-green-400 font-medium">{currentUser.privacy.profileVisibility}</span>
+                  <span className="text-sm text-gray-300">
+                    Profile Visibility
+                  </span>
+                  <span className="text-sm text-green-400 font-medium">
+                    {currentUser.privacy.profileVisibility}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-300">Show Email</span>
                   <span
-                    className={`text-sm font-medium ${currentUser.privacy.showEmail ? "text-green-400" : "text-red-400"}`}
+                    className={`text-sm font-medium ${
+                      currentUser.privacy.showEmail
+                        ? "text-green-400"
+                        : "text-red-400"
+                    }`}
                   >
                     {currentUser.privacy.showEmail ? "Yes" : "No"}
                   </span>
@@ -343,7 +380,11 @@ const Profile = () => {
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-300">Show Phone</span>
                   <span
-                    className={`text-sm font-medium ${currentUser.privacy.showPhone ? "text-green-400" : "text-red-400"}`}
+                    className={`text-sm font-medium ${
+                      currentUser.privacy.showPhone
+                        ? "text-green-400"
+                        : "text-red-400"
+                    }`}
                   >
                     {currentUser.privacy.showPhone ? "Yes" : "No"}
                   </span>
@@ -359,10 +400,13 @@ const Profile = () => {
                   <FaPlus />
                   Create New Trip
                 </button>
-                <button className="w-full flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-400 hover:to-cyan-400 rounded-xl transition-all duration-300 hover:scale-105 font-medium">
+                <Link
+                  to="/find-travel-mate"
+                  className="w-full flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-400 hover:to-cyan-400 rounded-xl transition-all duration-300 hover:scale-105 font-medium"
+                >
                   <FaUser />
                   Find Travel Mates
-                </button>
+                </Link>
                 <button className="w-full flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-500 hover:to-gray-600 rounded-xl transition-all duration-300 hover:scale-105 font-medium">
                   <FaSignOutAlt />
                   Sign Out
@@ -373,7 +417,7 @@ const Profile = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;
