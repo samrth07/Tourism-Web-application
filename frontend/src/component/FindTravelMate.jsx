@@ -149,7 +149,7 @@ console.log("Token being sent:", token);
 
 
   return (
-    <div className="min-h-screen px-6 py-12 bg-gradient-to-br from-[#000814] via-[#003049] to-[#001d3d] text-white font-sans">
+    <div className="min-h-screen pt-32 px-6 py-12 bg-gradient-to-br from-[#000814] via-[#003049] to-[#001d3d] text-white font-sans">
       <div className="text-center mb-12">
         <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
           Discover Your Next{" "}

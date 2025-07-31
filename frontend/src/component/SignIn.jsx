@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { RotatingLines } from "react-loader-spinner";
+// import { RotatingLines } from "react-loader-spinner";
 import { Link, useNavigate } from "react-router-dom"; 
 import { FaEnvelope, FaLock, FaGoogle, FaFacebookF } from "react-icons/fa";
 import axios from "axios";
 import { useAuth } from "../context/Authcontext";
 import { toast } from "react-toastify";
+import ClipLoader from "react-spinners/ClipLoader";
 
 
 const SignIn = () => { 
@@ -63,15 +64,9 @@ const SignIn = () => {
         </p>
 
         {isLoading ? (
-          <div className="flex justify-center items-center h-40">
-            <RotatingLines
-              strokeColor="grey"
-              strokeWidth="5"
-              animationDuration="0.75"
-              width="96"
-              visible={true}
-            />
-          </div>
+           <div className="flex justify-center items-center h-40">
+    <ClipLoader color="grey" size={48} />
+  </div>
         ) : (
           <>
             <form onSubmit={handleSubmit}>

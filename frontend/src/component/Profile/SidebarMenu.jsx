@@ -1,12 +1,23 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { FaUser, FaCogs, FaMapMarkedAlt, FaUsers } from "react-icons/fa";
+import { LogOut, Plane } from "lucide-react";
 
 const SidebarMenu = () => {
   return (
-    <div className="h-screen w-56 bg-slate-900 text-white p-6 fixed  left-0 shadow-2xl z-50">
-      <h2 className="  text-xl font-bold mb-6">My Dashboard</h2>
-      <nav className="flex flex-col space-y-4">
+    <div className="h-screen w-56 mt-3 bg-slate-900 text-white p-6 fixed left-0 shadow-2xl z-50">
+      
+      <Link
+        to="/"
+        className="flex items-center gap-2 text-white text-2xl font-bold mb-8 transition-colors hover:text-green-400"
+      >
+        <Plane className="w-7 h-7 text-green-500" />
+        <span>TravelMate</span>
+      </Link>
+
+      {/* <h2 className="text-xl font-semibold mb-6">My Dashboard</h2> */}
+
+      <nav className="flex mt-4 text-lg flex-col space-y-4">
         <Link
           to="/Dashboard/profile"
           className="flex items-center space-x-3 hover:bg-slate-700 px-3 py-2 rounded-lg"
@@ -34,6 +45,13 @@ const SidebarMenu = () => {
         >
           <FaCogs />
           <span>Settings</span>
+        </Link>
+        <Link
+          to="/"
+          className="flex items-center space-x-3 hover:bg-slate-700 px-3 py-2 rounded-lg"
+        >
+          <LogOut />
+          <span>Logout</span>
         </Link>
       </nav>
     </div>
