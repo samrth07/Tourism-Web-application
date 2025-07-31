@@ -1,11 +1,4 @@
-import { filterByDate, 
-    filterByDateAndDestination, 
-    filterByDateAndTime, 
-    filterByDestination, 
-    filterByTimeAndDestination, 
-    filterByTimeDateDestination, 
-    filterByTimeSlot
- } from "../../../db/prisma/services/roomService.js";
+import * as RoomService from '../../prisma/services/roomService.js';
 
 export const getTravelPlans = async(req, res) => {
 
@@ -14,7 +7,7 @@ export const getTravelPlans = async(req, res) => {
     const date = req.params.date;
 
     if(destination && !timeSlot && !date) {
-        const plans = filterByDestination(destination);
+        const plans = RoomService.filterByDestination(destination);
         res.json({
             plans
         })
@@ -22,7 +15,7 @@ export const getTravelPlans = async(req, res) => {
     }
 
     if(timeSlot && !destination && !date) {
-        let plans = filterByTimeSlot(timeSlot)
+        let plans = RoomService.filterByTimeSlot(timeSlot)
 
         res.status(200).json({
             plans: plans
@@ -31,7 +24,7 @@ export const getTravelPlans = async(req, res) => {
     }
 
     if(!destination && !timeSlot && date) {
-        let plans = filterByDate(date);
+        let plans = RoomService.filterByDate(date);
 
         res.json({
             plans: plans
@@ -40,7 +33,7 @@ export const getTravelPlans = async(req, res) => {
     }
 
     if(destination && timeSlot && !date) {
-        let plans = filterByTimeAndDestination(timeSlot, destination);
+        let plans = RoomService.filterByTimeAndDestination(timeSlot, destination);
 
         res.json({
             plans: plans
@@ -49,7 +42,7 @@ export const getTravelPlans = async(req, res) => {
     }
 
     if(!destination && timeSlot && date) {
-        let plans = filterByDateAndTime(date, timeSlot)
+        let plans = RoomService.filterByDateAndTime(date, timeSlot)
 
         res.json({
             plans: plans
@@ -58,7 +51,7 @@ export const getTravelPlans = async(req, res) => {
     }
 
     if(destination && !timeSlot && date) {
-        let plans = filterByDateAndDestination(date, destination);
+        let plans = RoomService.filterByDateAndDestination(date, destination);
 
         res.json({
             plans: plans
@@ -67,7 +60,7 @@ export const getTravelPlans = async(req, res) => {
     }
 
     if(destination && timeSlot && date) {
-        let plans = filterByTimeDateDestination(timeSlot, date, destination);
+        let plans = RoomService.filterByTimeDateDestination(timeSlot, date, destination);
 
         res.json({
             plans: plans

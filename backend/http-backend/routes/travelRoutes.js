@@ -14,4 +14,4 @@ travelRouter.post('/create', createPlan);
 travelRouter.post('/join/:planId', joinPlan);
 travelRouter.post('/leave', leaveRoom);
 
-export default travelRouter
+export default travelRouter;
