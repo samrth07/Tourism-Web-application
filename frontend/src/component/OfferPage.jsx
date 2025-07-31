@@ -84,7 +84,6 @@ export default function OffersPage() {
                 <span className="text-yellow-400 text-sm font-medium">({offer.discount}% Off)</span>
               </div>
 
-              {/*  Button */}
               <button className="mt-2 bg-[#003049] hover:bg-[#001d3d] text-white px-4 py-2 rounded-full text-base transition duration-300">
                 View →
               </button>

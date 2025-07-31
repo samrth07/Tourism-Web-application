@@ -29,7 +29,7 @@ function App() {
     <>
 
       <Navbar />
-      <ToastContainer position="top-center" autoClose={1000} />
+      <ToastContainer position="bottom-right" autoClose={1000} />
      <Routes>
       
           <Route path="/" element={<Home />} />

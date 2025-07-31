@@ -21,7 +21,7 @@ export default function Experience() {
   return (
     <div className="min-h-screen bg-gradient-to-b pt-32 from-[#000814] via-[#003049] to-[#001d3d] px-6 py-10 text-white">
       
-      {/* Heading */}
+      
       <div className="text-center mb-8">
         <h1 className="text-5xl font-extrabold tracking-tight">Explore Experiences</h1>
         <p className="text-gray-300 max-w-xl mx-auto mt-2 text-lg">
