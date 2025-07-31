@@ -201,10 +201,13 @@ export const addMemberTotravelPlan = async ( planId , user) => {
 
 export const getMemebers = async (planId) => {
 
-    return await client.travelPlanMembers.findMany({
+    return await client.travelPlan.findUnique({
       where : {
-        travelPlanId : planId
+        id : planId
       },
-
+      include : {
+        user : true,
+        members : true
+      }
     })
 }

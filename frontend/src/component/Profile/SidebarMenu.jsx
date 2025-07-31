@@ -2,8 +2,12 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { FaUser, FaCogs, FaMapMarkedAlt, FaUsers } from "react-icons/fa";
 import { LogOut, Plane } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const SidebarMenu = () => {
+  const { logout } = useAuth();
+  const navigate = useNavigate()
   return (
     <div className="h-screen w-56 mt-3 bg-slate-900 text-white p-6 fixed left-0 shadow-2xl z-50">
       
@@ -51,7 +55,7 @@ const SidebarMenu = () => {
           className="flex items-center space-x-3 hover:bg-slate-700 px-3 py-2 rounded-lg"
         >
           <LogOut />
-          <span>Logout</span>
+          <div onClick={ logout } >Logout</div>
         </Link>
       </nav>
     </div>

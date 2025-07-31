@@ -18,11 +18,18 @@ model User {
   updatedAt    DateTime            @updatedAt
   Address      Address?            @relation("userAddress")
   messages     Message[]
+  friend       Friend[]           @relation()
 
   // Relation
   createdPlans TravelPlan[]        @relation("UserToTravelPlan")
 
   travelPlans   TravelPlanMembers[]
+}
+
+model Friend {
+  id          Int             @id @default(autoincrement())
+  friendId    String         
+  user        User            @relation( fields: [friendId] , references: [id])
 }
 
 model Address {

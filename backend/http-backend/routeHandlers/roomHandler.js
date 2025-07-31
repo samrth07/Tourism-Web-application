@@ -20,17 +20,23 @@ export const createPlan = async (req, res) => {
     const userId = req.id;
 
     // Create the room
-    const user = await Planservisces.createPlan(destination, travelDate, timeSlot ,userId);
-    if (!user) {
+    const plan = await Planservisces.createPlan( destination, travelDate, timeSlot ,userId );
+    if ( !plan ) {
       res.status(500).json({
         error: "Failed to create the plan. Please try again .",
       });
       return;
     }
 
+    const planId = plan.id;
+    console.log("the id of plan is : " + planId);
+
+    const addMember = await Planservisces.addMemberTotravelPlan(planId , userId);
+
     res.status(200).json({
       message: "Plan Created Successfully",
-      user : user
+      plan : plan,
+      memberInproject : addMember
     });
     return;
   }
@@ -72,16 +78,13 @@ export const joinPlan = async (req, res) => {
     
   const addMember = await Planservisces.addMemberTotravelPlan(planId , user);
 
-  
+  // roomID is same as planId
 
       res.json({
         msg : "plan ceated succussfuly!!!",
         roomId : addMember
       })
-    // Room logic yet to write 
-    // check first the Room name is null or not 
-    // If the room name is null then create the room by name of first two user
-    // 
+    
 
     // Check if the user is already a member
     const isAlreadyMember = room.members.some((user) => user.id === userId);
