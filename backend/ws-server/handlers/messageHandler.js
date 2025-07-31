@@ -4,7 +4,7 @@ import { addMessage,
   clearRoomMessages,
   getRoomMessages, 
   getMessage
-} from "../../../db/prisma/services/messageService.js";
+} from "../../prisma/services/messageService.js";
 import { logger } from "../utils/logger.js";
 import { rooms, broadcastToRoom, isUserInRoom } from "../utils/roomManager.js";
 
