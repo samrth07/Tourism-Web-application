@@ -1,8 +1,7 @@
-import { getCreatedRoomsByUserId } from "../../../db/prisma/services/roomService.js";
 import { CreateUserSchema } from "../utils/zodValidation.js";
 import { hashPassword, verifyPassword } from '../utils/bcrypt.js';
 import { generateToken } from '../utils/jwt.js'
-import { createAddress, createUser, getUser, getUserByEmail , getMyinformation} from "../../../db/prisma/services/userService.js";
+import * as UserService from "../../prisma/services/userService.js";
 
 export const signup = async(req, res) => {
 
@@ -28,14 +27,14 @@ export const signup = async(req, res) => {
 
         const hashedPassword = await hashPassword(password);
 
-        let user = await createUser(email, hashedPassword , name , profileImage);
+        let user = await UserService.createUser(email, hashedPassword , name , profileImage);
         if(!user) res.json({msg : "no user is created "});
 
         console.log("user is +" + user.id);
 
         const userID = user.id;
 
-        const addEntry = await createAddress( city , country , pincode , userID);
+        const addEntry = await UserService.createAddress( city , country , pincode , userID);
 
           if(!user){
             res.json({
@@ -66,7 +65,7 @@ export const signin = async(req, res) => {
         const email = req.body.email;
         const password = req.body.password;
         console.log(email + password)
-        let user = await getUserByEmail(email);
+        let user = await UserService.getUserByEmail(email);
 
         if(!user) {
             res.status(404).json({
@@ -85,7 +84,7 @@ export const signin = async(req, res) => {
         }
 
         const token = await generateToken(user.id);
-        const userInfo = await getMyinformation( user.id )
+        const userInfo = await UserService.getMyinformation( user.id )
 
         res.json({
             token: token,
@@ -105,7 +104,7 @@ export const getMyRooms = async (req, res) => {
   try {
 
     const userId = req.id;
-    const user = await getCreatedRoomsByUserId(userId);
+    const user = await UserService.getCreatedRoomsByUserId(userId);
     if (!user) {
       res.status(404).json({
         message: "User not found.",
@@ -146,16 +145,12 @@ export const getMyRooms = async (req, res) => {
   }
 };
 
-export const getPlans = (req, res) => {
-
-}
-
 export const getUsers = async(req , res) => {
 
       try{
         const userId = req.id;
 
-         const data = await getUser( userId );
+         const data = await UserService.getUser( userId );
 
          if(data){
             res.json({

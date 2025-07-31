@@ -189,7 +189,6 @@ export const filterByTimeDateDestination = async(timeSlot, travelDate,destinatio
 
 
 export const addMemberTotravelPlan = async ( planId , user) => {
-  console.log(user);
   return await client.travelPlanMembers.create({
       data : {
         memberId : user,
@@ -201,13 +200,10 @@ export const addMemberTotravelPlan = async ( planId , user) => {
 
 export const getMemebers = async (planId) => {
 
-    return await client.travelPlan.findUnique({
+    return await client.travelPlanMembers.findMany({
       where : {
-        id : planId
+        travelPlanId : planId
       },
-      include : {
-        user : true,
-        members : true
-      }
+
     })
 }

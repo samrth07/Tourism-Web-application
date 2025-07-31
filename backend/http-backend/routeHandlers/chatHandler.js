@@ -1,5 +1,5 @@
-import {  clearRoomMessages, getRoomMessages } from "../../../db/prisma/services/messageService.js";
-import { getRoomByRoomId } from "../../../db/prisma/services/roomService.js";
+import {  clearRoomMessages, getRoomMessages } from "../../prisma/services/messageService.js";
+import { getRoomByRoomId } from "../../prisma/services/roomService.js";
 
 export const getMessages = async (req, res) => {
 
