@@ -34,7 +34,7 @@ export const createPlan = async (req, res) => {
 
     res.status(200).json({
       message: "Plan Created Successfully",
-      plan : plan,
+      plan : user,
       memberInproject : addMember
     });
     return;

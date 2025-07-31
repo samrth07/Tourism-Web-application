@@ -30,7 +30,6 @@ export const signup = async(req, res) => {
         let user = await UserService.createUser(email, hashedPassword , name , profileImage);
         if(!user) res.json({msg : "no user is created "});
 
-        console.log("user is +" + user.id);
 
         const userID = user.id;
 
@@ -41,7 +40,6 @@ export const signup = async(req, res) => {
               msg : "Something went wrong"
             })
           }
-        console.log(user);
         res.json({
             message: "user created succesfully!",
             id: user.id
