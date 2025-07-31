@@ -6,7 +6,6 @@ export default function ExpBlog() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#000814] via-[#003049] to-[#001d3d] px-0 py-0 text-white flex flex-col items-center">
-      {/* Hero Section */}
       <div className="w-full relative h-64 md:h-96 flex items-center justify-center">
         {/* Blog main image */}
         <div className="absolute inset-0 w-full h-full bg-white/10 object-cover opacity-40 flex items-center justify-center">
