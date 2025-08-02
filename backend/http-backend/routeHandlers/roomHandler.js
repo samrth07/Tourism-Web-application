@@ -19,8 +19,8 @@ export const createPlan = async (req, res) => {
     const userId = req.id;
 
     // Create the room
-    const user = await Planservices.createPlan(destination, travelDate, timeSlot ,userId);
-    if (!user) {
+    const plan = await Planservices.createPlan(destination, travelDate, timeSlot ,userId);
+    if (!plan) {
       res.status(500).json({
         error: "Failed to create the plan. Please try again .",
       });
@@ -28,13 +28,11 @@ export const createPlan = async (req, res) => {
     }
 
     const planId = plan.id;
-    console.log("the id of plan is : " + planId);
-
-    const addMember = await Planservisces.addMemberTotravelPlan(planId , userId);
+    const addMember = await Planservices.addMemberTotravelPlan(planId , userId);
 
     res.status(200).json({
       message: "Plan Created Successfully",
-      plan : user,
+      plan : plan,
       memberInproject : addMember
     });
     return;
