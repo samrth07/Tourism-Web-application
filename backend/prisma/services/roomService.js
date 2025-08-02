@@ -6,8 +6,7 @@ export const createPlan = async ( destination, travelDate, timeSlot ,userId) => 
       destination,
       travelDate,
       timeSlot,
-      createdById : userId,
-      roomName : destination
+      createdById : userId
     },
   });
 };

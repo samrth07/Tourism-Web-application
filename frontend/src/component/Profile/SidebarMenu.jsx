@@ -53,9 +53,10 @@ const SidebarMenu = () => {
         <Link
           to="/"
           className="flex items-center space-x-3 hover:bg-slate-700 px-3 py-2 rounded-lg"
+           onClick={ logout }
         >
           <LogOut />
-          <div onClick={ logout } >Logout</div>
+          <div >Logout</div>
         </Link>
       </nav>
     </div>

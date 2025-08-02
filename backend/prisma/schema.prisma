@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  output = "../generated/prisma"
+  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -17,13 +17,13 @@ model User {
   profileImage String?
   createdAt    DateTime            @default(now())
   updatedAt    DateTime            @updatedAt
+
   Address      Address?            @relation("userAddress")
   messages     Message[]
-
-  // Relation
   createdPlans TravelPlan[]        @relation("UserToTravelPlan")
-
-  travelPlans   TravelPlanMembers[]
+  travelPlans  TravelPlanMembers[]
+  sender       Friend[]           @relation("SentFriendRequests")
+  reciever     Friend[]           @relation("ReceivedFriendRequests")
 }
 
 model Address {
@@ -36,25 +36,22 @@ model Address {
 }
 
 model TravelPlan {
-  id                String              @id @default(uuid())
-  destination       String
-  travelDate        DateTime
-  timeSlot          String
-  isActive          Boolean             @default(true)
-  createdAt         DateTime            @default(now())
-  roomName          String?             @unique
-  createdById       String
-  messages          Message[]
-  user              User                @relation("UserToTravelPlan", fields: [createdById], references: [id])
-
-  members       TravelPlanMembers[]
+  id          String              @id @default(uuid())
+  destination String
+  travelDate  DateTime
+  timeSlot    String
+  isActive    Boolean             @default(true)
+  createdAt   DateTime            @default(now())
+  createdById String
+  messages    Message[]
+  user        User                @relation("UserToTravelPlan", fields: [createdById], references: [id])
+  members     TravelPlanMembers[]
 }
 
 model TravelPlanMembers {
   memberId     String
   travelPlanId String
-  user         User      @relation(fields: [memberId], references: [id], onDelete: Cascade)
-
+  user         User       @relation(fields: [memberId], references: [id], onDelete: Cascade)
   travelPlan   TravelPlan @relation(fields: [travelPlanId], references: [id], onDelete: Cascade)
 
   @@id([memberId, travelPlanId])
@@ -69,4 +66,15 @@ model Message {
   createdAt DateTime   @default(now())
   room      TravelPlan @relation(fields: [roomId], references: [id])
   sender    User       @relation(fields: [senderId], references: [id])
+}
+
+model Friend {
+  id          Int    @id @default(autoincrement())
+  isAccepted  Boolean  @default(false)
+  senderID    String
+  recieverId  String
+  sender      User   @relation( "SentFriendRequests" , fields: [senderID], references: [id])
+  recievedBy  User   @relation( "ReceivedFriendRequests" , fields: [recieverId], references: [id])
+
+  @@unique([senderID, recieverId])
 }

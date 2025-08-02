@@ -37,6 +37,14 @@ export const getUserById = async (id) => {
     where: {
       id,
     },
+    include : {
+      sender : true,
+      reciever : {
+        select : {
+          recievedBy : true
+        }
+      }
+    }
   });
 };
 
