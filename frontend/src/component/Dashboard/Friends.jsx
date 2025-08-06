@@ -1,5 +1,5 @@
 import React from "react";
-import TravelMateCard from "../TravelMateCard";
+import FriendCard from "../FriendCard";
 import { useEffect } from "react";
 import axios from "axios";
 import { useState } from "react";
@@ -9,6 +9,7 @@ const Friends = () => {
 
   const [AcceptedFrd, setAcceptedFrdData] = useState([]);
   const [pendingFrd, setPendingFrdData] = useState([]);
+  const [reqNotyetaccepted , setReqNotyetaccepted] = useState([]);
 
   const getAllfriends = async () => {
     const response = await axios.get("http://localhost:3000/friend", {
@@ -16,13 +17,23 @@ const Friends = () => {
         authorization: token,
       },
     });
-    console.log(response.data.friends.acceptedFriends);
+    console.log(response.data.friends);
     setAcceptedFrdData(response.data.friends.acceptedFriends);
     setPendingFrdData(response.data.friends.pendingRequests);
+    setReqNotyetaccepted(response.data.friends.notYetaccepted);
   };
 
-  const handelFrdrequest = async () => {
+  const handelFrdrequest = async ( senderId ) => {
       
+    const response = await axios.patch(`http://localhost:3000/friend/${senderId}` ,  {} , {
+      headers: {
+        authorization: token,
+      },
+    });
+
+    if( response ){
+          alert("you are friend now !!!");
+        }
   }
 
   useEffect(() => {
@@ -38,12 +49,12 @@ const Friends = () => {
         {AcceptedFrd.length > 0 ? (
 
         AcceptedFrd.map( (user , ind) => (
-          <TravelMateCard key={ind} user={user} message={"friends"}/>
+          <FriendCard key={ind} user={user} message={"friends"}/>
         ))
         
         ) : (
         
-        <div className="mb-7"> Empty data</div>)
+        <div className="mb-7"> No Friends Yet you make !!! Make friends now </div>)
         }
         </div>
 
@@ -54,12 +65,27 @@ const Friends = () => {
         {pendingFrd.length > 0 ? (
 
         pendingFrd.map( (user , ind) => (
-          <TravelMateCard key={ind} user={user}  message={"Accept"} handelFrdrequest={handelFrdrequest}/>
+          <FriendCard key={ind} user={user}  message={"Accept"} handelrequest={handelFrdrequest}/>
         ))
         
         ) : (
         
-        <div className="mb-7"> Empty data</div>)
+        <div className="mb-7"> No Pendding request </div>)
+        }
+        </div>
+
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto p-6 mb-7">
+  
+        {reqNotyetaccepted.length > 0 ? (
+
+        reqNotyetaccepted.map( (user , ind) => (
+          <FriendCard key={ind} user={user}  message={"pending"}  />
+        ))
+        
+        ) : (
+        
+        <div className="mb-7"> No Pendding request </div>)
         }
         </div>
     </div>
@@ -67,3 +93,5 @@ const Friends = () => {
 };
 
 export default Friends;
+
+

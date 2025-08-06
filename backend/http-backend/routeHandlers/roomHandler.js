@@ -176,9 +176,7 @@ export const leaveRoom = async (req, res) => {
 export const getMemebers = async(req , res) => {
 
     try {
-        console.log("control reach here")
     const planId  = req.params.planId;
-    console.log(planId);
     if( !planId ){
           res.status(403).json({msg : "PlanId is missing"});
     } 
@@ -194,3 +192,5 @@ export const getMemebers = async(req , res) => {
         res.status(500).json({msg : "Something went wrong !!!"});
     }
 }
+
+

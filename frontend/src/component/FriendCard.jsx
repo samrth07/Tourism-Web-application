@@ -7,7 +7,11 @@ const getInitials = (name) =>
     .map((n) => n[0])
     .join("");
 
-const TravelMateCard = ({ user  , message}) => {
+const FriendCard = ({ user  , message , handelrequest}) => {
+
+  function handelOnclick(){
+      handelrequest(user.id)
+  }
   return (
     <div className="group relative">
       {/* Main card container with glass effect and hover animation */}
@@ -63,7 +67,8 @@ const TravelMateCard = ({ user  , message}) => {
 
         {/* Enhanced action buttons */}
         <div className="relative flex gap-3">
-          <button className="flex-1 group/btn flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:from-green-600 hover:to-emerald-600 active:scale-95">
+          <button className="flex-1 group/btn flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:from-green-600 hover:to-emerald-600 active:scale-95"
+                  onClick={ handelOnclick } >
             <Contact className="w-4 h-4 transition-transform group-hover/btn:scale-110" />
             <span>{message}</span>
           </button>
@@ -82,4 +87,4 @@ const TravelMateCard = ({ user  , message}) => {
   );
 };
 
-export default TravelMateCard;
+export default FriendCard;

@@ -19,6 +19,7 @@ import MessengerUI from "./component/chatInerface/ChatInterface";
 import OffersPage from "./component/OfferPage";
 import Experience from "./component/ExperiencePage/Experience";
 import ExpBlog from "./component/ExperiencePage/ExpBlog";
+import CurrentPlans from "./component/ui/TravelPlan";
 
 
 
@@ -40,6 +41,7 @@ function App() {
           <Route path="/offers" element={<OffersPage />} />
           <Route path="/experience" element={<Experience />} />
           <Route path="/experience/:slug" element={<ExpBlog />} />
+          <Route path="/currentPlan" element={<CurrentPlans/>} />
 
 
           <Route path="/Dashboard" element={<DashboardLayout/>} >

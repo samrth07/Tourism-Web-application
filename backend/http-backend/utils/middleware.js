@@ -5,7 +5,6 @@ dotenv.config();
 export const  middleware = (req, res, next) => {
     try {
         const token = req.headers.authorization;
-
         let verification = jwt.verify(token, process.env.JWT_SECRET);
         
         if(verification) {
@@ -19,6 +18,7 @@ export const  middleware = (req, res, next) => {
         }
     }
 catch(e) {
+    console.log(e);
     res.status(500).json({
         message: "Something went wrong"
     })

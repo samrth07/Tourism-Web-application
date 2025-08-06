@@ -34,6 +34,7 @@ export const addFriend = async (req , res) => {
 // }
 
 export const acceptRequest = async ( req , res) => {
+    console.log("control reach here !!!")
     const sender  = req.params.senderId;
     const reciever = req.id;
 

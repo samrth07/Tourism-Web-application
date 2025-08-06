@@ -1,71 +1,26 @@
-import * as RoomService from '../../prisma/services/roomService.js';
+import * as RoomService from "../../prisma/services/roomService.js";
 
-export const getTravelPlans = async(req, res) => {
+export const getTravelPlans = async (req, res) => {
+  try {
+    const response = await RoomService.getAllplans();
+    const userId = req.id;
+    const currentPlans = response.filter((plan) =>
+      plan.members.some((member) => member.user.id === userId)
+    );
 
-    const destination = req.params.destination;
-    const timeSlot = req.params.timeSlot;
-    const date = req.params.date;
+    const notJoinedPlans = response.filter(
+      (plan) => !plan.members.some((member) => member.user.id === userId)
+    );
 
-    if(destination && !timeSlot && !date) {
-        const plans = RoomService.filterByDestination(destination);
-        res.json({
-            plans
-        })
-        return;
-    }
-
-    if(timeSlot && !destination && !date) {
-        let plans = RoomService.filterByTimeSlot(timeSlot)
-
-        res.status(200).json({
-            plans: plans
-        })
-        return;
-    }
-
-    if(!destination && !timeSlot && date) {
-        let plans = RoomService.filterByDate(date);
-
-        res.json({
-            plans: plans
-        })
-        return;
-    }
-
-    if(destination && timeSlot && !date) {
-        let plans = RoomService.filterByTimeAndDestination(timeSlot, destination);
-
-        res.json({
-            plans: plans
-        })
-        return;
-    }
-
-    if(!destination && timeSlot && date) {
-        let plans = RoomService.filterByDateAndTime(date, timeSlot)
-
-        res.json({
-            plans: plans
-        })
-        return;
-    }
-
-    if(destination && !timeSlot && date) {
-        let plans = RoomService.filterByDateAndDestination(date, destination);
-
-        res.json({
-            plans: plans
-        })
-        return;
-    }
-
-    if(destination && timeSlot && date) {
-        let plans = RoomService.filterByTimeDateDestination(timeSlot, date, destination);
-
-        res.json({
-            plans: plans
-        })
-        return;
-    }
-}
-export default getTravelPlans 
+    res.json({
+      currentPlans,
+      notJoinedPlans,
+    });
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      msg: "Internal Servaer error",
+    });
+  }
+};
+export default getTravelPlans;

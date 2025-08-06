@@ -24,55 +24,98 @@ export const acceptRequest = async (senderID, recieverId) => {
 };
 
 export const getAllFriends = async (userId) => {
-
-  const sentRequests = await client.friend.findMany({
+  
+  const allFriendRelations = await client.friend.findMany({
     where: {
-      senderID: userId
+      isAccepted: true,
+      OR: [
+        { senderID: userId },
+        { recieverId: userId }
+      ]
     },
     include: {
-      recievedBy:{
-        select : {
-          name : true,
-          email : true,
-          profileImage : true,
-          createdAt : true,
-          Address : true
+      sender: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          profileImage: true,
+          createdAt: true,
+          Address: true
+        }
+      },
+      recievedBy: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          profileImage: true,
+          createdAt: true,
+          Address: true
         }
       }
     }
   });
 
-  const receivedRequests = await client.friend.findMany({
+  // Get the other user (not the current user) from each accepted friendship
+  const accepted = allFriendRelations.map(f => {
+    return f.senderID === userId ? f.recievedBy : f.sender;
+  });
+
+  // Remove duplicates if any
+  const uniqueAccepted = Array.from(
+    new Map(accepted.map(user => [user.id, user])).values()
+  );
+
+  // Pending received
+  const pending = await client.friend.findMany({
     where: {
-      recieverId: userId
+      recieverId: userId,
+      isAccepted: false
     },
     include: {
-      sender:{
-        select :{
-          name : true,
-          email : true,
-          profileImage : true,
-          createdAt : true,
-          Address : true
+      sender: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          profileImage: true,
+          createdAt: true,
+          Address: true
         }
       }
     }
   });
 
-  // Separate accepted and pending
-  const accepted = [
-    ...sentRequests.filter(r => r.isAccepted).map(r => r.recievedBy),
-    ...receivedRequests.filter(r => r.isAccepted).map(r => r.sender),
-  ];
+  const pendingRequests = pending.map(r => r.sender);
 
-  const pending = [
-    ...sentRequests.filter(r => !r.isAccepted).map(r => r.recievedBy),
-    ...receivedRequests.filter(r => !r.isAccepted).map(r => r.sender),
-  ];
+  // Pending sent
+  const sentNotAccepted = await client.friend.findMany({
+    where: {
+      senderID: userId,
+      isAccepted: false
+    },
+    include: {
+      recievedBy: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          profileImage: true,
+          createdAt: true,
+          Address: true
+        }
+      }
+    }
+  });
+
+  const notYetaccepted = sentNotAccepted.map(r => r.recievedBy);
 
   return {
-    acceptedFriends: accepted,
-    pendingRequests: pending
+    acceptedFriends: uniqueAccepted,
+    pendingRequests,
+    notYetaccepted
   };
 };
+
 

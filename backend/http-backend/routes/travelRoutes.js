@@ -5,11 +5,11 @@ import { createPlan, getMemebers, joinPlan, leaveRoom } from '../routeHandlers/r
 
 const travelRouter = express.Router();
 
-travelRouter.get('/:filter', getTravelPlans);
 travelRouter.get('/:planId/members' , getMemebers)
 
 travelRouter.use(middleware);
 
+travelRouter.get('/', getTravelPlans);
 travelRouter.post('/create', createPlan);
 travelRouter.post('/join/:planId', joinPlan);
 travelRouter.post('/leave', leaveRoom);

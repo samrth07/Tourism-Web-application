@@ -1,151 +1,102 @@
 import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
-import TravelMateCard from "./TravelMateCard";
 import { useAuth } from "../context/Authcontext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-
-
-const travelMates = [
-  {
-    name: "Sarah Chen",
-    age: 28,
-    location: "San Francisco, CA",
-    destination: "Tokyo",
-    travelStyle: "Adventure",
-    duration: "1 Month",
-    groupSize: "small",
-    experience: "first-timer",
-    bio: "Excited to explore Tokyo and find like-minded travel buddies."
-  },
-  {
-    name: "David Park",
-    age: 35,
-    location: "Seoul, South Korea",
-    destination: "Bali",
-    travelStyle: "Relaxation",
-    duration: "1 Week",
-    groupSize: "medium",
-    experience: "experienced",
-    bio: "Seasoned traveler looking to unwind in Bali."
-  },
-  {
-    name: "Alex Thompson",
-    age: 26,
-    location: "New York, USA",
-    destination: "Iceland",
-    travelStyle: "Adventure",
-    duration: "Weekend",
-    groupSize: "solo",
-    experience: "first-timer",
-    bio: "Ready for my first solo trip into the wild beauty of Iceland."
-  },
-  {
-    name: "Priya Sharma",
-    age: 32,
-    location: "Mumbai, India",
-    destination: "Tokyo",
-    travelStyle: "Cultural",
-    duration: "1 Week",
-    groupSize: "medium",
-    experience: "experienced",
-    bio: "History buff looking to explore Tokyo’s ancient and modern culture."
-  },
-  {
-    name: "Liam Nguyen",
-    age: 30,
-    location: "Hanoi, Vietnam",
-    destination: "Nepal",
-    travelStyle: "Adventure",
-    duration: "1 Month",
-    groupSize: "small",
-    experience: "experienced",
-    bio: "Mountaineering enthusiast heading for the Himalayas."
-  },
-  {
-    name: "Emily Clark",
-    age: 27,
-    location: "London, UK",
-    destination: "Patagonia",
-    travelStyle: "Adventure",
-    duration: "1 Month",
-    groupSize: "medium",
-    experience: "first-timer",
-    bio: "Seeking thrill and peace in Patagonia’s vastness."
-  }
-];
+import TravelPlan from "./ui/TravelPlan";
 
 const FindTravelmate = () => {
+
+  const token = localStorage.getItem('token')
+
+  const [travelDate, setTravelDate] = useState("");
   const [destination, setDestination] = useState("");
   const [tripDuration, setTripDuration] = useState("");
   const [groupSize, setGroupSize] = useState("");
-  const [ageGroup, setAgeGroup] = useState("");
-  const [filteredMates, setFilteredMates] = useState(travelMates);
-  const [users, setUsers] = useState([]);
+  const [allPlans, setAllPlans] = useState([]);
+  const [plan, setPlan] = useState([]);
 
-  const { user } = useAuth();
+  const { user  , loading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!user) {
-      alert("Login is required.");
+    if ( !loading &&  !user ) {
+      toast.success("Login is required.");
       navigate("/signin");
     }
-  }, [user, navigate]);
+  }, [user, navigate , loading]);
+
+
+useEffect(() => {
+  let token = localStorage.getItem("token");
+
+  async function fetchUser() {
+    try {
+      const response = await axios.get("http://localhost:3000/plans", {
+        headers: {
+          authorization: token,
+        },
+      });
+      toast.success("User data fetched successfully!");
+      setPlan(response.data.notJoinedPlans);
+      setAllPlans(response.data.notJoinedPlans);
+    } catch (err) {
+      console.error(
+        "Failed to fetch users:",
+        err.response?.data || err.message
+      );
+    }
+  }
+
+  if (user) {
+    fetchUser();
+  }
+}, [user]);
 
   const handleApplyFilters = () => {
-    const filtered = travelMates.filter((mate) => {
-      const inAgeGroup =
-        ageGroup === "" ||
-        (ageGroup === "18-25" && mate.age >= 18 && mate.age <= 25) ||
-        (ageGroup === "26-35" && mate.age >= 26 && mate.age <= 35) ||
-        (ageGroup === "36-45" && mate.age >= 36 && mate.age <= 45);
+  const filtered = allPlans.filter((p) => {
+    const destinationMatch =
+      !destination || p.destination.toLowerCase() === destination.toLowerCase();
 
-      return (
-        (!destination || mate.destination === destination) &&
-        (!tripDuration || mate.duration === tripDuration) &&
-        (!groupSize || mate.groupSize === groupSize) &&
-        inAgeGroup
-      );
-    });
+    const dateMatch =
+      !travelDate ||
+      new Date(p.travelDate).toISOString().split("T")[0] === travelDate;
+    return destinationMatch && dateMatch;
+  });
 
-    setFilteredMates(filtered);
-  };
-
-  const handleReset = () => {
-    setDestination("");
-    setTripDuration("");
-    setGroupSize("");
-    setAgeGroup("");
-    setFilteredMates(travelMates);
-  };
-
-  useEffect(() => {
-    let token = localStorage.getItem("token");
-
-console.log("Token being sent:", token);
+  setPlan(filtered);
+};
 
 
-    async function fetchUser() {
-      try {
-        const response = await axios.get("http://localhost:3000/user/getUsers" , {
-          headers : {
-            authorization : token
-          }
-        });
-        toast.success("User data fetched successfully!");
-        console.log("Backend response:", response.data.res);
-        setUsers(response.data.res);
-      } catch (err) {
-        console.error("Failed to fetch users:", err.response?.data || err.message);
-      }
+const handleReset = () => {
+  setDestination("");
+  setTravelDate("");
+  setPlan(allPlans);
+};
+
+
+const HandleJoinPlan = async (planId) => {
+
+  const response = await axios.post(`http://localhost:3000/plans/join/${planId}` , {} , {
+    headers : {
+      authorization : token
     }
+  });
 
-    if (user) {
-      fetchUser();
-    }
-  }, [user]);
+  if(response) toast.success("Request of joining set successfully");
+  else alert("somwthing went wrong !!!!");
+}
+
+
+if (loading) {
+  return (
+    <div className="min-h-screen flex items-center justify-center text-white">
+      Checking authentication...
+    </div>
+  );
+}
+
 
 
   return (
@@ -161,7 +112,7 @@ console.log("Token being sent:", token);
           Connect with like-minded travelers, share incredible experiences, and
           create memories that last a lifetime.
         </p>
-        <div className="mt-6 flex flex-col md:flex-row justify-center gap-4 items-center">
+        {/* <div className="mt-6 flex flex-col md:flex-row justify-center gap-4 items-center">
           <input
             type="text"
             placeholder="Where do you want to go? (e.g., Tokyo, Bali...)"
@@ -175,31 +126,29 @@ console.log("Token being sent:", token);
           >
             <FaSearch className="inline mr-2" /> Find Matches
           </button>
-        </div>
+        </div> */}
       </div>
 
-      <div className="text-xl font-semibold text-white mb-4 text-center">Filters</div>
+      <div className="text-xl font-semibold text-white mb-4 text-center">
+        Filters
+      </div>
 
       <div className="bg-white/10 backdrop-blur-md p-6 rounded-3xl shadow-lg max-w-5xl mx-auto mb-12">
         <div className="grid md:grid-cols-4 gap-6">
           <div>
-            <label className="block text-sm font-semibold mb-2 text-white">Destination</label>
-            <select
-              className="w-full p-3 rounded-xl bg-white/20 text-black"
-              value={destination}
-              onChange={(e) => setDestination(e.target.value)}
-            >
-              <option value="">Any Destination</option>
-              <option value="Tokyo">Tokyo</option>
-              <option value="Bali">Bali</option>
-              <option value="Iceland">Iceland</option>
-              <option value="Nepal">Nepal</option>
-              <option value="Patagonia">Patagonia</option>
-            </select>
+            <label className="block text-sm font-semibold mb-2 text-white">
+              Destination
+            </label>
+         
+             <input type="text" className=" border-1 h-9 mt-2 p-3.5 rounded-2xl text-center text-white"
+           onChange={e => {setDestination(e.target.value)}}
+           placeholder="Enter Destination"/>
           </div>
 
           <div>
-            <label className="block text-sm font-semibold mb-2 text-white">Trip Duration</label>
+            <label className="block text-sm font-semibold mb-2 text-white">
+              Trip Duration
+            </label>
             <select
               className="w-full p-3 rounded-xl bg-white/20 text-white"
               value={tripDuration}
@@ -213,7 +162,9 @@ console.log("Token being sent:", token);
           </div>
 
           <div>
-            <label className="block text-sm font-semibold mb-2 text-white">Group Size</label>
+            <label className="block text-sm font-semibold mb-2 text-white">
+              Group Size
+            </label>
             <select
               className="w-full p-3 rounded-xl bg-white/20 text-white"
               value={groupSize}
@@ -228,17 +179,15 @@ console.log("Token being sent:", token);
           </div>
 
           <div>
-            <label className="block text-sm font-semibold mb-2 text-white">Age Group</label>
-            <select
+            <label className="block text-sm font-semibold mb-2 text-white">
+              Travel Date
+            </label>
+            <input
+              type="date"
+              value={travelDate}
+              onChange={(e) => setTravelDate(e.target.value)}
               className="w-full p-3 rounded-xl bg-white/20 text-white"
-              value={ageGroup}
-              onChange={(e) => setAgeGroup(e.target.value)}
-            >
-              <option value="">Any Age</option>
-              <option value="18-25">18 - 25</option>
-              <option value="26-35">26 - 35</option>
-              <option value="36-45">36 - 45</option>
-            </select>
+            />
           </div>
         </div>
 
@@ -258,18 +207,17 @@ console.log("Token being sent:", token);
         </div>
       </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-              {users.length > 0 ? (
-                users.map((user, idx) => (
-                  <TravelMateCard key={idx} user={user} />
-                ))
-              ) : (
-                <div className="col-span-full text-center text-white text-lg font-medium">
-                  No users found.
-                </div>
-              )}
-          </div>
-
+      <div className="px-6 py-10 bg-gray-900 min-h-screen mt-40">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl mx-auto">
+          {plan.length > 0 ? (
+            plan.map((plan, idx) => <TravelPlan key={idx} plan={plan} JoinPlan={HandleJoinPlan} msg={"Join Plan"}/>)
+          ) : (
+            <div className="col-span-full text-center text-white text-lg font-medium">
+              No plan found
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

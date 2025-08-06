@@ -9,19 +9,26 @@ export const useAuth = () => useContext(AuthContext);
 // Provider component
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true); // NEW
+  
 
   // Optional: persist user in localStorage
   useEffect(() => {
-    const storedUser = localStorage.getItem("token");
-    if (storedUser) {
-      setUser(storedUser);
-    }
-  }, []);
+  const storedToken = localStorage.getItem("token");
+  const storedUser = localStorage.getItem("user");
+
+  if (storedToken && storedUser) {
+    setUser(JSON.parse(storedUser));
+  }
+  setLoading(false); 
+}, []);
+
 
   const login = (userData) => {
     setUser(userData);
     localStorage.setItem("token", userData.token);
     localStorage.setItem("user" , JSON.stringify(userData.user));
+    setLoading(false);
   };
 
   const logout = () => {
@@ -30,7 +37,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout , loading }}>
       {children}
     </AuthContext.Provider>
   );

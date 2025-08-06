@@ -206,3 +206,25 @@ export const getMemebers = async (planId) => {
 
     })
 }
+
+export const getAllplans = async () => {
+
+  return await client.travelPlan.findMany({
+    include:{
+      user : true,
+      members :{
+        select :{
+          user : 
+          {
+            select : {
+            id : true,
+            name: true,
+            profileImage : true,
+            Address : true
+          }
+        }
+        }
+      }
+    }
+  });
+}
