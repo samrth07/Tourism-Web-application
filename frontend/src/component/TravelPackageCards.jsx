@@ -1,5 +1,5 @@
 "use client"
-
+import RollingGallery from "./RollingGallery"; 
 import { useState, useEffect, useRef } from "react"
 import {
   Star,
@@ -134,7 +134,7 @@ const TravelPackageCards = () => {
     const container = containerRef.current
     if (!isAutoPlaying || !container) return
 
-    const scrollStep = 0.5 // Adjust for speed
+    const scrollStep = 2.5 // Adjust for speed
     let animationFrame
 
     const scroll = () => {
@@ -159,89 +159,21 @@ const TravelPackageCards = () => {
   }, [])
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 py-12 bg-gray-900">
+    <div className="w-full max-w-7xl mx-auto px-4 py-12 bg-white">
       <div className="text-center mb-12">
         <div className="flex items-center justify-center mb-4">
-          <Plane className="w-8 h-8 text-green-500 mr-3" />
-          <h2 className="text-4xl font-bold text-white">Featured Travel Packages</h2>
+          <Plane className="w-8 h-8 text-orange-600 mr-3" />
+          <h2 className="text-4xl font-black text-stone-900">Featured Travel Packages</h2>
         </div>
-        <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+        <p className="text-xl text-stone-900 max-w-3xl mx-auto ">
           Explore incredible Indian destinations with our curated travel packages. Discover the beauty of India!
         </p>
       </div>
 
-      <div
-        ref={containerRef}
-        className="flex overflow-x-auto no-scrollbar scroll-smooth space-x-6 px-4 py-2"
-        onMouseEnter={() => setIsAutoPlaying(false)}
-        onMouseLeave={() => setIsAutoPlaying(true)}
-      >
-        {infinitePackages.map((pkg, index) => (
-          <div
-            key={`${pkg.id}-${index}`}
-            className="w-[300px] flex-shrink-0 bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden border border-gray-700"
-          >
-            <div className="relative">
-              <img
-                src={pkg.image || "/placeholder.svg"}
-                alt={pkg.title}
-                className="w-full h-40 object-cover rounded-t-xl"
-              />
-              {pkg.discount > 0 && (
-                <span className="absolute top-2 left-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full">
-                  {pkg.discount}% OFF
-                </span>
-              )}
-              <button
-                onClick={() => toggleFavorite(pkg.id)}
-                className="absolute top-2 right-2 p-2 bg-black/50 rounded-full text-white hover:text-red-500 transition-colors"
-              >
-                <Heart fill={favorites.has(pkg.id) ? "red" : "none"} className="w-4 h-4" />
-              </button>
-            </div>
-            <div className="p-4">
-              <h4 className="text-lg font-semibold text-white truncate mb-1" title={pkg.title}>
-                {pkg.title}
-              </h4>
-              <div className="text-sm text-gray-400 mb-2 flex items-center gap-1">
-                <MapPin className="w-3 h-3 text-green-400" /> {pkg.destination}
-              </div>
-              <div className="flex items-center justify-between mb-2 text-sm text-gray-300">
-                <span className="flex items-center gap-1">
-                  <Calendar className="w-3 h-3 text-blue-400" /> {pkg.duration}
-                </span>
-                <span className="flex items-center gap-1">
-                  <Users className="w-3 h-3 text-purple-400" /> {pkg.groupSize}
-                </span>
-              </div>
-              <div className="flex items-baseline justify-between mb-2">
-                <span className="text-xl font-bold text-green-500">
-                  {pkg.currency}
-                  {pkg.price.toLocaleString()}
-                </span>
-                <span className="line-through text-gray-500 text-sm">
-                  {pkg.currency}
-                  {pkg.originalPrice.toLocaleString()}
-                </span>
-              </div>
-              <div className="flex items-center justify-between text-xs text-gray-400">
-                <span className="flex items-center gap-1">
-                  <Star className="w-3 h-3 text-yellow-400" /> {pkg.rating} ({pkg.reviews})
-                </span>
-                <span className="flex items-center gap-1">
-                  {getCategoryIcon(pkg.category)} {pkg.category}
-                </span>
-              </div>
-              <button
-                onClick={() => setSelectedPackage(pkg)}
-                className="mt-4 w-full text-sm text-white bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-lg transition-colors"
-              >
-                View Details
-              </button>
-            </div>
-          </div>
-        ))}
+      <div>
+        <RollingGallery packages={infinitePackages} autoplay={true} pauseOnHover={true} />
       </div>
+
 
       {selectedPackage && (
         <div
