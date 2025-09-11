@@ -75,6 +75,9 @@ const EnhancedTravelPlan = ({ plan, JoinPlan, msg, OpenMemberPage }) => {
         </div>
       </div>
 
+      {/* Content Container */}
+      <div className="relative z-10 space-y-6">
+
       {/* Trip Details Section */}
       <div className="p-6 space-y-6">
         {/* Date & Time Info */}

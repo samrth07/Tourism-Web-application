@@ -128,7 +128,7 @@ const TravelPackageCards = () => {
     const container = containerRef.current
     if (!isAutoPlaying || !container) return
 
-    const scrollStep = 0.5 // Adjust for speed
+    const scrollStep = 2.5 // Adjust for speed
     let animationFrame
 
     const scroll = () => {
