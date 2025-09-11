@@ -1,21 +1,6 @@
 "use client"
-
 import { useState, useEffect, useRef } from "react"
-import {
-  Star,
-  Calendar,
-  Users,
-  MapPin,
-  Heart,
-  Plane,
-  Mountain,
-  Waves,
-  TreePine,
-  Sun,
-  X,
-  CheckCircle,
-  Info,
-} from "lucide-react"
+import { Star, Calendar, Users, MapPin, Heart, Plane, Mountain, Waves, TreePine, Sun, X, CheckCircle, Info, Clock, Award, Sparkles } from 'lucide-react'
 
 const TravelPackageCards = () => {
   const [isAutoPlaying, setIsAutoPlaying] = useState(true)
@@ -129,6 +114,15 @@ const TravelPackageCards = () => {
     return <Sun className="w-3 h-3" />
   }
 
+  const getDifficultyColor = (difficulty) => {
+    switch (difficulty) {
+      case "Easy": return "text-green-400 bg-green-500/20 border-green-500/30"
+      case "Moderate": return "text-yellow-400 bg-yellow-500/20 border-yellow-500/30"
+      case "Hard": return "text-red-400 bg-red-500/20 border-red-500/30"
+      default: return "text-gray-400 bg-gray-500/20 border-gray-500/30"
+    }
+  }
+
   // Auto-scrolling effect
   useEffect(() => {
     const container = containerRef.current
@@ -159,179 +153,323 @@ const TravelPackageCards = () => {
   }, [])
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 py-12 bg-gray-900">
-      <div className="text-center mb-12">
-        <div className="flex items-center justify-center mb-4">
-          <Plane className="w-8 h-8 text-green-500 mr-3" />
-          <h2 className="text-4xl font-bold text-white">Featured Travel Packages</h2>
+    <div className="w-full max-w-7xl mx-auto px-4 py-16 bg-gradient-to-b from-slate-50 to-white">
+      {/* Header Section */}
+      <div className="text-center mb-16">
+        <div className="flex items-center justify-center mb-6">
+          <div className="p-3 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl shadow-lg mr-4">
+            <Plane className="w-8 h-8 text-white" />
+          </div>
+          <div className="text-left">
+            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+              Featured Travel Packages
+            </h2>
+            <div className="flex items-center gap-2 mt-2">
+              <Sparkles className="w-4 h-4 text-emerald-500" />
+              <span className="text-emerald-600 font-medium">Handpicked by Experts</span>
+            </div>
+          </div>
         </div>
-        <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-          Explore incredible Indian destinations with our curated travel packages. Discover the beauty of India!
+        <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+          Explore incredible Indian destinations with our curated travel packages. Discover the beauty of India with unforgettable experiences!
         </p>
       </div>
 
+      {/* Cards Container */}
       <div
         ref={containerRef}
-        className="flex overflow-x-auto no-scrollbar scroll-smooth space-x-6 px-4 py-2"
+        className="flex overflow-x-auto no-scrollbar scroll-smooth space-x-8 px-4 py-6"
         onMouseEnter={() => setIsAutoPlaying(false)}
         onMouseLeave={() => setIsAutoPlaying(true)}
       >
         {infinitePackages.map((pkg, index) => (
           <div
             key={`${pkg.id}-${index}`}
-            className="w-[300px] flex-shrink-0 bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden border border-gray-700"
+            className="group w-[320px] flex-shrink-0 bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 hover:scale-105 overflow-hidden border border-gray-100 hover:border-emerald-200 relative"
           >
-            <div className="relative">
+            {/* Featured Badge */}
+            {pkg.featured && (
+              <div className="absolute top-4 left-4 z-10 px-3 py-1 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs font-bold rounded-full shadow-lg border border-white/20">
+                <Award className="w-3 h-3 inline mr-1" />
+                FEATURED
+              </div>
+            )}
+
+            {/* Image Section */}
+            <div className="relative overflow-hidden">
               <img
                 src={pkg.image || "/placeholder.svg"}
                 alt={pkg.title}
-                className="w-full h-40 object-cover rounded-t-xl"
+                className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700"
               />
+              
+              {/* Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              
+              {/* Discount Badge */}
               {pkg.discount > 0 && (
-                <span className="absolute top-2 left-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full">
+                <div className="absolute top-4 right-4 bg-gradient-to-r from-red-500 to-pink-500 text-white text-sm font-bold px-3 py-1 rounded-full shadow-lg border border-white/20">
                   {pkg.discount}% OFF
-                </span>
+                </div>
               )}
+
+              {/* Favorite Button */}
               <button
                 onClick={() => toggleFavorite(pkg.id)}
-                className="absolute top-2 right-2 p-2 bg-black/50 rounded-full text-white hover:text-red-500 transition-colors"
+                className="absolute bottom-4 right-4 p-2 bg-white/90 backdrop-blur-sm rounded-full text-gray-700 hover:text-red-500 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-110 border border-white/50"
               >
-                <Heart fill={favorites.has(pkg.id) ? "red" : "none"} className="w-4 h-4" />
+                <Heart 
+                  fill={favorites.has(pkg.id) ? "red" : "none"} 
+                  className={`w-5 h-5 ${favorites.has(pkg.id) ? 'text-red-500' : ''}`} 
+                />
               </button>
+
+              {/* Rating Badge */}
+              <div className="absolute bottom-4 left-4 flex items-center gap-1 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full shadow-lg border border-white/50">
+                <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                <span className="text-sm font-bold text-gray-900">{pkg.rating}</span>
+                <span className="text-xs text-gray-600">({pkg.reviews})</span>
+              </div>
             </div>
-            <div className="p-4">
-              <h4 className="text-lg font-semibold text-white truncate mb-1" title={pkg.title}>
-                {pkg.title}
-              </h4>
-              <div className="text-sm text-gray-400 mb-2 flex items-center gap-1">
-                <MapPin className="w-3 h-3 text-green-400" /> {pkg.destination}
+
+            {/* Content Section */}
+            <div className="p-6">
+              <div className="mb-3">
+                <h4 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-emerald-600 transition-colors" title={pkg.title}>
+                  {pkg.title}
+                </h4>
+                <div className="flex items-center gap-2 text-gray-600 mb-3">
+                  <MapPin className="w-4 h-4 text-emerald-500" />
+                  <span className="font-medium">{pkg.destination}</span>
+                </div>
               </div>
-              <div className="flex items-center justify-between mb-2 text-sm text-gray-300">
-                <span className="flex items-center gap-1">
-                  <Calendar className="w-3 h-3 text-blue-400" /> {pkg.duration}
-                </span>
-                <span className="flex items-center gap-1">
-                  <Users className="w-3 h-3 text-purple-400" /> {pkg.groupSize}
+
+              {/* Package Details */}
+              <div className="space-y-3 mb-4">
+                <div className="flex items-center justify-between text-sm">
+                  <div className="flex items-center gap-2 text-gray-600">
+                    <Clock className="w-4 h-4 text-blue-500" />
+                    <span>{pkg.duration}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-gray-600">
+                    <Users className="w-4 h-4 text-purple-500" />
+                    <span>{pkg.groupSize}</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    {getCategoryIcon(pkg.category)}
+                    <span className="text-xs text-gray-500">{pkg.category}</span>
+                  </div>
+                  <div className={`px-2 py-1 rounded-full text-xs font-medium border ${getDifficultyColor(pkg.difficulty)}`}>
+                    {pkg.difficulty}
+                  </div>
+                </div>
+              </div>
+
+              {/* Pricing */}
+              <div className="flex items-baseline justify-between mb-4 p-3 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-2xl border border-emerald-100">
+                <div>
+                  <span className="text-2xl font-bold text-emerald-600">
+                    {pkg.currency}{pkg.price.toLocaleString()}
+                  </span>
+                  <span className="text-xs text-gray-500 ml-1">per person</span>
+                </div>
+                <span className="line-through text-gray-400 text-sm">
+                  {pkg.currency}{pkg.originalPrice.toLocaleString()}
                 </span>
               </div>
-              <div className="flex items-baseline justify-between mb-2">
-                <span className="text-xl font-bold text-green-500">
-                  {pkg.currency}
-                  {pkg.price.toLocaleString()}
-                </span>
-                <span className="line-through text-gray-500 text-sm">
-                  {pkg.currency}
-                  {pkg.originalPrice.toLocaleString()}
-                </span>
-              </div>
-              <div className="flex items-center justify-between text-xs text-gray-400">
-                <span className="flex items-center gap-1">
-                  <Star className="w-3 h-3 text-yellow-400" /> {pkg.rating} ({pkg.reviews})
-                </span>
-                <span className="flex items-center gap-1">
-                  {getCategoryIcon(pkg.category)} {pkg.category}
-                </span>
-              </div>
+
+              {/* Action Button */}
               <button
                 onClick={() => setSelectedPackage(pkg)}
-                className="mt-4 w-full text-sm text-white bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-lg transition-colors"
+                className="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-semibold rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-emerald-500/25 border border-emerald-500/20"
               >
-                View Details
+                View Details & Book
               </button>
             </div>
           </div>
         ))}
       </div>
 
+      {/* Modal */}
       {selectedPackage && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={() => setSelectedPackage(null)}
         >
           <div
-            className="bg-gray-800 p-6 rounded-xl shadow-2xl w-full max-w-lg relative overflow-y-auto max-h-[90vh] border border-gray-700 text-white"
+            className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl relative overflow-hidden max-h-[90vh] overflow-y-auto border border-gray-200"
             onClick={(e) => e.stopPropagation()}
           >
+            {/* Close Button */}
             <button
-              className="absolute top-3 right-3 text-gray-400 hover:text-red-500 transition-colors"
+              className="absolute top-6 right-6 z-10 p-2 bg-white/90 backdrop-blur-sm rounded-full text-gray-600 hover:text-red-500 hover:bg-red-50 transition-all duration-300 shadow-lg border border-gray-200"
               onClick={() => setSelectedPackage(null)}
             >
               <X className="w-6 h-6" />
             </button>
-            <img
-              src={selectedPackage.image || "/placeholder.svg"}
-              alt={selectedPackage.title}
-              className="w-full h-56 object-cover rounded-lg mb-4"
-            />
-            <h3 className="text-3xl font-bold text-white mb-2">{selectedPackage.title}</h3>
-            <p className="text-md text-gray-300 mb-4 flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-green-400" /> {selectedPackage.destination}
-            </p>
 
-            <div className="grid grid-cols-2 gap-4 text-sm mb-4">
-              <div className="flex items-center gap-2 text-gray-300">
-                <Calendar className="w-4 h-4 text-blue-400" /> <strong>Duration:</strong> {selectedPackage.duration}
-              </div>
-              <div className="flex items-center gap-2 text-gray-300">
-                <Users className="w-4 h-4 text-purple-400" /> <strong>Group Size:</strong> {selectedPackage.groupSize}
-              </div>
-              <div className="flex items-center gap-2 text-gray-300">
-                <Plane className="w-4 h-4 text-cyan-400" /> <strong>Departure:</strong> {selectedPackage.departure}
-              </div>
-              <div className="flex items-center gap-2 text-gray-300">
-                <Info className="w-4 h-4 text-yellow-400" /> <strong>Difficulty:</strong> {selectedPackage.difficulty}
-              </div>
-              <div className="flex items-center gap-2 text-gray-300">
-                <Star className="w-4 h-4 text-yellow-400" /> <strong>Rating:</strong> {selectedPackage.rating} (
-                {selectedPackage.reviews} reviews)
-              </div>
-              <div className="flex items-center gap-2 text-gray-300">
-                {getCategoryIcon(selectedPackage.category)} <strong>Category:</strong> {selectedPackage.category}
+            {/* Header Image */}
+            <div className="relative h-64 overflow-hidden">
+              <img
+                src={selectedPackage.image || "/placeholder.svg"}
+                alt={selectedPackage.title}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+              
+              {/* Featured Badge */}
+              {selectedPackage.featured && (
+                <div className="absolute top-6 left-6 px-3 py-1 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-sm font-bold rounded-full shadow-lg">
+                  <Award className="w-4 h-4 inline mr-1" />
+                  FEATURED
+                </div>
+              )}
+
+              {/* Title Overlay */}
+              <div className="absolute bottom-6 left-6 right-16">
+                <h3 className="text-3xl font-bold text-white mb-2">{selectedPackage.title}</h3>
+                <div className="flex items-center gap-2 text-white/90">
+                  <MapPin className="w-5 h-5 text-emerald-400" />
+                  <span className="text-lg">{selectedPackage.destination}</span>
+                </div>
               </div>
             </div>
 
-            <div className="mb-4">
-              <h4 className="font-semibold text-white mb-2">Facilities Included:</h4>
-              <ul className="list-none space-y-1 text-sm text-gray-300">
-                {selectedPackage.includes.map((item, idx) => (
-                  <li key={idx} className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-green-500" /> {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {/* Content */}
+            <div className="p-8">
+              {/* Quick Info Grid */}
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+                <div className="bg-blue-50 p-4 rounded-2xl border border-blue-100">
+                  <div className="flex items-center gap-2 text-blue-600 mb-1">
+                    <Calendar className="w-5 h-5" />
+                    <span className="font-semibold">Duration</span>
+                  </div>
+                  <p className="text-gray-900 font-medium">{selectedPackage.duration}</p>
+                </div>
 
-            <div className="mb-4">
-              <h4 className="font-semibold text-white mb-2">Trip Highlights:</h4>
-              <ul className="list-disc list-inside text-sm text-gray-300">
-                {selectedPackage.highlights.map((item, idx) => (
-                  <li key={idx}>{item}</li>
-                ))}
-              </ul>
-            </div>
+                <div className="bg-purple-50 p-4 rounded-2xl border border-purple-100">
+                  <div className="flex items-center gap-2 text-purple-600 mb-1">
+                    <Users className="w-5 h-5" />
+                    <span className="font-semibold">Group Size</span>
+                  </div>
+                  <p className="text-gray-900 font-medium">{selectedPackage.groupSize}</p>
+                </div>
 
-            {selectedPackage.optionalExtras && selectedPackage.optionalExtras.length > 0 && (
-              <div className="mb-4">
-                <h4 className="font-semibold text-white mb-2">Optional Extras:</h4>
-                <ul className="list-disc list-inside text-sm text-gray-300">
-                  {selectedPackage.optionalExtras.map((item, idx) => (
-                    <li key={idx}>{item}</li>
+                <div className="bg-emerald-50 p-4 rounded-2xl border border-emerald-100">
+                  <div className="flex items-center gap-2 text-emerald-600 mb-1">
+                    <Star className="w-5 h-5" />
+                    <span className="font-semibold">Rating</span>
+                  </div>
+                  <p className="text-gray-900 font-medium">{selectedPackage.rating} ({selectedPackage.reviews} reviews)</p>
+                </div>
+
+                <div className="bg-cyan-50 p-4 rounded-2xl border border-cyan-100">
+                  <div className="flex items-center gap-2 text-cyan-600 mb-1">
+                    <Plane className="w-5 h-5" />
+                    <span className="font-semibold">Departure</span>
+                  </div>
+                  <p className="text-gray-900 font-medium">{selectedPackage.departure}</p>
+                </div>
+
+                <div className={`p-4 rounded-2xl border ${getDifficultyColor(selectedPackage.difficulty).replace('text-', 'bg-').replace('-400', '-50').replace('bg-', 'bg-').replace('-500/20', '-100')} ${getDifficultyColor(selectedPackage.difficulty).replace('bg-', 'border-').replace('/20', '')}`}>
+                  <div className={`flex items-center gap-2 mb-1 ${getDifficultyColor(selectedPackage.difficulty).split(' ')[0]}`}>
+                    <Info className="w-5 h-5" />
+                    <span className="font-semibold">Difficulty</span>
+                  </div>
+                  <p className="text-gray-900 font-medium">{selectedPackage.difficulty}</p>
+                </div>
+
+                <div className="bg-orange-50 p-4 rounded-2xl border border-orange-100">
+                  <div className="flex items-center gap-2 text-orange-600 mb-1">
+                    {getCategoryIcon(selectedPackage.category)}
+                    <span className="font-semibold">Category</span>
+                  </div>
+                  <p className="text-gray-900 font-medium">{selectedPackage.category}</p>
+                </div>
+              </div>
+
+              {/* Includes Section */}
+              <div className="mb-8">
+                <h4 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <CheckCircle className="w-6 h-6 text-emerald-500" />
+                  What's Included
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {selectedPackage.includes.map((item, idx) => (
+                    <div key={idx} className="flex items-center gap-3 p-3 bg-emerald-50 rounded-xl border border-emerald-100">
+                      <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0" />
+                      <span className="text-gray-900 font-medium">{item}</span>
+                    </div>
                   ))}
-                </ul>
+                </div>
               </div>
-            )}
 
-            <div className="mt-6 text-2xl font-bold text-green-500 flex items-baseline justify-end">
-              {selectedPackage.currency}
-              {selectedPackage.price.toLocaleString()}
-              <span className="line-through text-sm text-gray-400 ml-3">
-                {selectedPackage.currency}
-                {selectedPackage.originalPrice.toLocaleString()}
-              </span>
+              {/* Highlights Section */}
+              <div className="mb-8">
+                <h4 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <Sparkles className="w-6 h-6 text-yellow-500" />
+                  Trip Highlights
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {selectedPackage.highlights.map((item, idx) => (
+                    <div key={idx} className="flex items-center gap-3 p-3 bg-yellow-50 rounded-xl border border-yellow-100">
+                      <Star className="w-5 h-5 text-yellow-500 flex-shrink-0" />
+                      <span className="text-gray-900 font-medium">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Optional Extras */}
+              {selectedPackage.optionalExtras && selectedPackage.optionalExtras.length > 0 && (
+                <div className="mb-8">
+                  <h4 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <Info className="w-6 h-6 text-blue-500" />
+                    Optional Extras
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {selectedPackage.optionalExtras.map((item, idx) => (
+                      <div key={idx} className="flex items-center gap-3 p-3 bg-blue-50 rounded-xl border border-blue-100">
+                        <Info className="w-5 h-5 text-blue-500 flex-shrink-0" />
+                        <span className="text-gray-900 font-medium">{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Pricing and Book Button */}
+              <div className="bg-gradient-to-r from-emerald-50 to-teal-50 p-6 rounded-3xl border border-emerald-200">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <p className="text-gray-600 text-sm mb-1">Starting from</p>
+                    <div className="flex items-baseline gap-3">
+                      <span className="text-4xl font-bold text-emerald-600">
+                        {selectedPackage.currency}{selectedPackage.price.toLocaleString()}
+                      </span>
+                      <span className="line-through text-gray-400 text-lg">
+                        {selectedPackage.currency}{selectedPackage.originalPrice.toLocaleString()}
+                      </span>
+                    </div>
+                    <p className="text-gray-600 text-sm">per person</p>
+                  </div>
+                  {selectedPackage.discount > 0 && (
+                    <div className="text-right">
+                      <div className="bg-gradient-to-r from-red-500 to-pink-500 text-white text-lg font-bold px-4 py-2 rounded-full shadow-lg">
+                        Save {selectedPackage.discount}%
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                <button className="w-full py-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-lg font-bold rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-emerald-500/25">
+                  Book This Package Now
+                </button>
+              </div>
             </div>
-            <button className="mt-4 w-full text-lg text-white bg-green-600 hover:bg-green-500 px-6 py-3 rounded-lg transition-colors font-semibold">
-              Book Now
-            </button>
           </div>
         </div>
       )}
@@ -343,6 +481,12 @@ const TravelPackageCards = () => {
         .no-scrollbar {
           -ms-overflow-style: none;
           scrollbar-width: none;
+        }
+        .line-clamp-2 {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
         }
       `}</style>
     </div>

@@ -6,11 +6,11 @@ const DashboardLayout = () => {
   const isProfilePage = location.pathname === "/Dashboard/profile";
 
   return (
-    <div className="flex min-h-screen bg-gray-900">
+    <div className="flex min-h-screen bg-amber-50">
       <SidebarMenu />
       <div
-        className={`ml-56 px-6 w-full bg-gray-900 ${
-          isProfilePage ? "" : "pt-28"
+        className={`ml-56  w-full bg-amber-50 ${
+          isProfilePage ? "" : "pt-14"
         }`}
       >
         <div className="max-w-7xl mx-auto">

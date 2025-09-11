@@ -4,8 +4,6 @@ import Navbar from "./component/Navbar";
 import Home from "./component/Home";
 import SidebarMenu from "./component/Profile/SidebarMenu";
 import FindTravelMate from "./component/FindTravelMate"; 
-import TravelProfilePage from "./component/Profile/TravelProfilePage";
-import TravelFriendsPage from "./component/FriendsPage/TravelFriendsPage";
 import SignIn from "./component/SignIn";
 import SignUp from "./component/SignUp";
 import Profile from "./component/Dashboard/Profile";

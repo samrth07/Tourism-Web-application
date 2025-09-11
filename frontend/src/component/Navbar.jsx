@@ -14,7 +14,7 @@ const Navbar = () => {
   if (hideNavbar) return null
 
   return (
-    <nav className="fixed top-3 left-1/2 -translate-x-1/2 z-50 w-[90vw] rounded-full bg-gray-800 px-6 py-3 shadow-lg">
+    <nav className="fixed top-3 left-1/2 -translate-x-1/2 z-50 w-[90vw] rounded-full bg-black px-6 py-3 shadow-lg border-2 border-white">
       <div className="flex items-center justify-between">
         {/* Logo */}
         <Link
@@ -46,7 +46,7 @@ const Navbar = () => {
               to={to}
               className="relative rounded-full px-4 py-2 text-gray-300 transition-colors hover:text-white group"
             >
-              <span className="absolute inset-0 rounded-full bg-white/10 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <span className="absolute inset-0 rounded-full backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               <span className="relative z-10">{label}</span>
             </Link>
           ))}
