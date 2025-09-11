@@ -1,28 +1,33 @@
-"use client"
-import { Link, useNavigate, useLocation } from "react-router-dom"
-import { Plane, User, Menu, X } from "lucide-react"
-import { useAuth } from "../context/AuthContext"
-import { useState } from "react"
+"use client";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Plane, User, Menu, X } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
+import { useState } from "react";
 
 const Navbar = () => {
-  const navigate = useNavigate()
-  const location = useLocation()
-  const { user } = useAuth()
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { user } = useAuth();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const hideNavbar = location.pathname.startsWith("/Dashboard")
-  if (hideNavbar) return null
+  const hideNavbar = location.pathname.startsWith("/Dashboard");
+  if (hideNavbar) return null;
 
   return (
-    <nav className="fixed top-3 left-1/2 -translate-x-1/2 z-50 w-[90vw] rounded-full bg-gray-800 px-6 py-3 shadow-lg">
+    <nav className="fixed top-3 left-1/2 -translate-x-1/2 z-50 w-[74vw] rounded-full border-1 border-white bg-stone-900/60  backdrop-blur-md px-4 py-1 shadow-lg text-white">
       <div className="flex items-center justify-between">
         {/* Logo */}
-        <Link
-          to="/"
-          className="flex items-center gap-2 text-2xl font-bold text-white transition-colors hover:text-green-400 md:text-3xl"
-        >
-          <Plane className="h-7 w-7 text-green-500 md:h-8 md:w-8" />
-          TravelMate
+        <Link to="/" className="flex items-center space-x-3 group">
+          <div className="relative">
+            <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
+              <Plane className="h-6 w-6 text-white transform rotate-45" />
+            </div>
+            <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+          </div>
+          <div>
+            <span className="text-2xl font-bold text-white">TravelMate</span>
+            <div className="text-xs text-stone-300 -mt-1">Explore Together</div>
+          </div>
         </Link>
 
         {/* Hamburger (Mobile) */}
@@ -30,11 +35,15 @@ const Navbar = () => {
           className="text-white md:hidden"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
-          {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          {isMobileMenuOpen ? (
+            <X className="h-6 w-6" />
+          ) : (
+            <Menu className="h-6 w-6" />
+          )}
         </button>
 
         {/* Desktop Nav Links */}
-        <div className="hidden items-center gap-4 font-semibold md:flex">
+        <div className="hidden items-center gap-4 font-semibold md:flex text-base">
           {[
             { to: "/experience", label: "Experience" },
             { to: "/destinations", label: "Destinations" },
@@ -44,9 +53,9 @@ const Navbar = () => {
             <Link
               key={to}
               to={to}
-              className="relative rounded-full px-4 py-2 text-gray-300 transition-colors hover:text-white group"
+              className="relative rounded-full px-3 py-2 text-white transition-colors hover:text-white group"
             >
-              <span className="absolute inset-0 rounded-full bg-white/10 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <span className="absolute inset-0 rounded-full bg-stone-950/10 backdrop-blur-sm opacity-0 group-hover:opacity-100 group-hover:shadow-[0_0_20px_rgba(0,0,0,0.3)] transition-all duration-500 ease-in-out" />{" "}
               <span className="relative z-10">{label}</span>
             </Link>
           ))}
@@ -58,13 +67,13 @@ const Navbar = () => {
             <>
               <button
                 onClick={() => navigate("/signin")}
-                className="rounded-full border-2 border-white px-5 py-2 text-base font-medium text-white transition-all duration-300 hover:bg-white hover:text-gray-800"
+                className="rounded-full border-1 border-white px-2.5 py-1.5 text-base font-medium text-white transition-all duration-300 hover:bg-white hover:text-orange-600"
               >
                 Sign In
               </button>
               <button
                 onClick={() => navigate("/signup")}
-                className="rounded-full bg-green-600 px-5 py-2 text-base font-semibold text-white transition-colors duration-300 hover:bg-green-500"
+                className="rounded-full bg-orange-600 px-2.5 py-1 text-base font-semibold text-white shadow-sm transition-all duration-300 hover:bg-orange-700 hover:text-white hover:shadow-md hover:scale-105"
               >
                 Sign Up
               </button>
@@ -94,7 +103,7 @@ const Navbar = () => {
               key={to}
               to={to}
               onClick={() => setIsMobileMenuOpen(false)}
-              className="rounded-full px-4 py-2 text-center transition-colors hover:bg-white/20"
+              className="rounded-full px-4 py-2 text-center transition-colors hover:bg-white/10"
             >
               {label}
             </Link>
@@ -104,8 +113,8 @@ const Navbar = () => {
             <>
               <button
                 onClick={() => {
-                  setIsMobileMenuOpen(false)
-                  navigate("/signin")
+                  setIsMobileMenuOpen(false);
+                  navigate("/signin");
                 }}
                 className="rounded-full border-2 border-white px-4 py-2 transition-all duration-300 hover:bg-white hover:text-gray-800"
               >
@@ -113,8 +122,8 @@ const Navbar = () => {
               </button>
               <button
                 onClick={() => {
-                  setIsMobileMenuOpen(false)
-                  navigate("/signup")
+                  setIsMobileMenuOpen(false);
+                  navigate("/signup");
                 }}
                 className="rounded-full bg-green-600 px-4 py-2 font-semibold transition-colors hover:bg-green-500"
               >
@@ -124,8 +133,8 @@ const Navbar = () => {
           ) : (
             <button
               onClick={() => {
-                setIsMobileMenuOpen(false)
-                navigate("/Dashboard")
+                setIsMobileMenuOpen(false);
+                navigate("/Dashboard");
               }}
               aria-label="Go to Profile"
               className="flex items-center justify-center rounded-full border-2 border-white p-2 transition-shadow duration-100 hover:shadow-[0_0_10px_2px_white]"
@@ -136,7 +145,7 @@ const Navbar = () => {
         </div>
       )}
     </nav>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;
