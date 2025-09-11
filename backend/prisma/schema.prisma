@@ -22,6 +22,8 @@ model User {
   messages     Message[]
   createdPlans TravelPlan[]        @relation("UserToTravelPlan")
   travelPlans  TravelPlanMembers[]
+
+  // relationship
   sender       Friend[]           @relation("SentFriendRequests")
   reciever     Friend[]           @relation("ReceivedFriendRequests")
 }
@@ -75,6 +77,6 @@ model Friend {
   recieverId  String
   sender      User   @relation( "SentFriendRequests" , fields: [senderID], references: [id])
   recievedBy  User   @relation( "ReceivedFriendRequests" , fields: [recieverId], references: [id])
-
-  @@unique([senderID, recieverId])
+  
+  @@unique([senderID , recieverId])
 }

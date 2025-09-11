@@ -1,6 +1,6 @@
 import client from "../index.js";
 
-export const sendRequest = async (senderId, recieverId) => {
+export const sendRequest = async (senderId, recieverId ) => {
   return client.friend.create({
     data: {
       senderID: senderId,
@@ -9,13 +9,13 @@ export const sendRequest = async (senderId, recieverId) => {
   });
 };
 
-export const acceptRequest = async (senderID, recieverId) => {
+export const acceptRequest = async (senderID, recieverId , ) => {
   return client.friend.update({
     where: {
       senderID_recieverId : {
-        senderID,
+         senderID,
         recieverId,
-      },
+      }
     },
     data: {
       isAccepted: true,

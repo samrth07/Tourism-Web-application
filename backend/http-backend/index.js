@@ -13,7 +13,7 @@ app.use(express.json());
 app.use('/user', userRouter);
 app.use('/chat', chatRouter);
 app.use('/plans', travelRouter);
-app.use('/friend' , friendRouter)
+app.use('/friend' , friendRouter);
 
 
 app.listen(3000 , () => {

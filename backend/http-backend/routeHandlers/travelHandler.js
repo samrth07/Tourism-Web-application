@@ -2,8 +2,8 @@ import * as RoomService from "../../prisma/services/roomService.js";
 
 export const getTravelPlans = async (req, res) => {
   try {
-    const response = await RoomService.getAllplans();
     const userId = req.id;
+    const response = await RoomService.getAllplans(userId);
     const currentPlans = response.filter((plan) =>
       plan.members.some((member) => member.user.id === userId)
     );

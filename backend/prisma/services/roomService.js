@@ -207,24 +207,36 @@ export const getMemebers = async (planId) => {
     })
 }
 
-export const getAllplans = async () => {
-
+export const getAllplans = async (viewerId) => {
   return await client.travelPlan.findMany({
-    include:{
-      user : true,
-      members :{
-        select :{
-          user : 
-          {
-            select : {
-            id : true,
-            name: true,
-            profileImage : true,
-            Address : true
-          }
-        }
-        }
-      }
-    }
+    include: {
+      user: true, // creator of the plan
+      members: {
+        select: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              profileImage: true,
+              Address: true,
+
+              // check friendship with viewer
+              sender: {
+                where: {
+                  recieverId: viewerId
+                },
+                select: { id: true , isAccepted: true},
+              },
+              reciever: {
+                where: {
+                  senderID: viewerId
+                },
+                select: { id: true , isAccepted : true},
+              },
+            },
+          },
+        },
+      },
+    },
   });
-}
+};

@@ -225,6 +225,7 @@ const EnhancedTravelPlan = ({ plan, JoinPlan, msg, OpenMemberPage }) => {
         </div>
       </div>
     </div>
+    </div>
   );
 };
 

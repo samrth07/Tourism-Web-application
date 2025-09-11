@@ -70,9 +70,7 @@ export const joinPlan = async (req, res) => {
         error: "Plan doesn't exist",
       });
     }
-   console.log(plan);
   const user = req.id;
-    
   const addMember = await Planservices.addMemberTotravelPlan(planId , user);  
 
     res.json({
@@ -82,7 +80,6 @@ export const joinPlan = async (req, res) => {
     return;
   } 
   catch (error) {
-    console.log(error);
     res.status(500).json({
       error: "Failed to join the room.",
     });
@@ -110,7 +107,7 @@ export const VerifyUserInRoom = async (req, res) => {
       return;
     }
 
-    const isUserInRoom = room.users.some((user) => user.id === userId);
+    const isUserInRoom = room.users.some((user) => user.id === userId); 
     if (!isUserInRoom) {
       res.status(403).json({ message: "Access denied.You're not in this room." });
       return;

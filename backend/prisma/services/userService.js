@@ -94,7 +94,19 @@ export const getMyinformation = async ( userID) => {
       },
       include : {
         Address : true,
-        password : false
+        password : false,
+        createdPlans : true,
+        travelPlans : true,
+        sender:{
+          where: {
+            isAccepted : true
+          }
+        },
+        reciever:{
+          where: {
+            isAccepted : true
+          }
+        },
       }
     })
 }

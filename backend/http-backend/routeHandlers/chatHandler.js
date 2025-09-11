@@ -4,6 +4,14 @@ import { getRoomByRoomId } from "../../prisma/services/roomService.js";
 export const getMessages = async (req, res) => {
 
     try {
+        const friend = req.query.frined;
+        const group = req.query.group;
+
+        if( friend ){
+
+        }else{
+            
+        }
         const roomId = req.params.roomId;
         const messages = getRoomMessages(roomId)
 

@@ -62,7 +62,6 @@ export const signin = async(req, res) => {
 
         const email = req.body.email;
         const password = req.body.password;
-        console.log(email + password)
         let user = await UserService.getUserByEmail(email);
 
         if(!user) {

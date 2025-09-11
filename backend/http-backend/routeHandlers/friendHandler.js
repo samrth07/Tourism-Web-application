@@ -12,7 +12,7 @@ export const addFriend = async (req , res) => {
        if( !reqSender || !reqReciever) res.status(400).json({ msg : "somthing is missing !!!"});
 
        try {
-            const sendRequest = await friendService.sendRequest( reqSender , reqReciever);
+            const sendRequest = await friendService.sendRequest( reqSender , reqReciever );
 
             if( sendRequest ){
                 res.status(200).json({
@@ -39,7 +39,7 @@ export const acceptRequest = async ( req , res) => {
     const reciever = req.id;
 
     try {
-        const acceptRequest = await friendService.acceptRequest(sender , reciever);
+        const acceptRequest = await friendService.acceptRequest(sender , reciever );
 
         if( acceptRequest ){
             res.status(200).json({

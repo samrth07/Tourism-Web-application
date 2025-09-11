@@ -22,7 +22,6 @@ const Navbar = () => {
             <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
               <Plane className="h-6 w-6 text-white transform rotate-45" />
             </div>
-            <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
           </div>
           <div>
             <span className="text-2xl font-bold text-white">TravelMate</span>
