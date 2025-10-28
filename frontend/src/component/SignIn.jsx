@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom"; 
 import { FaEnvelope, FaLock, FaGoogle, FaFacebookF } from "react-icons/fa";
 import axios from "axios";
-import { useAuth } from "../context/Authcontext";
+import { useAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
 import ClipLoader from "react-spinners/ClipLoader";
 
