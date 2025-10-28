@@ -11,10 +11,10 @@ export const createPlan = async ( destination, travelDate, timeSlot ,userId) => 
   });
 };
 
-export const getRoomByName = async (roomName) => {
+export const getPlanById = async (planId) => {
   return await client.travelPlan.findFirst({
     where: {
-      roomName: roomName,
+      id: planId,
     },
   });
 };
@@ -125,66 +125,6 @@ export const getRoomByRoomId = async (roomId) => {
   });
 };
 
-export const filterByDestination = async (destination) => {
-  return await client.travelPlan.findMany({
-    where: {
-      destination
-    }
-  })
-}
-
-export const filterByTimeSlot = async(timeSlot) => {
-  return await client.travelPlan.findMany({
-    where: {
-      timeSlot
-    }
-  })
-}
-
-export const filterByDate = async(travelDate) => {
-  return await client.travelPlan.findMany({
-    where: {
-      travelDate
-    }
-  })
-}
-
-export const filterByDateAndTime = async(travelDate, timeSlot) => {
-  return await client.travelPlan.findMany({
-    where: {
-      travelDate,
-      timeSlot
-    }
-  })
-}
-
-export const filterByDateAndDestination = async(travelDate, destination) => {
-  return await client.travelPlan.findMany({
-    where: {
-      travelDate,
-      destination
-    }
-  })
-}
-
-export const filterByTimeAndDestination = async(timeSlot, destination) => {
-  return await client.travelPlan.findMany({
-    where: {
-      timeSlot,
-      destination
-    }
-  })
-}
-
-export const filterByTimeDateDestination = async(timeSlot, travelDate,destination) => {
-  return await client.travelPlan.findMany({
-    where: {
-      timeSlot,
-      travelDate,
-      destination
-    }
-  })
-}
 
 
 export const addMemberTotravelPlan = async ( planId , user) => {

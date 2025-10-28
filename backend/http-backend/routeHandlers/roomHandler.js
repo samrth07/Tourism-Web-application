@@ -125,43 +125,27 @@ export const VerifyUserInRoom = async (req, res) => {
 };
 
 // Leaving a room
-export const leaveRoom = async (req, res) => {
+export const LeavePlan = async (req, res) => {
   const userId = req.id;
-  const { roomId } = req.body;
+  const { planId } = req.params.planId;
 
-  if (!roomId) {
+  if (!planId) {
     res
       .status(500)
-      .json({ success: false, message: "Room ID required" });
+      .json({ success: false, message: "Plan Id is required" });
     return;
   }
 
   try {
-    const room = await Planservices.getRoomUsers(roomId);
-    if (!room) {
+    const plan = await Planservices.getPlanById(planId);
+    if (!plan) {
       res
         .status(404)
-        .json({ success: false, message: "Room not found." });
+        .json({ success: false, message: "Plan not found." });
       return;
     }
 
-    if (room.userId === userId) {
-      await deleteRoom(roomId);
-      res
-        .status(200)
-        .json({ 
-          success: true, 
-          message: "Room deleted."
-         });
-      return;
-    }
-
-    await removeUserFromRoom(roomId, userId);
-    res.json({ 
-      success: true,
-       message: "Left the room." 
-      });
-    return;
+    const leavePlan = Planservices.deleteRoom()
   } catch(e) {
     res
       .status(500)
