@@ -14,6 +14,7 @@ model User {
   name         String?
   email        String              @unique
   password     String
+  Age          Int?
   profileImage String?
   createdAt    DateTime            @default(now())
   updatedAt    DateTime            @updatedAt
@@ -45,9 +46,25 @@ model TravelPlan {
   isActive    Boolean             @default(true)
   createdAt   DateTime            @default(now())
   createdById String
+  minAge      Int ?                @default(0)
+  maxAge      Int  ?               @default(100)
+  grpSize     Int?
+  decp        String?              
+  image       String?
+  Categories  String?
+  Duration    String?
+  Difficulty  String?
+  Trip_Hightlights Trip_Hightlights[]   @relation()
   messages    Message[]
   user        User                @relation("UserToTravelPlan", fields: [createdById], references: [id])
   members     TravelPlanMembers[]
+}
+
+model Trip_Hightlights {
+  planId           String
+  plan             TravelPlan @relation( fields: [planId] , references: [id])
+  Trip_hightLight  String
+  @@id([planId])
 }
 
 model TravelPlanMembers {

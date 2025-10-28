@@ -43,4 +43,12 @@ export const CreateRoomSchema = z.object({
   destination: z.string().trim().nonempty({message: "Destination is required"}),
   travelDate: z.coerce.date(),
   timeSlot: timeSchema,
+  minAge : z.number().optional(),
+  maxAge : z.number.optional(),
+  grpSize : z.number.optional(),
+  decp : z.string.optional(),
+  Categories : z.string().optional(),
+  Duration : z.string().optional(),
+  Difficulty: z.string().optional(),
 })
+
