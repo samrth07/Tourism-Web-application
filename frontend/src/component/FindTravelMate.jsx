@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from "react"
-import { useAuth } from "../context/Authcontext"
+import { useAuth } from "../context/AuthContext"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import { toast } from "react-toastify"
