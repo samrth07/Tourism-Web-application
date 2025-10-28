@@ -1,5 +1,5 @@
 import React from "react";
-import { User, Mail, Contact, MapPin, Globe, Star } from "lucide-react"
+import { User, Mail, Contact, MapPin, Globe, Star, MessageCircleCode } from "lucide-react"
 
 const getInitials = (name) =>
   name
@@ -74,7 +74,7 @@ const FriendCard = ({ user  , message , handelrequest}) => {
               className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-orange-500 text-white font-semibold shadow-md transition-all duration-200 hover:bg-orange-600 hover:shadow-lg active:scale-95"
               onClick={handelOnclick}
             >
-              <Contact className="w-4 h-4" />
+              {/* <MessageCircleCode className="w-4 h-4" /> */}
               <span>{message}</span>
             </button>
 

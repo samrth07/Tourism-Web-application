@@ -14,7 +14,7 @@ const Friends = () => {
   const [loading, setLoading] = useState(true);
 
   const getAllfriends = async () => {
-    const response = await axios.get("http://localhost:3000/friend", {
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/friend`, {
       headers: {
         authorization: token,
       },
@@ -27,7 +27,7 @@ const Friends = () => {
 
   const handelFrdrequest = async (senderId) => {
     const response = await axios.patch(
-      `http://localhost:3000/friend/${senderId}`,
+      `${import.meta.env.VITE_API_URL}/friend/${senderId}`,
       {},
       {
         headers: {
@@ -61,7 +61,7 @@ const Friends = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto p-6">
         {AcceptedFrd.length > 0 ? (
           AcceptedFrd.map((user, ind) => (
-            <FriendCard key={ind} user={user} message={"friend"} />
+            <FriendCard key={ind} user={user} message={"msg"} />
           ))
         ) : (
           <div className="mb-7">

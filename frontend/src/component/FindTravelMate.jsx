@@ -34,7 +34,7 @@ const FindTravelmate = () => {
 
     async function fetchUser() {
       try {
-        const response = await axios.get("http://localhost:3000/plans", {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/plans`, {
           headers: {
             authorization: token,
           },
@@ -71,7 +71,7 @@ const FindTravelmate = () => {
 
   const HandleJoinPlan = async (planId) => {
     const response = await axios.post(
-      `http://localhost:3000/plans/join/${planId}`,
+      `${import.meta.env.VITE_API_URL}/plans/join/${planId}`,
       {},
       {
         headers: {
@@ -91,7 +91,7 @@ const FindTravelmate = () => {
 
   const sendRequest = async (recieverId) => {
     const addFriend = await axios.post(
-      `http://localhost:3000/friend/${recieverId}`,
+      `${import.meta.env.VITE_API_URL}/friend/${recieverId}`,
       {},
       {
         headers: {

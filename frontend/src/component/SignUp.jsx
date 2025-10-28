@@ -3,7 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaUser, FaEnvelope, FaPhone, FaLock, FaCalendar } from "react-icons/fa";
 import axios from 'axios'
 
+
 const SignUp = () => {
+
+  console.log(import.meta.env.VITE_API_URL);
+
   const navigate = useNavigate();
 
   const [formData, setformData] = useState({
@@ -25,7 +29,7 @@ const SignUp = () => {
     e.preventDefault();
     console.log(formData);
 
-        const responce =   await axios.post("http://localhost:3000/user/signup" , formData);
+        const responce =   await axios.post(`${import.meta.env.VITE_API_URL}/user/signup` , formData);
     if(responce){
       console.log(responce);
       alert("Signup successfully")
