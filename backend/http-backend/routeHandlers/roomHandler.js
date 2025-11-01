@@ -1,5 +1,7 @@
 import { CreateRoomSchema } from "../utils/zodValidation.js";
 import * as Planservices from "../../prisma/services/roomService.js";
+import { uploadImage } from "../utils/ImagesUtils.js";
+import { supabase } from "../server.js";
 
 
 export const createPlan = async (req, res) => {
@@ -13,13 +15,17 @@ export const createPlan = async (req, res) => {
       });
       return;
     }
+    let image  = "";
+    if( req.file ){
+      image = await uploadImage(supabase , req.file , 'TravelPlan');
+    }
     
-    const {destination, travelDate, timeSlot } = parsedData.data;
+    const {destination, travelDate, timeSlot , minAge , maxAge , grpSize , decp , Categories , Duration , Difficulty} = parsedData.data;
 
     const userId = req.id;
 
     // Create the room
-    const plan = await Planservices.createPlan(destination, travelDate, timeSlot ,userId);
+    const plan = await Planservices.createPlan(destination, travelDate, timeSlot ,userId , minAge , maxAge , grpSize , decp , Categories , Duration , Difficulty , image);
     if (!plan) {
       res.status(500).json({
         error: "Failed to create the plan. Please try again .",
@@ -124,10 +130,10 @@ export const VerifyUserInRoom = async (req, res) => {
   }
 };
 
-// Leaving a room
+// Leaving a plan
 export const LeavePlan = async (req, res) => {
   const userId = req.id;
-  const { planId } = req.params.planId;
+  const  planId = req.params.planId;
 
   if (!planId) {
     res
@@ -145,7 +151,10 @@ export const LeavePlan = async (req, res) => {
       return;
     }
 
-    const leavePlan = Planservices.deleteRoom()
+    const leavePlan = await Planservices.leavePlan(planId , userId);
+    res.status(200).json({
+      msg : `Plan deleted succussfully ${leavePlan}`
+    })
   } catch(e) {
     res
       .status(500)

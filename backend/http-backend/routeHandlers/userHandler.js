@@ -2,6 +2,8 @@ import { CreateUserSchema } from "../utils/zodValidation.js";
 import { hashPassword, verifyPassword } from '../utils/bcrypt.js';
 import { generateToken } from '../utils/jwt.js'
 import * as UserService from "../../prisma/services/userService.js";
+import { uploadImage } from "../utils/ImagesUtils.js";
+import { supabase } from "../server.js";
 
 export const signup = async(req, res) => {
 
@@ -142,6 +144,37 @@ export const getMyRooms = async (req, res) => {
   }
 };
 
+export const updateProfile = async( req , res) => {
+  try {
+    const file = req.file;
+    const userId = req.id;
+    let image_url = null;
+    const user = await UserService.getUserById(userId);
+   
+
+    if( file && user.profileImage) {
+      image_url = await uploadImage(supabase , file , 'User' , user.profileImage);
+    }else if( file ){
+      image_url = await uploadImage(supabase , file , 'User' );
+    }
+  
+    const userdata = req.body;
+    if( image_url){
+      userdata.profileImage = image_url
+    }
+    const response = await UserService.updateProfile(userdata , userId);
+
+    res.status(200).json({
+      data : response
+    })
+    
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      msg : "Internal server error",
+    })
+  }
+}
 export const getUsers = async(req , res) => {
 
       try{

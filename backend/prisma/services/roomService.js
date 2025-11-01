@@ -1,12 +1,33 @@
 import client from "../index.js";
 
-export const createPlan = async ( destination, travelDate, timeSlot ,userId) => {
+export const createPlan = async (
+  destination,
+  travelDate,
+  timeSlot,
+  userId,
+  minAge,
+  maxAge,
+  grpSize,
+  decp,
+  Categories,
+  Duration,
+  Difficulty,
+  image
+) => {
   return await client.travelPlan.create({
     data: {
       destination,
       travelDate,
       timeSlot,
-      createdById : userId
+      createdById: userId,
+      minAge,
+      maxAge,
+      grpSize,
+      decp,
+      Categories,
+      Duration,
+      Difficulty,
+      image
     },
   });
 };
@@ -19,88 +40,19 @@ export const getPlanById = async (planId) => {
   });
 };
 
-export const getRoomsByUserId = async (userId) => {
-  console.log(userId);
-  return await client.user.findUnique({
-    where: {
-      id: userId,
-    },
-    select: {
-      id: true,
-      name: true,
-      createdPlans: {
-        select: {
-          id: true,
-          roomname: true,
-          createdAt: true,
-          members: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-        },
-      },
-      travelPlans: {
-        select: {
-          id: true,
-          roomname: true,
-          createdAt: true,
-          user: {
-            select: {
-              id: true,
-              name: true, // the admin of the plan
-            },
-          },
-        },
-      },
-    },
-  });
-};
-// don't understand --samarth
-export const getCreatedRoomsByUserId = async (userId) => {
-  return await client.user.findUnique({
-    where: {
-      id: userId,
-    },
-    select: {
-      id: true,
-      name: true,
-      createdPlans: {
-        select: {
-          id: true,
-          roomName: true,
-          createdAt: true,
-          members: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-        },
-      },
-    },
+
+export const leavePlan = async (planId ,userId) => {
+  return await client.travelPlanMembers.delete({
+    where: { 
+      memberId_travelPlanId : {
+        memberId : userId,
+        travelPlanId : planId
+      }
+     },
   });
 };
 
-export const deleteRoom = async (roomId) => {
-  return await client.travelPlan.delete({
-    where: { id: roomId },
-  });
-};
-
-export const removeUserFromRoom = async (roomId, userId) => {
-  return await client.travelPlan.update({
-    where: { id: roomId },
-    data: {
-      members: {
-        disconnect: { id: userId },
-      },
-    },
-  });
-};
-
-export const getPlan = async ( planId ) => {
+export const getPlan = async (planId) => {
   return await client.travelPlan.findUnique({
     where: { id: planId },
     include: {
@@ -110,13 +62,6 @@ export const getPlan = async ( planId ) => {
   });
 };
 
-export const getRoomIfExists = async (roomId) => {
-  return await client.travelPlan.findUnique({
-    where: { 
-      id: roomId 
-    },
-  });
-};
 
 export const getRoomByRoomId = async (roomId) => {
   return await client.travelPlan.findUnique({
@@ -125,27 +70,22 @@ export const getRoomByRoomId = async (roomId) => {
   });
 };
 
-
-
-export const addMemberTotravelPlan = async ( planId , user) => {
+export const addMemberTotravelPlan = async (planId, user) => {
   return await client.travelPlanMembers.create({
-      data : {
-        memberId : user,
-        travelPlanId : planId
-      }
-  })
-}
-
+    data: {
+      memberId: user,
+      travelPlanId: planId,
+    },
+  });
+};
 
 export const getMemebers = async (planId) => {
-
-    return await client.travelPlanMembers.findMany({
-      where : {
-        travelPlanId : planId
-      },
-
-    })
-}
+  return await client.travelPlanMembers.findMany({
+    where: {
+      travelPlanId: planId,
+    },
+  });
+};
 
 export const getAllplans = async (viewerId) => {
   return await client.travelPlan.findMany({
@@ -163,15 +103,15 @@ export const getAllplans = async (viewerId) => {
               // check friendship with viewer
               sender: {
                 where: {
-                  recieverId: viewerId
+                  recieverId: viewerId,
                 },
-                select: { id: true , isAccepted: true},
+                select: { id: true, isAccepted: true },
               },
               reciever: {
                 where: {
-                  senderID: viewerId
+                  senderID: viewerId,
                 },
-                select: { id: true , isAccepted : true},
+                select: { id: true, isAccepted: true },
               },
             },
           },
