@@ -12,6 +12,16 @@ export const createUser = async ( email , hashedPassword , name , profileImage) 
   });
 };
 
+export const updateProfile = async ( userData , userId) => {
+  const data = userData;
+  return await client.user.update({
+    where : {
+      id : userId,
+    },
+    data 
+  })
+}
+
 export const createAddress = async ( city , country , pincode , userId) => {
 
   return await client.address.create({

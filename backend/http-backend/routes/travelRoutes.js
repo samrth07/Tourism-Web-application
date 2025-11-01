@@ -3,15 +3,33 @@ import { getTravelPlans } from '../routeHandlers/travelHandler.js';
 import { middleware } from '../utils/middleware.js';
 import { createPlan, getMemebers, joinPlan, LeavePlan } from '../routeHandlers/roomHandler.js';
 
-const travelRouter = express.Router();
+function parseData(req, res , next ) {
 
-travelRouter.get('/:planId/members' , getMemebers);
+  if (req.body.data) {
+    try {
+      console.log("Body befoere parse" + req.body.data)
+      const parse = JSON.parse(req.body.data);
+      req.body = parse;
+    } catch (e) {
+      return res.status(400).json({ message: 'Invalid JSON in projectData field' });
+    }
+  }
+  next();
+}
 
-travelRouter.use(middleware);
+export default function travelRouter( upload , supabase){
+    const router = express.Router();
 
-travelRouter.get('/', getTravelPlans);
-travelRouter.post('/create', createPlan);
-travelRouter.post('/join/:planId', joinPlan);
-travelRouter.post('/leave', LeavePlan);
+    router.get('/:planId/members' , getMemebers);
+    
+    router.use(middleware);
+    
+    router.get('/', getTravelPlans);
+    router.post('/create', upload.single('image') , parseData , createPlan);
+    router.post('/join/:planId', joinPlan);
+    router.delete('/leave/:planId', LeavePlan);
 
-export default travelRouter;
+    return router;
+}
+
+
