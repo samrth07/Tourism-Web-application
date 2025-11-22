@@ -3,7 +3,6 @@ import * as Planservices from "../../prisma/services/roomService.js";
 import { uploadImage } from "../utils/ImagesUtils.js";
 import { supabase } from "../server.js";
 
-
 export const createPlan = async (req, res) => {
   try {
     // Validate request body
@@ -15,17 +14,41 @@ export const createPlan = async (req, res) => {
       });
       return;
     }
-    let image  = "";
-    if( req.file ){
-      image = await uploadImage(supabase , req.file , 'TravelPlan');
+    let image = "";
+    if (req.file) {
+      image = await uploadImage(supabase, req.file, "TravelPlan");
     }
-    
-    const {destination, travelDate, timeSlot , minAge , maxAge , grpSize , decp , Categories , Duration , Difficulty} = parsedData.data;
+
+    const {
+      destination,
+      travelDate,
+      timeSlot,
+      minAge,
+      maxAge,
+      grpSize,
+      decp,
+      Categories,
+      Duration,
+      Difficulty,
+    } = parsedData.data;
 
     const userId = req.id;
 
     // Create the room
-    const plan = await Planservices.createPlan(destination, travelDate, timeSlot ,userId , minAge , maxAge , grpSize , decp , Categories , Duration , Difficulty , image);
+    const plan = await Planservices.createPlan(
+      destination,
+      travelDate,
+      timeSlot,
+      userId,
+      minAge,
+      maxAge,
+      grpSize,
+      decp,
+      Categories,
+      Duration,
+      Difficulty,
+      image
+    );
     if (!plan) {
       res.status(500).json({
         error: "Failed to create the plan. Please try again .",
@@ -34,17 +57,15 @@ export const createPlan = async (req, res) => {
     }
 
     const planId = plan.id;
-    const addMember = await Planservices.addMemberTotravelPlan(planId , userId);
+    const addMember = await Planservices.addMemberTotravelPlan(planId, userId);
 
     res.status(200).json({
       message: "Plan Created Successfully",
-      plan : plan,
-      memberInproject : addMember
+      plan: plan,
+      memberInproject: addMember,
     });
     return;
-  }
-   catch (error) {
-    console.error("Error creating plan:", error);
+  } catch (error) {
     res.status(500).json({
       error: "Something went wrong while creating the plan.",
     });
@@ -55,11 +76,9 @@ export const createPlan = async (req, res) => {
 // Joining a Plan
 
 export const joinPlan = async (req, res) => {
+  const planId = parseInt(req.params.planId);
 
-  const planId = req.params.planId;
-  console.log(planId)
-
-  if ( !planId ) {
+  if (!planId) {
     res.status(403).json({
       message: "SomingThing went wrong",
     });
@@ -67,25 +86,23 @@ export const joinPlan = async (req, res) => {
   }
 
   try {
-    const plan = await Planservices.getPlan( planId );
-     
+    const plan = await Planservices.getPlan(planId);
 
-    if ( !plan ) {
+    if (!plan) {
       res.status(404).json({
         success: false,
         error: "Plan doesn't exist",
       });
     }
-  const user = req.id;
-  const addMember = await Planservices.addMemberTotravelPlan(planId , user);  
+    const user = req.id;
+    const addMember = await Planservices.addMemberTotravelPlan(planId, user);
 
     res.json({
       message: "Room joined successfully.",
       member: addMember,
     });
     return;
-  } 
-  catch (error) {
+  } catch (error) {
     res.status(500).json({
       error: "Failed to join the room.",
     });
@@ -93,94 +110,47 @@ export const joinPlan = async (req, res) => {
   }
 };
 
-
-export const VerifyUserInRoom = async (req, res) => {
-  const userId = req.id;
-  const { roomId } = req.body;
-
-  if (!roomId) {
-    res
-      .status(404)
-      .json({ message: "Invalid Room ID" });
-    return;
-  }
-
-  try {
-    const room = await Planservices.getRoomByRoomId(roomId);
-
-    if (!room) {
-      res.status(404).json({ message: "Room not found" });
-      return;
-    }
-
-    const isUserInRoom = room.users.some((user) => user.id === userId); 
-    if (!isUserInRoom) {
-      res.status(403).json({ message: "Access denied.You're not in this room." });
-      return;
-    }
-
-    res.json({ 
-      message: "User is in the room" 
-    });
-    return;
-  } 
-  catch {
-    res.status(500).json({ message: "Server error" });
-    return;
-  }
-};
-
 // Leaving a plan
+
 export const LeavePlan = async (req, res) => {
   const userId = req.id;
-  const  planId = req.params.planId;
+  const planId = parseInt(req.params.planId);
 
   if (!planId) {
-    res
-      .status(500)
-      .json({ success: false, message: "Plan Id is required" });
+    res.status(500).json({ success: false, message: "Plan Id is required" });
     return;
   }
 
   try {
     const plan = await Planservices.getPlanById(planId);
     if (!plan) {
-      res
-        .status(404)
-        .json({ success: false, message: "Plan not found." });
+      res.status(404).json({ success: false, message: "Plan not found." });
       return;
     }
 
-    const leavePlan = await Planservices.leavePlan(planId , userId);
+    const leavePlan = await Planservices.leavePlan(planId, userId);
     res.status(200).json({
-      msg : `Plan deleted succussfully ${leavePlan}`
-    })
-  } catch(e) {
-    res
-      .status(500)
-      .json({ success: false, error: e });
+      msg: `Plan deleted succussfully ${leavePlan}`,
+    });
+  } catch (e) {
+    res.status(500).json({ success: false, error: e });
     return;
   }
 };
 
-export const getMemebers = async(req , res) => {
-
-    try {
-    const planId  = req.params.planId;
-    if( !planId ){
-          res.status(403).json({msg : "PlanId is missing"});
-    } 
-
-      const member = await Planservices.getMemebers(planId);
-
-      res.status(200).json({
-        member : member
-      })
-    
-    } catch (error) {
-      console.log(error)
-        res.status(500).json({msg : "Something went wrong !!!"});
+export const getMemebers = async (req, res) => {
+  try {
+    const planId = parseInt(req.params.planId);
+    if (!planId) {
+      res.status(403).json({ msg: "PlanId is missing" });
     }
-}
 
+    const member = await Planservices.getMemebers(planId);
 
+    res.status(200).json({
+      member: member,
+    });
+  } catch (error) {
+    res.status(500).json({ msg: "Something went wrong !!!" });
+  }
+};

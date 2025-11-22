@@ -1,67 +1,128 @@
-import * as friendService from "../../prisma/services/frinedService.js";
-import { getUserById } from "../../prisma/services/userService.js";
+import * as friendServices from "../../prisma/services/frinedService.js";
 
+export const addFriend = async (req, res) => {
+  try {
+    const receiverId = parseInt(req.params.receiverId);
+    const senderId = parseInt(req.id);
 
+    if (!receiverId) res.status(401).json({ msg: "Something is missing" });
 
-export const addFriend = async (req , res) => {
-        const reqSender = req.id;
-        const reqReciever = req.params.reqRecieverId
-        console.log("constrol reach at addfriend !!!");
-        console.log(reqSender + " " + reqReciever)
+    await friendServices.addFriend(senderId, receiverId);
 
-       if( !reqSender || !reqReciever) res.status(400).json({ msg : "somthing is missing !!!"});
+    res.status(200).json({
+      msg: "Request Send succfully ",
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: `The request fails with error ${error}`,
+    });
+  }
+};
 
-       try {
-            const sendRequest = await friendService.sendRequest( reqSender , reqReciever );
+export const accept = async (req, res) => {
+  try {
+    const receiverId = parseInt(req.id);
+    const senderId = parseInt(req.params.senderId);
+    if (!senderId) res.status(401).json({ msg: "Something is missing" });
 
-            if( sendRequest ){
-                res.status(200).json({
-                    msg : "Request send succussfully"
-                })
-            }
-            
-       } catch (error) {
+    await friendServices.acceptReq(senderId, receiverId);
 
-            res.status.json({
-                msg : "something is wrong"
-            })
-        
-       }
-}
+    const conversion = await friendServices.crateConversionID("", false);
 
-// export const removeFriend = async (req , res) => {
+    const participant = [
+      {
+        conversationId: conversion.id,
+        userId: receiverId,
+      },
+      {
+        conversationId: conversion.id,
+        userId: senderId,
+      },
+    ];
 
-// }
+    const response = await friendServices.conversionParticipant(participant);
 
-export const acceptRequest = async ( req , res) => {
-    console.log("control reach here !!!")
-    const sender  = req.params.senderId;
-    const reciever = req.id;
+    res.status(200).json({
+      msg: "You are friend  now !!!",
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: `The request fails with error ${error}`,
+    });
+  }
+};
 
-    try {
-        const acceptRequest = await friendService.acceptRequest(sender , reciever );
+export const removeFriend = async (req, res) => {
+  try {
+    const userID = parseInt(req.id);
+    const friendID = parseInt(req.params.friendID);
 
-        if( acceptRequest ){
-            res.status(200).json({
-                msg : "request accepted "
-            })
-        }
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({
-            msg : "something went wrong"
-        })
-    }
-}
+    await friendServices.removeFriend(userID, friendID);
 
+    res.status(200).json({
+      msg: "You are no loggere friend ",
+    });
+  } catch (error) {
+    res.status(500).json({
+      msg: `Someting went wrong ${error}`,
+    });
+  }
+};
 
-export const getAllfriend = async ( req , res) => {
+export const getAllFriend = async (req, res) => {
+  try {
+    const userID = parseInt(req.id);
+    const friend = await friendServices.getAllFriend(userID);
 
-    const userId = req.id
+    res.status(200).json({
+      friend,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error,
+    });
+  }
+};
 
-    const friends = await friendService.getAllFriends(userId);
+export const getPendingRequest = async (req, res) => {
+  try {
+    const userID = parseInt(req.id);
 
-    res.json({
-        friends
-    })
-}
+    const pendingRequest = await friendServices.getPendingRequest(userID);
+
+    res.status(200).json({
+      pendingRequest,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: `something  went wrong ${error}`,
+    });
+  }
+};
+
+export const getNotAccepeted = async (req, res) => {
+  try {
+    const userID = parseInt(req.id);
+
+    const notAccepeted = await friendServices.getNotAccepeted(userID);
+    res.status(200).json({
+      notAccepeted,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: `Error is ${error}`,
+    });
+  }
+};
+
+export const existingConversation = async (userId, receiverId) => {
+  try {
+    const conversationId = await friendServices.existingConversation(
+      userId,
+      receiverId
+    );
+    if (conversationId) return conversationId;
+  } catch (error) {
+    return error;
+  }
+};

@@ -7,7 +7,6 @@ export const emailSchema = z
   .email({ message: "Please enter a valid email address" })
   .nonempty({ message: "Email is required" });
 
-
 // Password Schema
 export const passwordSchema = z
   .string()
@@ -26,29 +25,37 @@ export const passwordSchema = z
     message: "Password must include at least one special character",
   });
 
-export const timeSchema = z.
-  enum(["Morning", "Noon", "Evening", "Night", "Midnight"])
+export const timeSchema = z.enum([
+  "Morning",
+  "Noon",
+  "Evening",
+  "Night",
+  "Midnight",
+]);
 
-  
 // Create User Schema (Signup)
 export const CreateUserSchema = z.object({
   email: emailSchema,
+  name: z.string(),
+  Age: z.number(),
   password: passwordSchema,
-  city    : z.string(),
-  country : z.string(),
-  pincode : z.string(),
+  city: z.string(),
+  country: z.string(),
+  pincode: z.string(),
 });
 
 export const CreateRoomSchema = z.object({
-  destination: z.string().trim().nonempty({message: "Destination is required"}),
+  destination: z
+    .string()
+    .trim()
+    .nonempty({ message: "Destination is required" }),
   travelDate: z.coerce.date(),
   timeSlot: timeSchema,
-  minAge : z.number().optional(),
-  maxAge : z.number().optional(),
-  grpSize : z.number().optional(),
-  decp : z.string().optional(),
-  Categories : z.string().optional(),
-  Duration : z.string().optional(),
-  Difficulty: z.string().optional(),
-})
-
+  minAge: z.number(),
+  maxAge: z.number(),
+  grpSize: z.number(),
+  decp: z.string(),
+  Categories: z.string().optional(),
+  Duration: z.string(),
+  Difficulty: z.string(),
+});

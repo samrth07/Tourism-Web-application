@@ -2,8 +2,6 @@
 import { v4 as uuidv4 } from "uuid";
 
 
-
-
 function extractFilePathAndNameFromUrl(fileUrl) {
   try {
     const url = new URL(fileUrl);
@@ -77,7 +75,7 @@ export async function deleteImage(
     .remove([filePath]);
 
   if (deleteError) {
-    throw new ApiError(`Image deletion failed: ${deleteError.message}`, 500);
+    throw new Error(`Image deletion failed: ${deleteError.message}`, 500);
   }
   } catch (error) {
     throw error

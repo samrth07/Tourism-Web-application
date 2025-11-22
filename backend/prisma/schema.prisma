@@ -10,90 +10,144 @@ datasource db {
 }
 
 model User {
-  id           String              @id @default(uuid())
-  name         String?
-  email        String              @unique
+  id           Int      @id @default(autoincrement())
+  name         String
+  email        String   @unique
   password     String
-  Age          Int?
+  Age          Int
   profileImage String?
-  createdAt    DateTime            @default(now())
-  updatedAt    DateTime            @updatedAt
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   Address      Address?            @relation("userAddress")
-  messages     Message[]
   createdPlans TravelPlan[]        @relation("UserToTravelPlan")
   travelPlans  TravelPlanMembers[]
+  messages     Message[]
+  messageSeen  MessageSeen[]
 
-  // relationship
-  sender       Friend[]           @relation("SentFriendRequests")
-  reciever     Friend[]           @relation("ReceivedFriendRequests")
+  receivedRequests         Friend[]                  @relation("receiver")
+  sentRequests             Friend[]                  @relation("sender")
+  Friend                   Friendship[]              @relation("friend")
+  user                     Friendship[]              @relation("user")
+  conversationParticipants ConversationParticipant[]
 }
 
 model Address {
-  id      String @id @default(uuid())
+  id      Int    @id @default(autoincrement())
   city    String
   country String
   pincode String
-  userId  String @unique
+  userId  Int    @unique
   user    User   @relation("userAddress", fields: [userId], references: [id])
 }
 
 model TravelPlan {
-  id          String              @id @default(uuid())
-  destination String
-  travelDate  DateTime
-  timeSlot    String
-  isActive    Boolean             @default(true)
-  createdAt   DateTime            @default(now())
-  createdById String
-  minAge      Int ?                @default(0)
-  maxAge      Int  ?               @default(100)
-  grpSize     Int?
-  decp        String?              
-  image       String?
-  Categories  String?
-  Duration    String?
-  Difficulty  String?
-  Trip_Hightlights Trip_Hightlights[]   @relation()
-  messages    Message[]
-  user        User                @relation("UserToTravelPlan", fields: [createdById], references: [id])
-  members     TravelPlanMembers[]
+  id               Int               @id @default(autoincrement())
+  destination      String
+  travelDate       DateTime
+  timeSlot         String
+  isActive         Boolean            @default(true)
+  createdAt        DateTime           @default(now())
+  createdById      Int
+  minAge           Int                @default(0)
+  maxAge           Int                @default(100)
+  grpSize          Int
+  decp             String
+  image            String
+  Categories       String?
+  Duration         String
+  Difficulty       String
+  Trip_Hightlights Trip_Highlights[]
+  messages         Message[]
+  user             User               @relation("UserToTravelPlan", fields: [createdById], references: [id])
+  members          TravelPlanMembers[]
 }
 
-model Trip_Hightlights {
-  planId           String
-  plan             TravelPlan @relation( fields: [planId] , references: [id])
-  Trip_hightLight  String
-  @@id([planId])
+model Trip_Highlights {
+  planId          Int
+  Trip_hightLight String
+  plan            TravelPlan @relation(fields: [planId], references: [id])
+
+  @@id([planId, Trip_hightLight]) // composite key
 }
 
 model TravelPlanMembers {
-  memberId     String
-  travelPlanId String
+  memberId     Int
+  travelPlanId Int
+
   user         User       @relation(fields: [memberId], references: [id], onDelete: Cascade)
   travelPlan   TravelPlan @relation(fields: [travelPlanId], references: [id], onDelete: Cascade)
 
   @@id([memberId, travelPlanId])
 }
 
-model Message {
-  id        String     @id @default(uuid())
-  type      String?
-  content   String
-  senderId  String
-  roomId    String
-  createdAt DateTime   @default(now())
-  room      TravelPlan @relation(fields: [roomId], references: [id])
-  sender    User       @relation(fields: [senderId], references: [id])
+model Friend {
+  id         Int     @id @default(autoincrement())
+  senderId   Int
+  receiverId Int
+  isAccepted Boolean @default(false)
+
+  receiver   User    @relation("receiver", fields: [receiverId], references: [id])
+  sender     User    @relation("sender", fields: [senderId], references: [id])
+
+  @@unique([senderId, receiverId])
 }
 
-model Friend {
-  id          Int    @id @default(autoincrement())
-  isAccepted  Boolean  @default(false)
-  senderID    String
-  recieverId  String
-  sender      User   @relation( "SentFriendRequests" , fields: [senderID], references: [id])
-  recievedBy  User   @relation( "ReceivedFriendRequests" , fields: [recieverId], references: [id])
-  
-  @@unique([senderID , recieverId])
+model Friendship {
+  id       Int  @id @default(autoincrement())
+  userId   Int
+  friendId Int
+
+  user     User @relation("user", fields: [userId], references: [id])
+  friend   User @relation("friend", fields: [friendId], references: [id])
+
+  @@unique([userId, friendId])
+}
+
+model Conversation {
+  id           Int                       @id @default(autoincrement())
+  name         String?
+  isGroup      Boolean                   @default(false)
+  createdAt    DateTime                  @default(now())
+  updatedAt    DateTime                  @updatedAt
+  participants ConversationParticipant[]
+  messages     Message[]
+}
+
+model ConversationParticipant {
+  id             Int          @id @default(autoincrement())
+  userId         Int
+  conversationId Int
+
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  user           User         @relation(fields: [userId], references: [id])
+
+  @@unique([userId, conversationId])
+}
+
+model Message {
+  id             Int           @id @default(autoincrement())
+  content        String
+  senderId       Int
+  conversationId Int
+  createdAt      DateTime      @default(now())
+
+  conversation   Conversation  @relation(fields: [conversationId], references: [id])
+  sender         User          @relation(fields: [senderId], references: [id])
+  seenBy         MessageSeen[]
+
+  travelPlanId   Int?
+  travelPlan     TravelPlan?   @relation(fields: [travelPlanId], references: [id])
+}
+
+model MessageSeen {
+  id        Int      @id @default(autoincrement())
+  messageId Int
+  userId    Int
+  seenAt    DateTime @default(now())
+
+  message Message @relation(fields: [messageId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+
+  @@unique([messageId, userId])
 }
