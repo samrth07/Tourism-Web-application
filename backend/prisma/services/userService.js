@@ -1,20 +1,25 @@
-import client from "../index.js";
+import prisma from "../index.js";
 
-export const createUser = async ( email , hashedPassword , name , profileImage) => {
+export const createUser = async (
+      email,
+      name,
+      password,
+      Age,
+    ) => {
   
-  return await client.user.create({
+  return await prisma.user.create({
     data: {
       email,
-      password: hashedPassword,
       name,
-      profileImage
+      password,
+      Age
     },
   });
 };
 
 export const updateProfile = async ( userData , userId) => {
   const data = userData;
-  return await client.user.update({
+  return await prisma.user.update({
     where : {
       id : userId,
     },
@@ -24,7 +29,7 @@ export const updateProfile = async ( userData , userId) => {
 
 export const createAddress = async ( city , country , pincode , userId) => {
 
-  return await client.address.create({
+  return await prisma.address.create({
           data : {
             city,
             userId,
@@ -35,7 +40,7 @@ export const createAddress = async ( city , country , pincode , userId) => {
 };
 
 export const getUserByEmail = async (email) => {
-  return await client.user.findUnique({
+  return await prisma.user.findUnique({
     where: {
       email,
     },
@@ -43,49 +48,16 @@ export const getUserByEmail = async (email) => {
 };
 
 export const getUserById = async (id) => {
-  return await client.user.findUnique({
+  return await prisma.user.findUnique({
     where: {
       id,
-    },
-    include : {
-      sender : true,
-      reciever : {
-        select : {
-          recievedBy : true
-        }
-      }
     }
   });
 };
-
-export const connectUserWithRoom = async (roomId, userId) => {
-  await client.travelPlan.update({
-    where: { 
-      id: roomId
-    },
-    data: {
-      members: {
-        connect: {
-          id: userId 
-        }
-      } 
-    },
-  });
-};
-
-export const isUserAdmin = async(roomId, userId) => {
-  return await client.travelPlan.findUnique({
-    where: {
-      id: roomId,
-      userId: userId
-    }
-  });
-};
-
 
 export const getUser = async ( userID ) => {
 
-      return await client.user.findMany({
+      return await prisma.user.findMany({
         where : {
           id :{
             not : userID
@@ -97,26 +69,16 @@ export const getUser = async ( userID ) => {
       })
 }
 
-export const getMyinformation = async ( userID) => {
-    return await client.user.findFirst({
+export const getMyinformation = async ( userId) => {
+    return await prisma.user.findFirst({
       where : {
-        id : userID
+        id : userId
       },
       include : {
         Address : true,
         password : false,
         createdPlans : true,
         travelPlans : true,
-        sender:{
-          where: {
-            isAccepted : true
-          }
-        },
-        reciever:{
-          where: {
-            isAccepted : true
-          }
-        },
       }
     })
 }

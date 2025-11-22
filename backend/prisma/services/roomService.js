@@ -1,4 +1,4 @@
-import client from "../index.js";
+import prisma from "../index.js";
 
 export const createPlan = async (
   destination,
@@ -14,7 +14,7 @@ export const createPlan = async (
   Difficulty,
   image
 ) => {
-  return await client.travelPlan.create({
+  return await prisma.travelPlan.create({
     data: {
       destination,
       travelDate,
@@ -33,7 +33,7 @@ export const createPlan = async (
 };
 
 export const getPlanById = async (planId) => {
-  return await client.travelPlan.findFirst({
+  return await prisma.travelPlan.findFirst({
     where: {
       id: planId,
     },
@@ -42,7 +42,7 @@ export const getPlanById = async (planId) => {
 
 
 export const leavePlan = async (planId ,userId) => {
-  return await client.travelPlanMembers.delete({
+  return await prisma.travelPlanMembers.delete({
     where: { 
       memberId_travelPlanId : {
         memberId : userId,
@@ -53,7 +53,7 @@ export const leavePlan = async (planId ,userId) => {
 };
 
 export const getPlan = async (planId) => {
-  return await client.travelPlan.findUnique({
+  return await prisma.travelPlan.findUnique({
     where: { id: planId },
     include: {
       members: true, // Get all users in the room
@@ -62,16 +62,8 @@ export const getPlan = async (planId) => {
   });
 };
 
-
-export const getRoomByRoomId = async (roomId) => {
-  return await client.travelPlan.findUnique({
-    where: { id: roomId },
-    include: { users: true, userId: true },
-  });
-};
-
 export const addMemberTotravelPlan = async (planId, user) => {
-  return await client.travelPlanMembers.create({
+  return await prisma.travelPlanMembers.create({
     data: {
       memberId: user,
       travelPlanId: planId,
@@ -80,7 +72,7 @@ export const addMemberTotravelPlan = async (planId, user) => {
 };
 
 export const getMemebers = async (planId) => {
-  return await client.travelPlanMembers.findMany({
+  return await prisma.travelPlanMembers.findMany({
     where: {
       travelPlanId: planId,
     },
@@ -88,7 +80,7 @@ export const getMemebers = async (planId) => {
 };
 
 export const getAllplans = async (viewerId) => {
-  return await client.travelPlan.findMany({
+  return await prisma.travelPlan.findMany({
     include: {
       user: true, // creator of the plan
       members: {
@@ -99,20 +91,12 @@ export const getAllplans = async (viewerId) => {
               name: true,
               profileImage: true,
               Address: true,
-
-              // check friendship with viewer
-              sender: {
-                where: {
-                  recieverId: viewerId,
+              Friend: {
+                where : {
+                  friendId : viewerId
                 },
-                select: { id: true, isAccepted: true },
-              },
-              reciever: {
-                where: {
-                  senderID: viewerId,
-                },
-                select: { id: true, isAccepted: true },
-              },
+                select : { user : true}
+              }
             },
           },
         },

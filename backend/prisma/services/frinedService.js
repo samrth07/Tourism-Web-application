@@ -1,121 +1,156 @@
-import client from "../index.js";
+import prisma from "../index.js";
 
-export const sendRequest = async (senderId, recieverId ) => {
-  return client.friend.create({
+export const addFriend = async (senderId, recieverId) => {
+  return await prisma.friend.create({
     data: {
-      senderID: senderId,
-      recieverId: recieverId,
+      senderId: senderId,
+      receiverId: recieverId,
     },
   });
 };
 
-export const acceptRequest = async (senderID, recieverId , ) => {
-  return client.friend.update({
+export const acceptReq = async (senderId, recieverId) => {
+  await prisma.friend.update({
     where: {
-      senderID_recieverId : {
-         senderID,
-        recieverId,
-      }
-    },
-    data: {
-      isAccepted: true,
-    },
-  });
-};
-
-export const getAllFriends = async (userId) => {
-  
-  const allFriendRelations = await client.friend.findMany({
-    where: {
-      isAccepted: true,
-      OR: [
-        { senderID: userId },
-        { recieverId: userId }
-      ]
-    },
-    include: {
-      sender: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          profileImage: true,
-          createdAt: true,
-          Address: true
-        }
+      senderId_receiverId: {
+        senderId: senderId,
+        receiverId: recieverId,
       },
-      recievedBy: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          profileImage: true,
-          createdAt: true,
-          Address: true
-        }
-      }
-    }
-  });
-
-  // Get the other user (not the current user) from each accepted friendship
-  const accepted = allFriendRelations.map(f => {
-    return f.senderID === userId ? f.recievedBy : f.sender;
-  });
-
-  // Remove duplicates if any
-  const uniqueAccepted = Array.from(
-    new Map(accepted.map(user => [user.id, user])).values()
-  );
-
-  // Pending received
-  const pending = await client.friend.findMany({
-    where: {
-      recieverId: userId,
-      isAccepted: false
     },
-    include: {
-      sender: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          profileImage: true,
-          createdAt: true,
-          Address: true
-        }
-      }
-    }
-  });
-
-  const pendingRequests = pending.map(r => r.sender);
-
-  // Pending sent
-  const sentNotAccepted = await client.friend.findMany({
-    where: {
-      senderID: userId,
-      isAccepted: false
+    data: {
+      isAccepted: true,
     },
-    include: {
-      recievedBy: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          profileImage: true,
-          createdAt: true,
-          Address: true
-        }
-      }
-    }
   });
 
-  const notYetaccepted = sentNotAccepted.map(r => r.recievedBy);
+  const response = await prisma.friendship.createMany({
+    data: [
+      { userId: senderId, friendId: recieverId },
+      { userId: recieverId, friendId: senderId },
+    ],
+  });
 
-  return {
-    acceptedFriends: uniqueAccepted,
-    pendingRequests,
-    notYetaccepted
-  };
+  return response;
 };
 
+export const removeFriend = async (senderId, recieverId) => {
+  await prisma.friend.deleteMany({
+    where: {
+      OR: [
+        {
+          senderId: senderId,
+          receiverId: recieverId,
+        },
+        { senderId: recieverId, receiverId: senderId },
+      ],
+    },
+  });
 
+  await prisma.friendship.deleteMany({
+    where: {
+      OR: [
+        {
+          userId: recieverId,
+          friendId: senderId,
+        },
+        {
+          userId: senderId,
+          friendId: recieverId,
+        },
+      ],
+    },
+  });
+};
+
+export const getAllFriend = async (userId) => {
+  const friend = await prisma.friendship.findMany({
+    where: {
+      userId: userId,
+    },
+    select: {
+      friend: true,
+    },
+  });
+
+  const result = [];
+
+  for (const f of friend) {
+    const friendId = f.friend.id;
+
+    // 2. Check if conversation already exists (1-to-1 only)
+    const conversation = await prisma.conversation.findFirst({
+      where: {
+        isGroup: false,
+        participants: {
+          some: { userId },
+        },
+        AND: {
+          participants: {
+            some: { userId: friendId },
+          },
+        },
+      },
+    });
+
+    if (!conversation) return;
+
+    // 4. Push final result
+    result.push({
+      conversationId: conversation.id,
+      friendInformation: f.friend,
+    });
+  }
+
+  return result;
+};
+
+export const getPendingRequest = async (userID) => {
+  return await prisma.friend.findMany({
+    where: {
+      senderId: userID,
+      isAccepted: false,
+    },
+    select: {
+      receiver: true,
+    },
+  });
+};
+
+export const getNotAccepeted = async (userID) => {
+  return await prisma.friend.findMany({
+    where: {
+      receiverId: userID,
+      isAccepted: false,
+    },
+    select: {
+      sender: true,
+    },
+  });
+};
+
+export const crateConversionID = async (groupName, isGrp) => {
+  return await prisma.conversation.create({
+    data: {
+      isGroup: isGrp,
+      name: groupName,
+    },
+  });
+};
+
+export const conversionParticipant = async (members) => {
+  return await prisma.conversationParticipant.createMany({
+    data: members,
+    skipDuplicates: true,
+  });
+};
+
+export const existingConversation = async (senderId, receiverId) => {
+  return await prisma.conversation.findFirst({
+    where: {
+      isGroup: false,
+      AND: [
+        { participants: { some: { userId: senderId } } },
+        { participants: { some: { userId: receiverId } } },
+      ],
+    },
+  });
+};

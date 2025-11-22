@@ -1,11 +1,12 @@
 import express from 'express';
-import { getMessages } from "../routeHandlers/chatHandler.js"
+import { getMessage, seenMessage } from '../routeHandlers/chatHandler.js';
 import { middleware } from '../utils/middleware.js';
 
 const chatRouter = express.Router();
 
-chatRouter.use(middleware);
+chatRouter.use( middleware );
 
-chatRouter.get('/:roomId', getMessages);
+chatRouter.patch('/:conversationId/seen' , seenMessage);
+chatRouter.get('/:conversationId' , getMessage);
 
 export default chatRouter

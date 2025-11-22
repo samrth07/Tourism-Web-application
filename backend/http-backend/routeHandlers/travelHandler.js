@@ -17,7 +17,6 @@ export const getTravelPlans = async (req, res) => {
       notJoinedPlans,
     });
   } catch (error) {
-    console.log(error)
     res.status(500).json({
       msg: "Internal Servaer error",
     });

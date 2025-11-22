@@ -1,24 +1,26 @@
+import { Router } from "express";
+import {
+  accept,
+  addFriend,
+  removeFriend,
+  getAllFriend,
+  getPendingRequest,
+  getNotAccepeted,
+} from "../routeHandlers/friendHandler.js";
+import { middleware } from "../utils/middleware.js";
 
-import express from 'express'
-import { acceptRequest, addFriend  , getAllfriend } from '../routeHandlers/friendHandler.js';
-import { middleware } from '../utils/middleware.js';
-
-export const friendRouter = express.Router();
+export const friendRouter = Router();
 
 friendRouter.use(middleware);
 
-// get All friends
+friendRouter.get("/", getAllFriend);
 
-friendRouter.get('/' , getAllfriend);
+friendRouter.post("/:receiverId", addFriend);
+friendRouter.patch("/:senderId", accept);
+friendRouter.delete("/:friendID", removeFriend);
 
-// send friend request
+// get pending request
+friendRouter.get("/pendingRequest", getPendingRequest);
 
-friendRouter.post('/:reqRecieverId' , addFriend);
-
-// remove the friend
-
-// friendRouter.delete('/' , removeFriend);
-
-// accept friend request
-
-friendRouter.patch('/:senderId' , acceptRequest);
+// get not accpeted reuest
+friendRouter.get("/notAccepeted", getNotAccepeted);

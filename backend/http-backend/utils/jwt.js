@@ -3,8 +3,8 @@ import dotenv from 'dotenv';
 
 dotenv.config({path: '../.env'});
 
-export const generateToken = async(id) => {
-    const token = await jwt.sign({
+export const generateToken = (id) => {
+    const token =  jwt.sign({
             id
         },
         process.env.JWT_SECRET,{
