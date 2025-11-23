@@ -8,7 +8,7 @@ const getInitials = (name) =>
     .join("");
 
 const FriendCard = ({ user  , message , handelrequest}) => {
-
+  console.log(user.name)
   function handelOnclick(){
       handelrequest(user.id)
   }

@@ -71,7 +71,7 @@ const FindTravelmate = () => {
 
   const HandleJoinPlan = async (planId) => {
     const response = await axios.post(
-      `${import.meta.env.VITE_API_URL}/plans/join/${planId}`,
+      `${import.meta.env.VITE_API_URL}/plans/${planId}`,
       {},
       {
         headers: {

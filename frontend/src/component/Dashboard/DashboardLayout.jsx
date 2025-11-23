@@ -10,7 +10,7 @@ const DashboardLayout = () => {
       <SidebarMenu />
       <div
         className={`ml-56  w-full bg-amber-50 ${
-          isProfilePage ? "" : "pt-14"
+          isProfilePage ? "" : "pt-2"
         }`}
       >
         <div className="max-w-7xl mx-auto">
