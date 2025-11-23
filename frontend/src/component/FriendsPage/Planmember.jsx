@@ -16,7 +16,7 @@ const Planmember = ( { members , sendRequest} ) => {
 
       <div className="flex gap-2">
       
-        {member.user?.sender.length > 0 || member.user?.reciever.length > 0 ? (
+        {member.user?.Friend.length > 0  ? (
           !member.user?.sender?.[0]?.isAccepted &&
           !member.user?.reciever?.[0]?.isAccepted ? (
             <span className="bg-orange-500 p-2 rounded-2xl">Pending</span>

@@ -41,7 +41,7 @@ function App() {
           <Route path="/experience/:slug" element={<ExpBlog />} />
           <Route path="/currentPlan" element={<CurrentPlans/>} />
 
-
+       
           <Route path="/Dashboard" element={<DashboardLayout/>} >
                   <Route index element={<Navigate to="profile" />} />
                   <Route path="profile" element={<Profile/>} />

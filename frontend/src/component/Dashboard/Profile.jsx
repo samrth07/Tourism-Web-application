@@ -92,296 +92,278 @@ const Profile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white text-stone-900">
-      <div className="relative bg-gradient-to-r from-orange-50 via-orange-100 to-orange-50 border-b border-orange-200 shadow-sm">
-        <div className="max-w-6xl mx-auto px-6 py-8">
-          <div className="flex flex-col md:flex-row items-center gap-6">
-            <div className="relative group">
-              <div className="w-32 h-32 rounded-full bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600 flex items-center justify-center text-4xl font-bold text-white shadow-2xl ring-4 ring-orange-500/30">
-                {getInitials(user.name)}
+    <div className="min-h-screen bg-stone-50 text-stone-900 pb-20 font-sans">
+      
+      {/* --- Hero / Header Section --- */}
+      <div className="relative bg-white border-b border-orange-100 shadow-sm">
+        {/* Decorative Background Blur */}
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-orange-50 via-white to-orange-50 opacity-60"></div>
+        
+        <div className="relative max-w-7xl mx-auto px-6 py-12">
+          <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
+            
+            {/* Profile Image with Ring Effect */}
+            <div className="relative group shrink-0">
+              <div className="w-36 h-36 md:w-40 md:h-40 rounded-full p-1 bg-white shadow-xl ring-1 ring-orange-100">
+                <div className="w-full h-full rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-5xl font-bold text-white overflow-hidden relative">
+                   {user.profileImage ? (
+                     <img src={user.profileImage} alt="Profile" className="w-full h-full object-cover" />
+                   ) : (
+                     getInitials(user.name)
+                   )}
+                   {/* Hover Overlay */}
+                   <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center cursor-pointer">
+                      <FaEdit className="text-white text-xl" />
+                   </div>
+                </div>
               </div>
-              <button className="absolute bottom-2 right-2 w-10 h-10 bg-orange-500 hover:bg-orange-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg">
-                <FaCamera className="text-sm text-white" />
-              </button>
-              <div className="absolute -inset-2 bg-gradient-to-br from-orange-400/20 to-orange-600/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </div>
 
-            <div className="flex-1 text-center md:text-left">
-              <div className="flex flex-col md:flex-row md:items-center gap-4 mb-4">
-                <h1 className="text-4xl font-bold text-stone-900">{user.name}</h1>
-                <div className="flex gap-2">
-                  <button className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-xl transition-all duration-300 hover:scale-105 font-medium shadow-md">
-                    <FaEdit className="text-sm" />
-                    Edit Profile
+            {/* Profile Info */}
+            <div className="flex-1 text-center md:text-left pt-2">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                <div>
+                  <h1 className="text-4xl font-extrabold text-stone-900 tracking-tight">{user.name}</h1>
+                  <p className="text-stone-500 font-medium mt-1">Travel Enthusiast & Explorer</p>
+                </div>
+                
+                {/* Action Buttons */}
+                <div className="flex gap-3 justify-center md:justify-start">
+                  <button className="flex items-center gap-2 px-5 py-2.5 bg-stone-900 hover:bg-orange-600 text-white rounded-full transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 font-medium text-sm">
+                    <FaEdit /> Edit Profile
                   </button>
-                  <button className="inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-gray-50 text-stone-900 rounded-xl transition-all duration-300 hover:scale-105 font-medium border border-gray-200">
-                    <FaCog className="text-sm" />
-                    Settings
+                  <button className="flex items-center gap-2 px-5 py-2.5 bg-white hover:bg-stone-50 text-stone-700 border border-stone-200 rounded-full transition-all duration-300 hover:shadow-md font-medium text-sm">
+                    <FaCog /> Settings
                   </button>
                 </div>
               </div>
 
-              <div className="flex flex-wrap justify-center md:justify-start gap-4 text-stone-600 mb-4">
+              {/* Meta Data Tags */}
+              <div className="flex flex-wrap justify-center md:justify-start gap-y-2 gap-x-6 text-stone-500 text-sm mb-6">
                 <div className="flex items-center gap-2">
                   <FaMapMarkerAlt className="text-orange-500" />
-                  <span>{user.Address?.city || "Unknown"}</span>
+                  <span>{user.Address?.city || "Location not set"}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <FaCalendar className="text-orange-500" />
-                  <span>Member since {user.createdAt?.slice(0, 4) || "2024"}</span>
+                  <span>Joined {user.createdAt?.slice(0, 4) || "2024"}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <FaEye className="text-orange-500" />
-                  <span>{currentUser.profileViews} profile views</span>
+                  <span>{currentUser.profileViews} views</span>
                 </div>
               </div>
 
-              <p className="text-stone-600 max-w-2xl leading-relaxed">{currentUser.bio}</p>
+              {/* Bio */}
+              <p className="text-stone-600 leading-relaxed max-w-3xl mx-auto md:mx-0 bg-orange-50/50 p-4 rounded-xl border border-orange-100/50">
+                {currentUser.bio || "No bio yet. Tell the world about your travel dreams!"}
+              </p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="max-w-6xl mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* Stats Cards */}
+      {/* --- Main Content Grid --- */}
+      <div className="max-w-7xl mx-auto px-6 py-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          
+          {/* Left Column (Content) - Spans 8 cols */}
+          <div className="lg:col-span-8 space-y-8">
+            
+            {/* Stats Cards Row */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="bg-white border border-gray-200 rounded-2xl p-6 text-center hover:scale-105 transition-transform duration-300 shadow-sm hover:shadow-md">
-                <FaPlane className="text-3xl text-orange-500 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-stone-900">{user.travelPlans.length}</div>
-                <div className="text-stone-500 text-sm">My Trips</div>
-              </div>
-
-              <div className="bg-white border border-gray-200 rounded-2xl p-6 text-center hover:scale-105 transition-transform duration-300 shadow-sm hover:shadow-md">
-                <FaGlobe className="text-3xl text-orange-500 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-stone-900">{user.createdPlans.length}</div>
-                <div className="text-stone-500 text-sm">Created By me</div>
-              </div>
-
-              <div className="bg-white border border-gray-200 rounded-2xl p-6 text-center hover:scale-105 transition-transform duration-300 shadow-sm hover:shadow-md">
-                <FaUser className="text-3xl text-orange-500 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-stone-900">
-                  {Number.parseInt(user.sender.length) + Number.parseInt(user.reciever.length)}
+              {[
+                { icon: FaPlane, count: user.travelPlans.length, label: "My Trips" },
+                { icon: FaGlobe, count: user.createdPlans.length, label: "Created" },
+                { icon: FaUser, count: 10, label: "Friends" }, // Hardcoded 10 based on input
+                { icon: FaStar, count: "4.8", label: "Rating" } // Placeholder rating
+              ].map((stat, idx) => (
+                <div key={idx} className="bg-white rounded-3xl p-6 text-center shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-stone-100 hover:border-orange-200 transition-all duration-300 group">
+                  <div className="w-12 h-12 mx-auto bg-orange-50 text-orange-500 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                    <stat.icon className="text-xl" />
+                  </div>
+                  <div className="text-3xl font-bold text-stone-900 mb-1">{stat.count}</div>
+                  <div className="text-stone-400 text-xs font-semibold uppercase tracking-wide">{stat.label}</div>
                 </div>
-                <div className="text-stone-500 text-sm">Connections</div>
-              </div>
-
-              <div className="bg-white border border-gray-200 rounded-2xl p-6 text-center hover:scale-105 transition-transform duration-300 shadow-sm hover:shadow-md">
-                <FaStar className="text-3xl text-orange-500 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-stone-900">{}</div>
-                <div className="text-stone-500 text-sm">My Rating</div>
-              </div>
+              ))}
             </div>
 
             {/* Upcoming Trips */}
-            <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold flex items-center gap-2 text-stone-900">
-                  <FaCalendar className="text-orange-500" />
+            <div className="bg-white rounded-3xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-stone-100">
+              <div className="flex items-center justify-between mb-8">
+                <h3 className="text-xl font-bold flex items-center gap-3 text-stone-900">
+                  <span className="p-2 bg-orange-100 text-orange-600 rounded-lg"><FaCalendar /></span>
                   Upcoming Adventures
                 </h3>
-                <button className="flex items-center gap-2 px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-xl transition-all duration-300 hover:scale-105 font-medium text-sm">
-                  <FaPlus className="text-xs" />
-                  Add Trip
+                <button className="text-sm font-semibold text-orange-600 hover:text-orange-700 hover:underline decoration-2 underline-offset-4">
+                  + Plan New
                 </button>
               </div>
+              
               <div className="space-y-4">
-                {currentUser.upcomingTrips.map((trip, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-4 bg-gray-50 border border-gray-100 rounded-xl hover:border-orange-200 transition-all duration-300"
-                  >
-                    <div>
-                      <h4 className="font-semibold text-stone-900">{trip.destination}</h4>
-                      <p className="text-stone-600 text-sm">{trip.date}</p>
+                {currentUser.upcomingTrips.length > 0 ? currentUser.upcomingTrips.map((trip, index) => (
+                  <div key={index} className="flex flex-col sm:flex-row sm:items-center justify-between p-5 bg-white border border-stone-100 rounded-2xl hover:shadow-lg hover:border-orange-100 transition-all duration-300 group">
+                    <div className="flex items-center gap-4">
+                       <div className="w-12 h-12 rounded-xl bg-stone-100 flex items-center justify-center text-stone-400 font-bold group-hover:bg-orange-500 group-hover:text-white transition-colors">
+                          {trip.destination.charAt(0)}
+                       </div>
+                       <div>
+                        <h4 className="font-bold text-lg text-stone-900">{trip.destination}</h4>
+                        <p className="text-stone-500 text-sm flex items-center gap-2">
+                           <FaCalendar className="text-xs" /> {trip.date}
+                        </p>
+                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span
-                        className={`px-3 py-1 rounded-full text-xs font-medium ${
+                    
+                    <div className="flex items-center gap-3 mt-4 sm:mt-0 pl-16 sm:pl-0">
+                      <span className={`px-4 py-1.5 rounded-full text-xs font-bold border ${
                           trip.status === "Booked"
-                            ? "bg-green-100 text-green-700 border border-green-200"
-                            : "bg-yellow-100 text-yellow-700 border border-yellow-200"
-                        }`}
-                      >
+                            ? "bg-emerald-50 text-emerald-600 border-emerald-100"
+                            : "bg-amber-50 text-amber-600 border-amber-100"
+                        }`}>
                         {trip.status}
                       </span>
-                      <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                        <FaEdit className="text-sm text-stone-500" />
+                      <button className="text-stone-400 hover:text-orange-500 transition-colors p-2">
+                        <FaEdit />
                       </button>
                     </div>
                   </div>
-                ))}
+                )) : (
+                  <div className="text-center py-8 text-stone-400">No upcoming trips. Time to plan one!</div>
+                )}
               </div>
             </div>
 
             {/* Travel Interests */}
-            <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-bold flex items-center gap-2 text-stone-900">
-                  <FaHeart className="text-orange-500" />
-                  My Travel Interests
+            <div className="bg-white rounded-3xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-stone-100">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-bold flex items-center gap-3 text-stone-900">
+                   <span className="p-2 bg-red-100 text-red-500 rounded-lg"><FaHeart /></span>
+                   Travel Interests
                 </h3>
-                <button className="text-orange-500 hover:text-orange-600 transition-colors">
-                  <FaEdit />
-                </button>
               </div>
               <div className="flex flex-wrap gap-3">
                 {currentUser.interests.map((interest, index) => (
                   <div key={index} className="group relative">
-                    <span className="inline-flex items-center gap-2 px-4 py-2 bg-orange-50 border border-orange-200 text-orange-700 rounded-full text-sm hover:bg-orange-100 transition-all duration-300 cursor-pointer">
+                    <span className="inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-stone-200 text-stone-700 rounded-full text-sm font-medium hover:border-orange-400 hover:text-orange-600 transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md">
                       {interest}
-                      <button className="opacity-0 group-hover:opacity-100 transition-opacity">
-                        <FaTrash className="text-xs text-red-500" />
+                      <button className="ml-1 opacity-0 group-hover:opacity-100 transition-opacity hover:text-red-500">
+                        <FaTrash className="text-xs" />
                       </button>
                     </span>
                   </div>
                 ))}
-                <button className="px-4 py-2 border-2 border-dashed border-gray-300 hover:border-orange-400 text-stone-500 hover:text-orange-500 rounded-full text-sm transition-all duration-300">
-                  + Add Interest
+                <button className="px-5 py-2.5 border border-dashed border-stone-300 text-stone-400 hover:text-orange-500 hover:border-orange-400 rounded-full text-sm font-medium transition-all duration-300 flex items-center gap-2">
+                  <FaPlus className="text-xs" /> Add Interest
                 </button>
               </div>
             </div>
 
-            {/* Recent Trips */}
-            <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+            {/* Recent Trips Photos */}
+            <div className="bg-white rounded-3xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-stone-100">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold flex items-center gap-2 text-stone-900">
-                  <FaPlane className="text-orange-500" />
-                  My Recent Adventures
+                <h3 className="text-xl font-bold flex items-center gap-3 text-stone-900">
+                   <span className="p-2 bg-blue-100 text-blue-500 rounded-lg"><FaPlane /></span>
+                   Recent Adventures
                 </h3>
-                <button className="flex items-center gap-2 px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-xl transition-all duration-300 hover:scale-105 font-medium text-sm">
-                  <FaUpload className="text-xs" />
-                  Add Photos
+                <button className="flex items-center gap-2 text-stone-500 hover:text-orange-600 text-sm font-medium transition-colors">
+                  <FaUpload /> Add Photos
                 </button>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {currentUser.recentTrips.map((trip, index) => (
-                  <div
-                    key={index}
-                    className="group relative overflow-hidden rounded-xl bg-gray-50 border border-gray-200 hover:border-orange-200 transition-all duration-300 hover:scale-105"
-                  >
+                  <div key={index} className="group relative rounded-2xl overflow-hidden aspect-[4/3] shadow-md cursor-pointer">
                     <img
                       src={trip.image || "/placeholder.svg"}
                       alt={trip.destination}
-                      className="w-full h-32 object-cover"
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                    <div className="absolute bottom-0 left-0 right-0 p-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="font-semibold text-white">{trip.destination}</h4>
-                          <p className="text-gray-300 text-sm">{trip.date}</p>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          {[...Array(trip.rating)].map((_, i) => (
-                            <FaStar key={i} className="text-yellow-400 text-xs" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-90"></div>
+                    
+                    <div className="absolute bottom-0 left-0 right-0 p-5 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                      <h4 className="font-bold text-white text-lg">{trip.destination}</h4>
+                      <div className="flex justify-between items-center mt-1">
+                        <p className="text-stone-300 text-xs">{trip.date}</p>
+                        <div className="flex gap-0.5">
+                          {[...Array(5)].map((_, i) => (
+                            <FaStar key={i} className={`text-xs ${i < trip.rating ? "text-yellow-400" : "text-gray-500"}`} />
                           ))}
                         </div>
                       </div>
                     </div>
-                    <button className="absolute top-2 right-2 w-8 h-8 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
-                      <FaEdit className="text-xs text-white" />
-                    </button>
                   </div>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* Right Column */}
-          <div className="space-y-6">
-            {/* Account Settings */}
-            <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-              <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-stone-900">
-                <FaCog className="text-orange-500" />
-                Account Settings
-              </h3>
-              <div className="space-y-4">
-                <button className="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 rounded-xl transition-all duration-300">
-                  <div className="flex items-center gap-3">
-                    <FaUser className="text-orange-500" />
-                    <span className="text-sm text-stone-900">Edit Personal Info</span>
-                  </div>
-                  <FaEdit className="text-stone-500 text-sm" />
-                </button>
+          {/* Right Column (Sidebar) - Spans 4 cols */}
+          <div className="lg:col-span-4 space-y-8">
+            
+            {/* Quick Actions Card */}
+            <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-3xl p-6 shadow-xl shadow-orange-500/20 text-white">
+               <h3 className="text-xl font-bold mb-6">Quick Actions</h3>
+               <div className="space-y-3">
+                 <button className="w-full flex items-center gap-3 px-4 py-3.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-xl transition-all duration-300 font-medium border border-white/10">
+                   <FaPlus className="text-orange-200" /> Create New Trip
+                 </button>
+                 <Link to="/find-travel-mate" className="w-full flex items-center gap-3 px-4 py-3.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-xl transition-all duration-300 font-medium border border-white/10">
+                   <FaUser className="text-orange-200" /> Find Travel Mates
+                 </Link>
+               </div>
+            </div>
 
-                <button className="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 rounded-xl transition-all duration-300">
-                  <div className="flex items-center gap-3">
-                    <FaLock className="text-orange-500" />
-                    <span className="text-sm text-stone-900">Privacy Settings</span>
-                  </div>
-                  <FaEdit className="text-stone-500 text-sm" />
-                </button>
-
-                <button className="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 rounded-xl transition-all duration-300">
-                  <div className="flex items-center gap-3">
-                    <FaBell className="text-orange-500" />
-                    <span className="text-sm text-stone-900">Notifications</span>
-                  </div>
-                  <FaEdit className="text-stone-500 text-sm" />
-                </button>
-              </div>
+            {/* Account Settings Menu */}
+            <div className="bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-stone-100">
+               <h3 className="text-lg font-bold mb-4 text-stone-900">Settings</h3>
+               <div className="space-y-2">
+                  {[
+                    { icon: FaUser, label: "Personal Info" },
+                    { icon: FaLock, label: "Privacy & Security" },
+                    { icon: FaBell, label: "Notifications" }
+                  ].map((item, idx) => (
+                    <button key={idx} className="w-full flex items-center justify-between p-3.5 hover:bg-stone-50 rounded-xl transition-colors group">
+                      <div className="flex items-center gap-3">
+                         <div className="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-stone-500 group-hover:bg-orange-500 group-hover:text-white transition-colors">
+                           <item.icon className="text-xs" />
+                         </div>
+                         <span className="text-sm font-medium text-stone-600 group-hover:text-stone-900">{item.label}</span>
+                      </div>
+                      <FaEdit className="text-stone-300 text-xs group-hover:text-orange-500" />
+                    </button>
+                  ))}
+               </div>
             </div>
 
             {/* Privacy Status */}
-            <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-              <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-stone-900">
-                <FaLock className="text-orange-500" />
-                Privacy Status
-              </h3>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-stone-600">Profile Visibility</span>
-                  <span className="text-sm text-green-600 font-medium">{currentUser.privacy.profileVisibility}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-stone-600">Show Email</span>
-                  <span
-                    className={`text-sm font-medium ${
-                      currentUser.privacy.showEmail ? "text-green-600" : "text-red-500"
-                    }`}
-                  >
-                    {currentUser.privacy.showEmail ? "Yes" : "No"}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-stone-600">Show Phone</span>
-                  <span
-                    className={`text-sm font-medium ${
-                      currentUser.privacy.showPhone ? "text-green-600" : "text-red-500"
-                    }`}
-                  >
-                    {currentUser.privacy.showPhone ? "Yes" : "No"}
-                  </span>
-                </div>
+            <div className="bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-stone-100">
+              <h3 className="text-lg font-bold mb-4 text-stone-900">Privacy Status</h3>
+              <div className="space-y-4">
+                 {[
+                   { label: "Profile Visibility", value: currentUser.privacy.profileVisibility, isBool: false },
+                   { label: "Show Email", value: currentUser.privacy.showEmail, isBool: true },
+                   { label: "Show Phone", value: currentUser.privacy.showPhone, isBool: true }
+                 ].map((item, idx) => (
+                   <div key={idx} className="flex items-center justify-between p-2">
+                      <span className="text-sm text-stone-500">{item.label}</span>
+                      <span className={`text-xs font-bold px-2 py-1 rounded border ${
+                        (item.isBool ? item.value : item.value === 'Public') 
+                        ? 'bg-green-50 text-green-600 border-green-100' 
+                        : 'bg-red-50 text-red-500 border-red-100'
+                      }`}>
+                        {item.isBool ? (item.value ? "Visible" : "Hidden") : item.value}
+                      </span>
+                   </div>
+                 ))}
               </div>
             </div>
 
-            {/* Quick Actions */}
-            <div className="rounded-2xl p-6 shadow-sm bg-white border border-gray-200   ">
-              <h3 className="text-xl font-bold mb-4 text-black">Quick Actions</h3>
-              <div className="space-y-3">
-                <button className="w-full flex items-center gap-3 px-4 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-xl transition-all duration-300 hover:scale-105 font-medium">
-                  <FaPlus />
-                  Create New Trip
-                </button>
-                <Link
-                  to="/find-travel-mate"
-                  className="w-full flex items-center gap-3 px-4 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-xl transition-all duration-300 hover:scale-105 font-medium"
-                >
-                  <FaUser />
-                  Find Travel Mates
-                </Link>
-                <button className="w-full flex items-center gap-3 px-4 py-3 bg-lime-800 hover:bg-lime-700 text-white rounded-xl transition-all duration-300 hover:scale-105 font-medium">
-                  <FaSignOutAlt />
-                  Sign Out
-                </button>
-              </div>
-            </div>
+            <button className="w-full py-4 text-stone-400 hover:text-red-500 font-medium text-sm transition-colors flex items-center justify-center gap-2">
+               <FaSignOutAlt /> Sign Out
+            </button>
           </div>
+
         </div>
       </div>
     </div>
