@@ -3,6 +3,7 @@ import FriendCard from "../FriendCard";
 import axios from "axios";
 import ClipLoader from "react-spinners/ClipLoader";
 import { FaUserFriends, FaUserPlus,  FaPaperPlane } from "react-icons/fa";
+import LoadingEffect from "../ui/LoadingEffect";
 
 const Friends = () => {
   const token = localStorage.getItem("token");
@@ -63,10 +64,7 @@ const Friends = () => {
 
   if (loading) {
     return (
-      <div className="min-h-[60vh] flex flex-col gap-4 justify-center items-center bg-stone-50">
-        <ClipLoader color="#44403c" size={50} />
-        <p className="text-stone-500 font-medium animate-pulse">Loading connections...</p>
-      </div>
+      <LoadingEffect/>
     );
   }
 

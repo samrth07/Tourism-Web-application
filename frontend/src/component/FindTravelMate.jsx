@@ -1,73 +1,85 @@
-
-import { useEffect, useState } from "react"
-import { useAuth } from "../context/AuthContext"
-import { useNavigate } from "react-router-dom"
-import axios from "axios"
-import { toast } from "react-toastify"
-import TravelPlan from "./ui/TravelPlan"
-import Planmember from "./FriendsPage/Planmember"
+import { useEffect, useState } from "react";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify";
+import TravelPlan from "./ui/TravelPlan";
+import Planmember from "./FriendsPage/Planmember";
+import LoadingEffect from "./ui/LoadingEffect";
 
 const FindTravelmate = () => {
-  const token = localStorage.getItem("token")
+  const token = localStorage.getItem("token");
 
-  const [travelDate, setTravelDate] = useState("")
-  const [destination, setDestination] = useState("")
-  const [tripDuration, setTripDuration] = useState("")
-  const [groupSize, setGroupSize] = useState("")
-  const [allPlans, setAllPlans] = useState([])
-  const [plan, setPlan] = useState([])
-  const [memberPage, setmemberPage] = useState(false)
-  const [members, setMemberData] = useState([])
+  const [travelDate, setTravelDate] = useState("");
+  const [destination, setDestination] = useState("");
+  const [tripDuration, setTripDuration] = useState("");
+  const [groupSize, setGroupSize] = useState("");
+  const [allPlans, setAllPlans] = useState([]);
+  const [plan, setPlan] = useState([]);
+  const [memberPage, setmemberPage] = useState(false);
+  const [members, setMemberData] = useState([]);
+  const [isPlan, setCurPlan] = useState(true);
 
-  const { user, loading } = useAuth()
-  const navigate = useNavigate()
-
-  useEffect(() => { 
-    if (!loading && !user) {
-      toast.success("Login is required.")
-      navigate("/signin")
-    }
-  }, [user, navigate, loading])
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("token")
+    if (!loading && !user) {
+      toast.success("Login is required.");
+      navigate("/signin");
+    }
+  }, [user, navigate, loading]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
 
     async function fetchUser() {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/plans`, {
-          headers: {
-            authorization: token,
-          },
-        })
-        toast.success("User data fetched successfully!")
-        setPlan(response.data.notJoinedPlans)
-        setAllPlans(response.data.notJoinedPlans)
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/plans`,
+          {
+            headers: {
+              authorization: token,
+            },
+          }
+        );
+        toast.success("User data fetched successfully!");
+        setPlan(response.data.notJoinedPlans);
+        setAllPlans(response.data.notJoinedPlans);
+        setCurPlan(false);
       } catch (err) {
-        console.error("Failed to fetch users:", err.response?.data || err.message)
+        console.error(
+          "Failed to fetch users:",
+          err.response?.data || err.message
+        );
       }
     }
 
     if (user) {
-      fetchUser()
+      fetchUser();
     }
-  }, [user])
+  }, [user]);
 
   const handleApplyFilters = () => {
     const filtered = allPlans.filter((p) => {
-      const destinationMatch = !destination || p.destination.toLowerCase() === destination.toLowerCase()
+      const destinationMatch =
+        !destination ||
+        p.destination.toLowerCase() === destination.toLowerCase();
 
-      const dateMatch = !travelDate || new Date(p.travelDate).toISOString().split("T")[0] === travelDate
-      return destinationMatch && dateMatch
-    })
+      const dateMatch =
+        !travelDate ||
+        new Date(p.travelDate).toISOString().split("T")[0] === travelDate;
+      return destinationMatch && dateMatch;
+    });
 
-    setPlan(filtered)
-  }
+    setPlan(filtered);
+  };
 
   const handleReset = () => {
-    setDestination("")
-    setTravelDate("")
-    setPlan(allPlans)
-  }
+    setDestination("");
+    setTravelDate("");
+    setPlan(allPlans);
+  };
 
   const HandleJoinPlan = async (planId) => {
     const response = await axios.post(
@@ -77,17 +89,17 @@ const FindTravelmate = () => {
         headers: {
           authorization: token,
         },
-      },
-    )
+      }
+    );
 
-    if (response) toast.success("Request of joining set successfully")
-    else alert("somwthing went wrong !!!!")
-  }
+    if (response) toast.success("Request of joining set successfully");
+    else alert("somwthing went wrong !!!!");
+  };
 
   const OpenMemberPage = (members) => {
-    setmemberPage(true)
-    setMemberData(members)
-  }
+    setmemberPage(true);
+    setMemberData(members);
+  };
 
   const sendRequest = async (recieverId) => {
     const addFriend = await axios.post(
@@ -97,20 +109,28 @@ const FindTravelmate = () => {
         headers: {
           authorization: token,
         },
-      },
-    )
+      }
+    );
 
     if (addFriend) {
-      toast.success("Request send succuessFull !!!")
+      toast.success("Request send succuessFull !!!");
     } else {
-      toast.success("Something went wrong!!!")
+      toast.success("Something went wrong!!!");
     }
-  }
+  };
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-stone-900">Checking authentication...</div>
-    )
+      <div className="min-h-screen flex items-center justify-center text-stone-900">
+        Checking authentication...
+      </div>
+    );
+  }
+
+  if (isPlan) {
+    return (
+        <LoadingEffect/>
+    );
   }
 
   return (
@@ -123,21 +143,26 @@ const FindTravelmate = () => {
           </span>
         </h1>
         <p className="mt-6 text-lg max-w-xl mx-auto text-stone-700 leading-relaxed">
-          Connect with like-minded travelers, share incredible experiences, and create memories that last a lifetime.
+          Connect with like-minded travelers, share incredible experiences, and
+          create memories that last a lifetime.
         </p>
       </div>
 
-      <div className="text-xl font-semibold text-stone-900 mb-6 text-center">Filters</div>
+      <div className="text-xl font-semibold text-stone-900 mb-6 text-center">
+        Filters
+      </div>
 
       <div className="bg-white border border-orange-100 shadow-lg p-8 rounded-3xl max-w-5xl mx-auto mb-16">
         <div className="grid md:grid-cols-4 gap-8">
           <div>
-            <label className="block text-sm font-semibold mb-3 text-stone-900">Destination</label>
+            <label className="block text-sm font-semibold mb-3 text-stone-900">
+              Destination
+            </label>
             <input
               type="text"
               className="w-full border border-orange-200 h-12 p-4 rounded-xl text-stone-900 bg-orange-50 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent placeholder:text-stone-500"
               onChange={(e) => {
-                setDestination(e.target.value)
+                setDestination(e.target.value);
               }}
               placeholder="Enter Destination"
               value={destination}
@@ -145,7 +170,9 @@ const FindTravelmate = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold mb-3 text-stone-900">Trip Duration</label>
+            <label className="block text-sm font-semibold mb-3 text-stone-900">
+              Trip Duration
+            </label>
             <select
               className="w-full h-12 p-2 rounded-xl bg-orange-50 border border-orange-200 text-stone-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               value={tripDuration}
@@ -159,7 +186,9 @@ const FindTravelmate = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold mb-3 text-stone-900">Group Size</label>
+            <label className="block text-sm font-semibold mb-3 text-stone-900">
+              Group Size
+            </label>
             <select
               className="w-full h-12 p-2 rounded-xl bg-orange-50 border border-orange-200 text-stone-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               value={groupSize}
@@ -174,7 +203,9 @@ const FindTravelmate = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold mb-3 text-stone-900">Travel Date</label>
+            <label className="block text-sm font-semibold mb-3 text-stone-900">
+              Travel Date
+            </label>
             <input
               type="date"
               value={travelDate}
@@ -229,7 +260,7 @@ const FindTravelmate = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default FindTravelmate
+export default FindTravelmate;

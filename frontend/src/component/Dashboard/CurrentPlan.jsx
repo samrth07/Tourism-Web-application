@@ -4,11 +4,13 @@ import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Planmember from "../FriendsPage/Planmember";
+import LoadingEffect from "../ui/LoadingEffect";
 
 const CurrentPlan = () => {
   const [plan, setPlan] = useState([]);
   const [memberPage, setmemberPage] = useState(false);
   const [members, setMemberData] = useState([]);
+  const [loading , setLoading] = useState(true);
 
   const OpenMemberPage = (members) => {
     setmemberPage(true);
@@ -25,8 +27,10 @@ const CurrentPlan = () => {
             authorization: token,
           },
         });
+        setLoading(false);
         toast.success("Your current plan!");
         setPlan(response.data.currentPlans);
+        
       } catch (err) {
         console.error(
           "Failed to fetch users:",
@@ -36,6 +40,12 @@ const CurrentPlan = () => {
     }
     fetchUser();
   }, []);
+
+  if( loading ){
+    return(
+      <LoadingEffect/>
+    )
+  }
 
   return (
     <div>

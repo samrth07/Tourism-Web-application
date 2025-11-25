@@ -161,7 +161,7 @@ const EnhancedTravelPlan = ({ plan, JoinPlan, msg, OpenMemberPage }) => {
 
           <button
             className="w-full bg-stone-50 hover:bg-stone-100 rounded-2xl p-4 transition-all duration-200 group/members"
-            onClick={() => OpenMemberPage(plan.members)}
+           
           >
             <div className="flex items-center justify-between">
               <div className="flex -space-x-3">

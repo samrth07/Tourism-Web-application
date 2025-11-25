@@ -109,12 +109,12 @@ const Home = () => {
             <span className="text-orange-500">Confidence</span>
           </h1>
 
-          <p className="text-2xl">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit...
+          <p className="text-2xl font-medium font-sans">
+            Life is short and the world is wide. We curate journeys that go beyond the ordinary, ensuring every step you take is filled with wonder and safety.
           </p>
 
-          <p className="text-2xl">
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit...
+          <p className="text-2xl font-medium font-sans">
+              From hidden gems in bustling cities to silent retreats in nature, we handle the details so you can handle the memories.
           </p>
 
           <div className="pt-4">
