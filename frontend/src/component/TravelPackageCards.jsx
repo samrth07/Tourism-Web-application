@@ -60,7 +60,7 @@ const TravelPackageCards = () => {
       currency: "₹",
       duration: "7 Days, 6 Nights",
       groupSize: "2-8 People",
-      image: "https://images.unsplash.com/photo-1596436889106-be35e509794c?w=500&h=300&fit=crop",
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtws-DR7Yzvj_uZNEq6zYT9X1GjE3LKbGNJw&s",
       rating: 4.8,
       reviews: 190,
       departure: "Nov 1 - Feb 28",
@@ -72,31 +72,11 @@ const TravelPackageCards = () => {
       discount: 12,
       featured: true,
     },
-    {
-      id: 4,
-      destination: "Leh-Ladakh, India",
-      title: "Himalayan Expedition to Ladakh",
-      price: 25000,
-      originalPrice: 28000,
-      currency: "₹",
-      duration: "8 Days, 7 Nights",
-      groupSize: "6-15 People",
-      image: "https://images.unsplash.com/photo-1587333109000-012128121234?w=500&h=300&fit=crop",
-      rating: 4.9,
-      reviews: 110,
-      departure: "May 15 - Sep 30",
-      includes: ["Flight", "Guesthouse Stay", "Trekking Gear", "Local Guide"],
-      highlights: ["Pangong Lake", "Nubra Valley", "Magnetic Hill", "Monastery Visits"],
-      optionalExtras: ["River Rafting", "Motorbike Expedition"],
-      difficulty: "Hard",
-      category: "Adventure & Mountains",
-      discount: 11,
-      featured: false,
-    },
+    
   ]
 
   // Duplicate packages for infinite scroll effect
-  const infinitePackages = [...travelPackages, ...travelPackages, ...travelPackages]
+  const infinitePackages = [...travelPackages, ...travelPackages]
 
   const toggleFavorite = (packageId) => {
     setFavorites((prev) => {
@@ -153,20 +133,20 @@ const TravelPackageCards = () => {
   }, [])
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 py-16 bg-gradient-to-b from-slate-50 to-white">
+    <div className="w-full mx-auto px-4 py-16 bg-gradient-to-b from-slate-50 to-white flex flex-col items-center">
       {/* Header Section */}
       <div className="text-center mb-16">
         <div className="flex items-center justify-center mb-6">
-          <div className="p-3 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl shadow-lg mr-4">
+          <div className="p-3 bg-gradient-to-r from-orange-500 to-orange-500 rounded-2xl shadow-lg mr-4">
             <Plane className="w-8 h-8 text-white" />
           </div>
           <div className="text-left">
-            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-orange-900 to-gray-700 bg-clip-text text-transparent">
               Featured Travel Packages
             </h2>
             <div className="flex items-center gap-2 mt-2">
               <Sparkles className="w-4 h-4 text-emerald-500" />
-              <span className="text-emerald-600 font-medium">Handpicked by Experts</span>
+              <span className="text-orange-600 font-medium">Handpicked by Experts</span>
             </div>
           </div>
         </div>
@@ -177,15 +157,14 @@ const TravelPackageCards = () => {
 
       {/* Cards Container */}
       <div
-        ref={containerRef}
-        className="flex overflow-x-auto no-scrollbar scroll-smooth space-x-8 px-4 py-6"
-        onMouseEnter={() => setIsAutoPlaying(false)}
-        onMouseLeave={() => setIsAutoPlaying(true)}
+        
+        className="grid grid-cols-3  gap-10 p-14"
+        
       >
         {infinitePackages.map((pkg, index) => (
           <div
             key={`${pkg.id}-${index}`}
-            className="group w-[320px] flex-shrink-0 bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 hover:scale-105 overflow-hidden border border-gray-100 hover:border-emerald-200 relative"
+            className="group  flex-shrink-0 bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 hover:scale-105 overflow-hidden border border-gray-100 hover:border-emerald-200 relative"
           >
             {/* Featured Badge */}
             {pkg.featured && (
@@ -284,7 +263,7 @@ const TravelPackageCards = () => {
               {/* Action Button */}
               <button
                 onClick={() => setSelectedPackage(pkg)}
-                className="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-semibold rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-emerald-500/25 border border-emerald-500/20"
+                className="w-full py-3 bg-gradient-to-r from-orange-600 to-orange-600 hover:from-orange-500 hover:to-orange-500 text-white font-semibold rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-emerald-500/25 border border-emerald-500/20"
               >
                 View Details & Book
               </button>
@@ -465,7 +444,7 @@ const TravelPackageCards = () => {
                   )}
                 </div>
                 
-                <button className="w-full py-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-lg font-bold rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-emerald-500/25">
+                <button className="w-full py-4 bg-gradient-to-r from-orange-600 to-orange-600 hover:from-orange-500 hover:to-teal-500 text-white text-lg font-bold rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-emerald-500/25">
                   Book This Package Now
                 </button>
               </div>
@@ -474,6 +453,7 @@ const TravelPackageCards = () => {
         </div>
       )}
 
+        <button className=" px-10 font-medium py-6  rounded-full  bg-stone-900 text-amber-50 hover:scale-105 hover:bg-orange-600 transition duration-200">View All Tours</button>
       <style jsx>{`
         .no-scrollbar::-webkit-scrollbar {
           display: none;
