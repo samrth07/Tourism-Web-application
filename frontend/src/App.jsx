@@ -1,8 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useState } from "react";
-// import Navbar from "./component/Navbar";
 import Home from "./component/Home";
-// import SidebarMenu from "./component/Profile/SidebarMenu";
 import FindTravelMate from "./component/FindTravelMate";
 import SignIn from "./component/SignIn";
 import SignUp from "./component/SignUp";
@@ -17,8 +15,7 @@ import MessengerUI from "./component/chatInerface/ChatInterface";
 import OffersPage from "./component/OfferPage";
 import Experience from "./component/ExperiencePage/Experience";
 import ExpBlog from "./component/ExperiencePage/ExpBlog";
-import CurrentPlans from "./component/ui/TravelPlan";
-// import Footer from "./component/Footer";
+import CurrentPlans from "./component/ui/TravelPlan";;
 import MainLayout from "./component/MainLayout";
 
 function App() {
