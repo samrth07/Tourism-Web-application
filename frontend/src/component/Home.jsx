@@ -1,122 +1,193 @@
 // import "../index.css";//the correct path to your index.css is
 import TravelPackageCards from "./TravelPackageCards";
-import { Globe, Award, Headset } from "lucide-react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Autoplay } from "swiper/modules";
+import {
+  Globe,
+  Award,
+  Headset,
+  Banknote,
+  Star,
+  Map,
+  CheckCircle2,
+  ArrowRight,
+} from "lucide-react";
+import useInView from "../hook/useInView";
 import "swiper/css";
 import "swiper/css/navigation";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import Img1 from "../assets/img1.jpg";
-import Img2 from "../assets/img2.jpg";
-import Img3 from "../assets/img3.jpg";
-import Img4 from "../assets/img4.jpg";
-import Img5 from "../assets/img5.jpg";
-import Img6 from "../assets/img6.jpg";
-import Img7 from "../assets/img7.jpg";
-import Img8 from "../assets/img8.jpg";
-import Img9 from "../assets/img9.jpg";
-import Img10 from "../assets/img10.jpg";
-
+import img7 from "../assets/img7.jpg";
+import img8 from "../assets/img8.jpg";
+import bgV from "../assets/bgV.mp4";
+import { Link } from "react-router-dom";
 
 const Home = () => {
+  const [ref, isVisible] = useInView({ threshold: 0.2 });
+  
+  const features = [
+    {
+      Icon: Globe,
+      title: "Diverse Destinations",
+      description:
+        "Explore a wide range of destinations, from serene beaches to majestic mountains.",
+    },
+    {
+      Icon: Award,
+      title: "Expertly Curated",
+      description:
+        "Our packages are carefully crafted by travel experts for unforgettable experiences.",
+    },
+    {
+      Icon: Headset,
+      title: "24/7 Support",
+      description:
+        "Enjoy peace of mind with our dedicated support team available around the clock.",
+    },
+    {
+      Icon: Map,
+      title: "Global Reach",
+      description:
+        "Access exclusive spots and hidden gems in over 100 countries worldwide.",
+    },
+    {
+      Icon: Star,
+      title: "Premium Experience",
+      description:
+        "Luxury accommodations and VIP transport options for the discerning traveler.",
+    },
+    {
+      Icon: Banknote,
+      title: "Best Prices",
+      description:
+        "We match prices to ensure you get the best value for your dream vacation.",
+    },
+  ];
   return (
-    <div className="bg-white min-h-screen text-stone-900">
+    <div className="bg-white min-h-screen text-stone-900 font-sans">
       {/* Hero Section */}
-
-      <div className="relative h-screen">
-        <Swiper
-          modules={[Navigation, Autoplay]}
-          slidesPerView={1}
-          loop={true}
-          speed={1000}
-          autoplay={{
-            delay: 3000,
-            disableOnInteraction: false,
-          }}
-          navigation={{
-            nextEl: ".swiper-button-next-custom",
-            prevEl: ".swiper-button-prev-custom",
-          }}
-          className="h-full w-full"
+      <div className="relative h-screen w-full overflow-hidden">
+        {/* Video Background */}
+        {/* Using a placeholder video URL for demonstration. Replace src with your {bgV} import */}
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute top-0 left-0 w-full h-full object-cover"
         >
-          {[Img2, Img3,Img10, Img4, Img9, Img5
-          ].map((img, i) => (
-            <SwiperSlide key={i}>
-              <div
-                className="h-screen w-full bg-cover bg-center"
-                style={{ backgroundImage: `url(${img})` }}
-              ></div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+          <source src={bgV} type="video/mp4" />
+        </video>
 
-        {/* Custom Arrows */}
-        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-30 flex gap-4">
-          <button className="swiper-button-prev-custom w-[52px] h-[52px] border border-white text-white rounded-full bg-transparent flex items-center justify-center text-xl hover:bg-white/10 transition">
-            &lt;
-          </button>
-          <button className="swiper-button-next-custom w-[52px] h-[52px] border border-white text-white rounded-full bg-transparent flex items-center justify-center text-xl hover:bg-white/10 transition">
-            &gt;
-          </button>
-        </div>
-        {/* Overlay Content (no blur/glassmorphism) */}
-        <div className="absolute inset-0 flex items-center justify-center z-20">
-          <div className="text-white text-center max-w-xl mx-auto">
-            <h1 className="text-4xl md:text-6xl font-extrabold leading-tight mb-6 text-white [text-shadow:_0_3px_3px_rgba(0,0,0,1.5)]">
+        {/* Dark Overlay for text readability */}
+        <div className="absolute inset-0 bg-black/30"></div>
+
+        {/* Content */}
+        <div className="absolute inset-0 flex items-center justify-center z-20 px-4 sm:px-6">
+          <div className="text-white text-center max-w-3xl mx-auto">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 text-white drop-shadow-lg">
               WHERE TO GO NEXT?
             </h1>
-            <p className="text-lg md:text-xl mb-8 text-white [text-shadow:_0_3px_3px_rgba(0,0,0,1)]">
+            <p className="text-base sm:text-lg md:text-xl mb-8 text-white/90 max-w-xl mx-auto drop-shadow-md">
               Let us help you map your perfect getaway and discover
-              unforgettable adventures!
+              unforgettable adventures across the globe!
             </p>
-            <button className="px-8 py-3 border border-white text-white font-semibold rounded-full bg-stone-950/30 backdrop-blur-md hover:bg-white/10 hover:text-white transition transform duration-300 shadow-md">
+            <Link
+              to={"/signin"}
+              className="px-8 py-3 sm:px-10 sm:py-4 border border-white text-white font-semibold rounded-full bg-stone-950/30 backdrop-blur-md hover:bg-white hover:text-stone-900 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+            >
               Get Started
-            </button>
+            </Link>
           </div>
         </div>
       </div>
 
-      {/* Why Choose Us Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          <h2 className="text-4xl font-black text-stone-900 mb-16">
-            Why Choose TravelMate?
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 px-6 md:px-16">
-            {[
-              
-              {
-                Icon: Globe,
-                title: "Diverse Destinations",
-                description:
-                  "Explore a wide range of destinations, from serene beaches to majestic mountains.",
-              },
-              {
-                Icon: Award,
-                title: "Expertly Curated",
-                description:
-                  "Our packages are carefully crafted by travel experts for unforgettable experiences.",
-              },
-              {
-                Icon: Headset,
-                title: "24/7 Support",
-                description:
-                  "Enjoy peace of mind with our dedicated support team available around the clock.",
-              },
-            ].map(({ Icon, title, description }, i) => (
+      {/* {trvel with confidance } */}
+
+      <section className="grid grid-cols-1 md:grid-cols-2 justify-center px-20 py-12 gap-3 m-2 ">
+         <div ref={ref} className={`flex flex-col   py-12 gap-10 m-2 
+      ${isVisible ? "slide-left" : "opacity-0"}
+    `}>
+          <h1 className="text-4xl uppercase lg:text-6xl font-extrabold tracking-tight text-stone-900 leading-[1.1]">
+            Explore the World with{" "}
+            <span className="text-orange-500">Confidence</span>
+          </h1>
+
+          <p className="text-2xl">
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit...
+          </p>
+
+          <p className="text-2xl">
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit...
+          </p>
+
+          <div className="pt-4">
+            <button className="group mb-10 bg-stone-900 hover:bg-orange-600 text-white px-8 py-4 rounded-full text-lg font-medium transition-all duration-300 flex items-center gap-2 shadow-xl hover:shadow-orange-500/25 hover:-translate-y-1">
+              Start Your Journey
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </button>
+          </div>
+        </div>
+
+        <div className="flex-1 relative w-full max-w-lg lg:max-w-none">
+          <div className="relative group">
+            {/* Image border decoration */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-orange-400 to-stone-300 rounded-[2rem] blur opacity-30 group-hover:opacity-60 transition duration-1000"></div>
+
+            <img
+              src={img7}
+              alt="Travel Destination"
+              className="relative w-full h-[500px] object-cover rounded-[2rem] shadow-2xl transform transition duration-500 hover:scale-[1.01]"
+            />
+
+            {/* Floating Card Overlay */}
+            <div className="absolute bottom-6 left-6 bg-white/90 backdrop-blur-sm p-4 rounded-2xl shadow-lg flex items-center gap-4 animate-fade-in-up max-w-xs">
+              <div className="bg-green-100 p-3 rounded-full text-green-600">
+                <Globe className="w-6 h-6" />
+              </div>
+              <div>
+                <p className="text-xs text-stone-500 font-semibold uppercase">
+                  Current Status
+                </p>
+                <p className="text-stone-900 font-bold">Accepting Bookings</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* WHY CHOOSE US SECTION */}
+      <section className="py-20 lg:py-32 bg-stone-50 relative">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-20">
+            <h2 className="text-3xl md:text-4xl font-bold text-stone-900 mb-6 tracking-tight">
+              Why Choose Us for Your Next Adventure
+            </h2>
+            <div className="w-20 h-1 bg-orange-500 mx-auto rounded-full mb-6"></div>
+            <p className="text-lg text-stone-600">
+              We don't just plan trips; we curate experiences. Here is why
+              thousands of travelers trust us with their memories.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map(({ Icon, title, description }, i) => (
               <div
                 key={i}
-                className=" bg-orange-500/20 rounded-3xl p-10 shadow-[8px_8px_15px_rgba(0,0,0,0.2)] hover:shadow-[12px_12px_20px_rgba(0,0,0,0.25)] transform hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
+                className="group bg-white rounded-[2rem] p-8 border border-stone-100 shadow-sm hover:shadow-xl transition-all duration-300 ease-out hover:-translate-y-2 relative overflow-hidden"
               >
-                <div className="w-14 h-14 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-8 text-white drop-shadow-md">
-                  <Icon className="w-7 h-7" />
+                {/* Hover Gradient Background */}
+                <div className="absolute inset-0 bg-gradient-to-br from-orange-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+                <div className="relative z-10 flex flex-col items-center text-center h-full">
+                  <div className="w-16 h-16 bg-stone-100 group-hover:bg-orange-500 rounded-2xl flex items-center justify-center mb-6 text-stone-900 group-hover:text-white transition-colors duration-300 shadow-inner group-hover:shadow-orange-500/40">
+                    <Icon className="w-8 h-8" />
+                  </div>
+
+                  <h3 className="text-xl font-bold text-stone-900 mb-3 group-hover:text-orange-600 transition-colors">
+                    {title}
+                  </h3>
+
+                  <p className="text-stone-600 text-base leading-relaxed">
+                    {description}
+                  </p>
                 </div>
-                <h3 className="text-xl md:text-2xl font-semibold text-stone-900 mb-3 text-center">
-                  {title}
-                </h3>
-                <p className="text-stone-900 text-center text-sm md:text-base leading-relaxed">
-                  {description}
-                </p>
               </div>
             ))}
           </div>
@@ -127,26 +198,6 @@ const Home = () => {
       <section className="py- bg-white">
         <TravelPackageCards />
       </section>
-
-      {/* Footer */}
-      <footer className="bg-lime-950 py-8 mt-16 border-t border-gray-700">
-        <div className="max-w-7xl mx-auto px-6 text-center text-white text-sm">
-          <p>
-            &copy; {new Date().getFullYear()} TravelMate. All rights reserved.
-          </p>
-          <div className="mt-4 space-x-6">
-            <a href="#" className="hover:text-orange-400 transition-colors">
-              Privacy Policy
-            </a>
-            <a href="#" className="hover:text-orange-400 transition-colors">
-              Terms of Service
-            </a>
-            <a href="#" className="hover:text-orange-400 transition-colors">
-              Contact Us
-            </a>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 };

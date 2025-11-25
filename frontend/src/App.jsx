@@ -18,6 +18,7 @@ import OffersPage from "./component/OfferPage";
 import Experience from "./component/ExperiencePage/Experience";
 import ExpBlog from "./component/ExperiencePage/ExpBlog";
 import CurrentPlans from "./component/ui/TravelPlan";
+import Footer from "./component/Footer";
 
 
 
@@ -52,7 +53,7 @@ function App() {
 
     </Routes>
     
-
+    <Footer/>
 
     </>
     
