@@ -45,7 +45,7 @@ const Navbar = () => {
         <div className="hidden items-center gap-4 font-semibold md:flex text-base">
           {[
             { to: "/experience", label: "Experience" },
-            { to: "/destinations", label: "Destinations" },
+            { to: "/#", label: "Destinations" },
             { to: "/offers", label: "Offers" },
             { to: "/find-travel-mate", label: "Find Travel Mate" },
           ].map(({ to, label }) => (
