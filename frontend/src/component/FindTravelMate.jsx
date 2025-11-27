@@ -3,17 +3,17 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import TravelPlan from "./ui/TravelPlan";
+import EnhancedTravelPlan from "./ui/TravelPlan";
 import Planmember from "./FriendsPage/Planmember";
 import LoadingEffect from "./ui/LoadingEffect";
-import { 
-  Search, 
-  MapPin, 
-  Calendar, 
-  Users, 
-  Clock, 
+import {
+  Search,
+  MapPin,
+  Calendar,
+  Users,
+  Clock,
   RotateCcw,
-  Filter 
+  Filter,
 } from "lucide-react";
 
 const FindTravelmate = () => {
@@ -67,8 +67,12 @@ const FindTravelmate = () => {
   // --- Handlers ---
   const handleApplyFilters = () => {
     const filtered = allPlans.filter((p) => {
-      const destinationMatch = !destination || p.destination.toLowerCase().includes(destination.toLowerCase());
-      const dateMatch = !travelDate || new Date(p.travelDate).toISOString().split("T")[0] === travelDate;
+      const destinationMatch =
+        !destination ||
+        p.destination.toLowerCase().includes(destination.toLowerCase());
+      const dateMatch =
+        !travelDate ||
+        new Date(p.travelDate).toISOString().split("T")[0] === travelDate;
       // Note: You might want to add logic for Group Size and Duration filtering here if your API/Data supports it
       return destinationMatch && dateMatch;
     });
@@ -115,18 +119,22 @@ const FindTravelmate = () => {
     }
   };
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  if (loading)
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Loading...
+      </div>
+    );
   if (isPlan) return <LoadingEffect />;
 
   return (
     <div className="min-h-screen bg-stone-50 font-sans pb-20">
-      
       {/* --- 1. Compact Hero Section --- */}
       {/* Reduced padding significantly (pt-24 instead of pt-32) and removed bottom margin */}
       <div className="bg-white pt-24 pb-12 px-6 border-b border-stone-100">
         <div className="max-w-4xl mx-auto text-center space-y-4">
           <h1 className="text-3xl uppercase md:text-5xl font-extrabold tracking-tight text-stone-900">
-            Find Your Next  <span className="text-orange-500">Travel Mate</span>
+            Find Your Next <span className="text-orange-500">Travel Mate</span>
           </h1>
           <p className="text-stone-500 max-w-lg mx-auto">
             Connect with travelers, share costs, and make memories.
@@ -138,10 +146,8 @@ const FindTravelmate = () => {
       {/* This sticks to the top 20px when scrolling */}
       <div className="sticky top-4 z-40 px-4 -mt-8 mb-8">
         <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-xl shadow-stone-200/50 border border-stone-100 p-2 md:p-3">
-          
           {/* Desktop/Tablet Layout: Single Row */}
           <div className="flex flex-col md:flex-row items-center gap-2">
-            
             {/* Destination Input */}
             <div className="relative flex-1 w-full group">
               <div className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 group-focus-within:text-orange-500 transition-colors">
@@ -158,7 +164,6 @@ const FindTravelmate = () => {
 
             {/* Hidden on mobile unless expanded (Simple toggle logic could be added here) */}
             <div className="flex gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
-              
               {/* Date */}
               <div className="relative min-w-[140px]">
                 <div className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400">
@@ -217,7 +222,7 @@ const FindTravelmate = () => {
               >
                 <RotateCcw size={18} />
               </button>
-              
+
               <button
                 onClick={handleApplyFilters}
                 className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-stone-900 hover:bg-orange-600 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg shadow-stone-200"
@@ -226,47 +231,45 @@ const FindTravelmate = () => {
                 <span className="md:hidden">Search</span>
               </button>
             </div>
-
           </div>
         </div>
       </div>
 
       {/* --- 3. Results Grid --- */}
-      <div className=" mx-auto px-6">
+      <div className=" px-6 py-5 min-h-screen  ">
         {/* Optional: Results Count */}
         <div className="flex items-center justify-between mb-6 text-sm text-stone-500">
           <span>Showing {plan.length} active trips</span>
           {/* You could add a sort dropdown here */}
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {plan.length > 0 ? (
-            plan.map((p, idx) => (
-              <div key={idx} className="flex justify-center">
-                <TravelPlan
+ <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
+        {plan.length > 0 ? (
+          plan.map((p, idx) => (
+            // wrapper ensures centering; h-full to let card stretch
+            <div key={idx} className="flex justify-center h-full min-w-0">
+              <div className="w-full max-w-[440px]"> {/* optional max width for nicer columns */}
+                <EnhancedTravelPlan
                   plan={p}
                   JoinPlan={HandleJoinPlan}
                   msg={"Join Plan"}
-                  OpenMemberPage={OpenMemberPage}
+                  OpenMemberPage={() => OpenMemberPage(p)}
                 />
               </div>
-            ))
-          ) : (
-            <div className="col-span-full py-20 text-center">
-              <div className="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Filter size={24} className="text-stone-400" />
-              </div>
-              <h3 className="text-lg font-semibold text-stone-900">No plans found</h3>
-              <p className="text-stone-500">Try adjusting your filters to see more results.</p>
-              <button 
-                onClick={handleReset}
-                className="mt-4 text-orange-600 font-medium hover:underline"
-              >
-                Clear all filters
-              </button>
             </div>
-          )}
-        </div>
+          ))
+        ) : (
+          <div className="col-span-full py-20 text-center">
+            <div className="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Filter size={24} className="text-stone-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-stone-900">No plans found</h3>
+            <p className="text-stone-500">Try adjusting your filters to see more results.</p>
+            <button onClick={handleReset} className="mt-4 text-orange-600 font-medium hover:underline">
+              Clear all filters
+            </button>
+          </div>
+        )}
+      </div>
       </div>
 
       {/* --- Member Modal --- */}
