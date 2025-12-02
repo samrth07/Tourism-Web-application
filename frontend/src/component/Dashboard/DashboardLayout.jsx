@@ -8,10 +8,12 @@ const DashboardLayout = () => {
   return (
     <div className="flex min-h-screen bg-amber-50">
       <SidebarMenu />
+
+      {/* Use padding-left on md+ instead of hard margin so small screens don't overflow */}
       <div
-        className={`ml-56  w-full bg-amber-50 ${
-          isProfilePage ? "" : "pt-2"
-        }`}
+        className={`w-full bg-amber-50 min-w-0
+          pl-4 pr-4 sm:pl-6 sm:pr-6 md:pl-56 md:pr-8
+          ${isProfilePage ? "" : "pt-2"}`}
       >
         <div className="max-w-7xl mx-auto">
           <Outlet />
@@ -20,5 +22,6 @@ const DashboardLayout = () => {
     </div>
   );
 };
+
 
 export default DashboardLayout;
