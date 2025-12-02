@@ -20,7 +20,7 @@ import { Link } from "react-router-dom";
 
 const Home = () => {
   const [ref, isVisible] = useInView({ threshold: 0.2 });
-  
+
   const features = [
     {
       Icon: Globe,
@@ -101,20 +101,26 @@ const Home = () => {
       {/* {trvel with confidance } */}
 
       <section className="grid grid-cols-1 md:grid-cols-2 justify-center px-20 py-12 gap-3 m-2 ">
-         <div ref={ref} className={`flex flex-col   py-12 gap-10 m-2 
+        <div
+          ref={ref}
+          className={`flex flex-col   py-12 gap-10 m-2 
       ${isVisible ? "slide-left" : "opacity-0"}
-    `}>
+    `}
+        >
           <h1 className="text-4xl uppercase lg:text-6xl font-extrabold tracking-tight text-stone-900 leading-[1.1]">
             Explore the World with{" "}
             <span className="text-orange-500">Confidence</span>
           </h1>
 
           <p className="text-2xl font-medium font-sans">
-            Life is short and the world is wide. We curate journeys that go beyond the ordinary, ensuring every step you take is filled with wonder and safety.
+            Life is short and the world is wide. We curate journeys that go
+            beyond the ordinary, ensuring every step you take is filled with
+            wonder and safety.
           </p>
 
           <p className="text-2xl font-medium font-sans">
-              From hidden gems in bustling cities to silent retreats in nature, we handle the details so you can handle the memories.
+            From hidden gems in bustling cities to silent retreats in nature, we
+            handle the details so you can handle the memories.
           </p>
 
           <div className="pt-4">
@@ -125,27 +131,29 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="flex-1 relative w-full max-w-lg lg:max-w-none">
-          <div className="relative group">
+        <div className="flex-1 relative w-full  lg:max-w-none px-4 sm:px-0 ">
+          <div className="relative group flex justify-center">
             {/* Image border decoration */}
-            <div className="absolute -inset-1 bg-gradient-to-r from-orange-400 to-stone-300 rounded-[2rem] blur opacity-30 group-hover:opacity-60 transition duration-1000"></div>
+            <div className="absolute -inset-0.5 sm:-inset-1 bg-gradient-to-r from-orange-400 to-stone-300 rounded-2xl sm:rounded-[2rem] blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
 
             <img
               src={img7}
               alt="Travel Destination"
-              className="relative w-full h-[500px] object-cover rounded-[2rem] shadow-2xl transform transition duration-500 hover:scale-[1.01]"
+              className="relative w-full h-72 sm:h-80 md:h-[500px] object-cover rounded-2xl sm:rounded-4xl shadow-2xl transform transition duration-500 hover:scale-[1.01]"
             />
 
             {/* Floating Card Overlay */}
-            <div className="absolute bottom-6 left-6 bg-white/90 backdrop-blur-sm p-4 rounded-2xl shadow-lg flex items-center gap-4 animate-fade-in-up max-w-xs">
-              <div className="bg-green-100 p-3 rounded-full text-green-600">
-                <Globe className="w-6 h-6" />
+            <div className="absolute bottom-3 left-3 right-3 sm:bottom-6 sm:left-6 sm:right-auto bg-white/95 backdrop-blur-sm p-3 sm:p-4 rounded-xl sm:rounded-2xl shadow-lg flex items-center gap-3 sm:gap-4 animate-fade-in-up sm:max-w-xs">
+              <div className="bg-green-100 p-2 sm:p-3 rounded-full text-green-600 shrink-0">
+                <Globe className="w-5 h-5 sm:w-6 sm:h-6" />
               </div>
-              <div>
-                <p className="text-xs text-stone-500 font-semibold uppercase">
+              <div className="min-w-0">
+                <p className="text-[10px] sm:text-xs text-stone-500 font-semibold uppercase tracking-wide">
                   Current Status
                 </p>
-                <p className="text-stone-900 font-bold">Accepting Bookings</p>
+                <p className="text-sm sm:text-base text-stone-900 font-bold truncate">
+                  Accepting Bookings
+                </p>
               </div>
             </div>
           </div>

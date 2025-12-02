@@ -229,7 +229,7 @@ const EnhancedTravelPlan = ({ plan, JoinPlan, msg, OpenMemberPage }) => {
           )}
 
           {/* Travel Buddies */}
-          <div className="space-y-3">
+          {/* <div className="space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold text-stone-700 uppercase tracking-wide">
                 Travel Buddies
@@ -287,7 +287,7 @@ const EnhancedTravelPlan = ({ plan, JoinPlan, msg, OpenMemberPage }) => {
                 />
               </div>
             </button>
-          </div>
+          </div> */}
 
           {/* Action Buttons — keep them at the bottom */}
           <div className="flex gap-3 pt-2 mt-auto">

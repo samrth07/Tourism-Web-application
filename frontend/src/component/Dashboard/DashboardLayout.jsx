@@ -15,7 +15,7 @@ const DashboardLayout = () => {
           pl-4 pr-4 sm:pl-6 sm:pr-6 md:pl-56 md:pr-8
           ${isProfilePage ? "" : "pt-2"}`}
       >
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto mt-12 md:mt-0 md:pl-12">
           <Outlet />
         </div>
       </div>
