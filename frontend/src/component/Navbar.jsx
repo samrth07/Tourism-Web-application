@@ -60,7 +60,7 @@ const Navbar = () => {
         <div className="hidden md:flex items-center gap-1">
           {[
             { to: "/experience", label: "Experience" },
-            { to: "/destinations", label: "Destinations" },
+            { to: "/#", label: "Destinations" },
             { to: "/offers", label: "Offers" },
             { to: "/find-travel-mate", label: "Find Mate" },
           ].map(({ to, label }) => (
