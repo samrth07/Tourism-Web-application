@@ -50,7 +50,7 @@ const CurrentPlan = () => {
   return (
     <div>
       <div className="px-6 py-5 min-h-screen ">
-        <div className="grid grid-cols-1  md:grid-cols-2 gap-10  mx-auto">
+        <div className="grid md:grid-cols-1  lg:grid-cols-2 gap-10  mx-auto">
           {plan.length > 0 ? (
             plan.map((plan, idx) => (
               <TravelPlan key={idx} plan={plan} msg={"Leave Plan"} OpenMemberPage={OpenMemberPage}/>
