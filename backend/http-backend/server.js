@@ -23,6 +23,7 @@ app.use(cors({}));
 
 app.use(express.json());
 
+app.use("/health" , (req , res){ res.status(200).json(msg : "ok")});
 app.use("/api/v1", route(upload, supabase));
 
 const server = http.createServer(app);
